@@ -17,7 +17,8 @@ namespace Badminton.Web.Mappers
                 OpeningHours = courtModel.OpeningHours,
                 PricePerHour = courtModel.PricePerHour,
                 Image = courtModel.Image,
-                Announcement = courtModel.Announcement
+                Announcement = courtModel.Announcement,
+                Evaluates = courtModel.Evaluates.Select(e => e.ToFormatEvaluateDTO()).ToList()
             };
         }
 

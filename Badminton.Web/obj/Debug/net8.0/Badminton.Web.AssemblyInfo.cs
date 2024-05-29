@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Badminton.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+77f88ebc7f04d4bff58cd2236e28e79e6e665b8d")]
 [assembly: System.Reflection.AssemblyProductAttribute("Badminton.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Badminton.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

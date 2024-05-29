@@ -13,6 +13,11 @@ namespace Badminton.Web.Repository
             _context = context;
         }
 
+        public async Task<bool> CourtExist(int id)
+        {
+            return await _context.Courts.AnyAsync(c => c.CourtId == id);
+        }
+
         public async Task<Court> CreateAsync(Court courtModel)
         {
             await _context.AddAsync(courtModel);
@@ -35,12 +40,12 @@ namespace Badminton.Web.Repository
 
         public async Task<List<Court>> GetAllAsync()
         {
-            return await _context.Courts.ToListAsync();
+            return await _context.Courts.Include(e => e.Evaluates).ToListAsync();
         }
 
         public async Task<Court?> GetByIdAsync(int id)
         {
-            return await _context.Courts.FirstOrDefaultAsync(c => c.CourtId == id);
+            return await _context.Courts.Include(e => e.Evaluates).FirstOrDefaultAsync(c => c.CourtId == id);
         }
 
         public async Task<Court?> UpdateAsync(int id, UpdateCourtDTO courtDTO)

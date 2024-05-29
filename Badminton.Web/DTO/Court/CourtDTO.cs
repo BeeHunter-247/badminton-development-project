@@ -1,4 +1,5 @@
-﻿using Badminton.Web.Models;
+﻿using Badminton.Web.DTO.Evaluate;
+using Badminton.Web.Models;
 
 namespace Badminton.Web.DTO.Court
 {
@@ -21,5 +22,7 @@ namespace Badminton.Web.DTO.Court
         public string Image { get; set; }
 
         public string Announcement { get; set; }
+
+        public List<EvaluateDTO> Evaluates { get; set; }
     }
 }

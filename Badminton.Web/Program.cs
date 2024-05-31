@@ -31,6 +31,7 @@ namespace Badminton.Web
 
             builder.Services.AddScoped<ICourtRepository, CourtRepository>();
             builder.Services.AddScoped<IEvaluateRepository, EvaluateRepository>();
+            builder.Services.AddScoped<ISCourtRepository, SCourtRepository>();
 
 
             var app = builder.Build();

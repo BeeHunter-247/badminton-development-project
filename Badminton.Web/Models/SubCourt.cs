@@ -13,6 +13,8 @@ public partial class SubCourt
 
     public string Name { get; set; }
 
+    public decimal PricePerHour { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual Court Court { get; set; }

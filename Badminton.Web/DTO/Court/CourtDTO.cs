@@ -1,4 +1,5 @@
 ﻿using Badminton.Web.DTO.Evaluate;
+using Badminton.Web.DTO.SubCourt;
 using Badminton.Web.Models;
 
 namespace Badminton.Web.DTO.Court
@@ -17,12 +18,11 @@ namespace Badminton.Web.DTO.Court
 
         public string OpeningHours { get; set; }
 
-        public decimal PricePerHour { get; set; }
-
         public string Image { get; set; }
 
         public string Announcement { get; set; }
 
         public List<EvaluateDTO> Evaluates { get; set; }
+        public List<SCourtDTO> SubCourts { get; set; }
     }
 }

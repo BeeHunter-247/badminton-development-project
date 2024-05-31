@@ -16,10 +16,6 @@ namespace Badminton.Web.DTO.Court
 
         public string OpeningHours { get; set; }
 
-        [Required]
-        [Range(20, 200)]
-        public decimal PricePerHour { get; set; }
-
         public string Image { get; set; }
 
         public string Announcement { get; set; }

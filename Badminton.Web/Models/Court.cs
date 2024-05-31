@@ -19,8 +19,6 @@ public partial class Court
 
     public string OpeningHours { get; set; }
 
-    public decimal PricePerHour { get; set; }
-
     public string Image { get; set; }
 
     public string Announcement { get; set; }

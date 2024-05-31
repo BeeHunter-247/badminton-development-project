@@ -15,10 +15,10 @@ namespace Badminton.Web.Mappers
                 Location = courtModel.Location,
                 Phone = courtModel.Phone,
                 OpeningHours = courtModel.OpeningHours,
-                PricePerHour = courtModel.PricePerHour,
                 Image = courtModel.Image,
                 Announcement = courtModel.Announcement,
-                Evaluates = courtModel.Evaluates.Select(e => e.ToFormatEvaluateDTO()).ToList()
+                Evaluates = courtModel.Evaluates.Select(e => e.ToFormatEvaluateDTO()).ToList(),
+                SubCourts = courtModel.SubCourts.Select(s => s.ToFormatSCourtDTO()).ToList()
             };
         }
 
@@ -31,7 +31,6 @@ namespace Badminton.Web.Mappers
                 Location = courtDTO.Location,
                 Phone = courtDTO.Phone,
                 OpeningHours = courtDTO.OpeningHours,
-                PricePerHour = courtDTO.PricePerHour,
                 Image = courtDTO.Image,
                 Announcement = courtDTO.Announcement
             };

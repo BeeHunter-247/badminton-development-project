@@ -40,12 +40,12 @@ namespace Badminton.Web.Repository
 
         public async Task<List<Court>> GetAllAsync()
         {
-            return await _context.Courts.Include(e => e.Evaluates).ToListAsync();
+            return await _context.Courts.Include(e => e.Evaluates).Include(s => s.SubCourts).ToListAsync();
         }
 
         public async Task<Court?> GetByIdAsync(int id)
         {
-            return await _context.Courts.Include(e => e.Evaluates).FirstOrDefaultAsync(c => c.CourtId == id);
+            return await _context.Courts.Include(e => e.Evaluates).Include(s => s.SubCourts).FirstOrDefaultAsync(c => c.CourtId == id);
         }
 
         public async Task<Court?> UpdateAsync(int id, UpdateCourtDTO courtDTO)
@@ -61,7 +61,6 @@ namespace Badminton.Web.Repository
             existingCourt.Location = courtDTO.Location;
             existingCourt.Phone = courtDTO.Phone;
             existingCourt.OpeningHours = courtDTO.OpeningHours;
-            existingCourt.PricePerHour = courtDTO.PricePerHour;
             existingCourt.Image = courtDTO.Image;
             existingCourt.Announcement = courtDTO.Announcement;
 

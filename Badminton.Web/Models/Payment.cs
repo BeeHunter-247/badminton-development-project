@@ -21,7 +21,7 @@ public partial class Payment
 
     public string PaymentStatus { get; set; }
 
-    public DateOnly PaymentDate { get; set; }
+    public DateTime PaymentDate { get; set; }
 
     public int InvoiceId { get; set; }
 

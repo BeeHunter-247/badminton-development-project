@@ -17,7 +17,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCourts()
+        public async Task<IActionResult> GetAll()
         {
              if(!ModelState.IsValid)
             {
@@ -31,7 +31,7 @@ namespace Badminton.Web.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        public async Task<IActionResult> GetCourtById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             if(!ModelState.IsValid)
             {
@@ -75,7 +75,7 @@ namespace Badminton.Web.Controllers
 
             var courtModel = courtDTO.ToFormatCourtFromCreate();
             await _courtRepo.CreateAsync(courtModel);
-            return CreatedAtAction(nameof(GetCourtById), new { id = courtModel.CourtId }, courtModel.ToFormatCourtDTO());
+            return CreatedAtAction(nameof(GetById), new { id = courtModel.CourtId }, courtModel.ToFormatCourtDTO());
         }
 
         [HttpPut]

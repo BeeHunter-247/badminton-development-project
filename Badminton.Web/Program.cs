@@ -2,7 +2,7 @@
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using Badminton.Web.Repository;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore; 
 
 namespace Badminton.Web
 {
@@ -32,7 +32,7 @@ namespace Badminton.Web
             builder.Services.AddScoped<ICourtRepository, CourtRepository>();
             builder.Services.AddScoped<IEvaluateRepository, EvaluateRepository>();
             builder.Services.AddScoped<ISCourtRepository, SCourtRepository>();
-
+            builder.Services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
 
             var app = builder.Build();
 

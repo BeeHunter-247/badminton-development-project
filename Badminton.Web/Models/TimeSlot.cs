@@ -13,8 +13,6 @@ public partial class TimeSlot
 
     public TimeOnly EndTime { get; set; }
 
-    public decimal Price { get; set; }
-
     public string SlotType { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();

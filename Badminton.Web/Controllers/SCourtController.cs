@@ -19,7 +19,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllSCourt()
+        public async Task<IActionResult> GetAll()
         {
             if(!ModelState.IsValid)
             {
@@ -33,7 +33,7 @@ namespace Badminton.Web.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        public async Task<IActionResult> GetSCourtById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             if(!ModelState.IsValid)
             {
@@ -51,7 +51,7 @@ namespace Badminton.Web.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
-        public async Task<IActionResult> Update([FromRoute] int id, UpdateSCourtDTO updateDTO)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSCourtDTO updateDTO)
         {
             if(!ModelState.IsValid)
             {
@@ -81,7 +81,25 @@ namespace Badminton.Web.Controllers
 
             var sCourtModel = createDTO.ToFormatSCourtFromCreate(courtId);
             await _sCourtRepo.CreateAsync(sCourtModel);
-            return CreatedAtAction(nameof(GetSCourtById), new { id = sCourtModel.CourtId }, sCourtModel.ToFormatSCourtDTO());
+            return CreatedAtAction(nameof(GetById), new { id = sCourtModel.CourtId }, sCourtModel.ToFormatSCourtDTO());
+        }
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var sCourtModel = await _sCourtRepo.DeleteAsync(id);
+            if(sCourtModel == null)
+            {
+                return NotFound("Sân không tồn tại!");
+            }
+
+            return Ok(sCourtModel);
         }
     }
 }

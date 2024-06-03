@@ -20,6 +20,19 @@ namespace Badminton.Web.Repository
             return sCourtModel;
         }
 
+        public async Task<SubCourt?> DeleteAsync(int id)
+        {
+            var sCourtModel = await _context.SubCourts.FirstOrDefaultAsync(s => s.SubCourtId == id);
+            if(sCourtModel == null)
+            {
+                return null;
+            }
+
+            _context.SubCourts.Remove(sCourtModel);
+            await _context.SaveChangesAsync();
+            return sCourtModel;
+        }
+
         public async Task<List<SubCourt>> GetAllAsync()
         {
             return await _context.SubCourts.ToListAsync();

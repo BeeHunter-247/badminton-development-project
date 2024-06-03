@@ -18,7 +18,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllEvaluate()
+        public async Task<IActionResult> GetAll()
         {
             var evaluates = await _evaluateRepo.GetAllAsync();
             var evaluateDTO = evaluates.Select(e => e.ToFormatEvaluateDTO());
@@ -27,7 +27,7 @@ namespace Badminton.Web.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        public async Task<IActionResult> GetEvaluateById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             if(!ModelState.IsValid)
             {
@@ -58,7 +58,7 @@ namespace Badminton.Web.Controllers
 
             var evaluateModel = evaluateDTO.ToFormatEvaluateFromCreate(courtId);
             await _evaluateRepo.CreateAsync(evaluateModel);
-            return CreatedAtAction(nameof(GetEvaluateById), new {id = evaluateModel.EvaluateId}, evaluateModel.ToFormatEvaluateDTO());
+            return CreatedAtAction(nameof(GetById), new {id = evaluateModel.EvaluateId}, evaluateModel.ToFormatEvaluateDTO());
         }
 
         [HttpPut]

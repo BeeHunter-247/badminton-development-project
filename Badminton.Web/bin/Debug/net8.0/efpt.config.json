@@ -39,6 +39,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Option]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Payment]",
          "ObjectType": 0
       },
@@ -52,10 +56,6 @@
       },
       {
          "Name": "[dbo].[SubCourt]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[SubCourtTimeSlot]",
          "ObjectType": 0
       },
       {

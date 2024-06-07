@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Badminton.Web.Controllers
 {
-    [Route("api/evaluate")]
+    [Route("api/[controller]")]
     [ApiController]
     public class EvaluateController : ControllerBase
     {

@@ -9,6 +9,8 @@ public partial class TimeSlot
 {
     public int TimeSlotId { get; set; }
 
+    public int SubCourtId { get; set; }
+
     public TimeOnly StartTime { get; set; }
 
     public TimeOnly EndTime { get; set; }
@@ -17,5 +19,5 @@ public partial class TimeSlot
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-    public virtual ICollection<SubCourt> SubCourts { get; set; } = new List<SubCourt>();
+    public virtual SubCourt SubCourt { get; set; }
 }

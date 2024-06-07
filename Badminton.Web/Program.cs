@@ -34,6 +34,7 @@ namespace Badminton.Web
             builder.Services.AddScoped<ISCourtRepository, SCourtRepository>();
             builder.Services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
 
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Badminton.Web.Controllers
 {
-    [Route("api/subCourt")]
+    [Route("api/[controller]")]
     [ApiController]
     public class SCourtController : ControllerBase
     {

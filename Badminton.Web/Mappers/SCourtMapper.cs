@@ -12,7 +12,7 @@ namespace Badminton.Web.Mappers
                 SubCourtId = sCourtModel.SubCourtId,
                 CourtId = sCourtModel.CourtId,
                 Name = sCourtModel.Name,
-                PricePerHour = sCourtModel.PricePerHour,
+                PricePerHour = sCourtModel.PricePerHour
             };
         }
 

@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Badminton.Web.Controllers
 {
-    [Route("api/timeSlot")]
+    [Route("api/[controller]")]
+    [ApiController]
     public class TimeSlotController : Controller
     {
         private readonly ITimeSlotRepository _timeSlotRepo;
@@ -76,6 +77,7 @@ namespace Badminton.Web.Controllers
             {
                 var timeSlotModel = new TimeSlot
                 {
+                    SubCourtId = timeSlotDTO.SubCourtId,
                     StartTime = TimeOnly.Parse(timeSlotDTO.StartTime),
                     EndTime = TimeOnly.Parse(timeSlotDTO.EndTime),
                     SlotType = timeSlotDTO.SlotType,

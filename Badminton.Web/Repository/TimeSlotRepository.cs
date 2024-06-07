@@ -51,13 +51,18 @@ namespace Badminton.Web.Repository
             {
                 return null;
             }
-
+            
+            existingTimeSlot.SubCourtId = timeSlotDTO.SubCourtId;
             existingTimeSlot.StartTime = TimeOnly.Parse(timeSlotDTO.StartTime);
             existingTimeSlot.EndTime = TimeOnly.Parse(timeSlotDTO.EndTime);
             existingTimeSlot.SlotType = timeSlotDTO.SlotType;
 
             await _context.SaveChangesAsync();
             return existingTimeSlot;
+        }
+        public async Task<TimeSlot> GetTime(TimeSlot timeSlot)
+        {
+            return await _context.TimeSlots.FirstOrDefaultAsync(t => t.TimeSlotId == timeSlot.TimeSlotId);
         }
     }
 }

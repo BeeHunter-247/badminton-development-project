@@ -3,6 +3,42 @@
   "WorkspaceRootPath": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\repository\\scourtrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\repository\\scourtrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\helpers\\queryscourt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\helpers\\queryscourt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\controllers\\scourtcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\controllers\\scourtcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\interfaces\\iscourtrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\interfaces\\iscourtrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\models\\subcourt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\models\\subcourt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\dto\\subcourt\\scourtdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\dto\\subcourt\\scourtdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\dto\\timeslot\\timeslotdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\dto\\timeslot\\timeslotdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\dto\\timeslot\\createtimeslotdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\dto\\timeslot\\createtimeslotdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\controllers\\timeslotcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\controllers\\timeslotcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\dto\\evaluate\\createevaluatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\dto\\evaluate\\createevaluatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -19,24 +55,12 @@
       "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\controllers\\evaluatecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\controllers\\timeslotcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\controllers\\timeslotcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\repository\\timeslotrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\repository\\timeslotrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\dto\\timeslot\\timeslotdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\dto\\timeslot\\timeslotdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\dto\\timeslot\\updatetimeslotdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\dto\\timeslot\\updatetimeslotdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\dto\\timeslot\\createtimeslotdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\dto\\timeslot\\createtimeslotdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\controllers\\courtcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -55,14 +79,6 @@
       "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\models\\courtsynccontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\dto\\subcourt\\scourtdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\dto\\subcourt\\scourtdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\repository\\scourtrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\repository\\scourtrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\repository\\courtrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\repository\\courtrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -77,10 +93,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\interfaces\\icourtrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\interfaces\\icourtrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\controllers\\scourtcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\controllers\\scourtcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -131,10 +143,6 @@
       "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\interfaces\\iscourtrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\interfaces\\iscourtrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|c:\\users\\admin\\documents\\project\\asp.net\\swp391_project\\badminton.web\\interfaces\\ievaluaterepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E3158B88-A6B7-401C-BA17-80855E6E6467}|Badminton.Web\\Badminton.Web.csproj|solutionrelative:badminton.web\\interfaces\\ievaluaterepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -150,7 +158,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -159,6 +167,32 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{fbcae063-e2c0-4ab1-a516-996ea3dafb72}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "SubCourt.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Models\\SubCourt.cs",
+              "RelativeDocumentMoniker": "Badminton.Web\\Models\\SubCourt.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Models\\SubCourt.cs",
+              "RelativeToolTip": "Badminton.Web\\Models\\SubCourt.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-10T15:23:21.847Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "QuerySCourt.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Helpers\\QuerySCourt.cs",
+              "RelativeDocumentMoniker": "Badminton.Web\\Helpers\\QuerySCourt.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Helpers\\QuerySCourt.cs",
+              "RelativeToolTip": "Badminton.Web\\Helpers\\QuerySCourt.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAvAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-10T15:16:17.458Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -175,72 +209,83 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "TimeSlotController.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Controllers\\TimeSlotController.cs",
-              "RelativeDocumentMoniker": "Badminton.Web\\Controllers\\TimeSlotController.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Controllers\\TimeSlotController.cs",
-              "RelativeToolTip": "Badminton.Web\\Controllers\\TimeSlotController.cs",
-              "ViewState": "AQIAAEAAAAAAAAAAAAAkwE8AAAA4AAAA",
+              "DocumentIndex": 5,
+              "Title": "SCourtDTO.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\SubCourt\\SCourtDTO.cs",
+              "RelativeDocumentMoniker": "Badminton.Web\\DTO\\SubCourt\\SCourtDTO.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\SubCourt\\SCourtDTO.cs",
+              "RelativeToolTip": "Badminton.Web\\DTO\\SubCourt\\SCourtDTO.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAA4AAAAxAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-01T07:16:23.866Z",
+              "WhenOpened": "2024-05-30T15:11:39.308Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "EvaluateController.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Controllers\\EvaluateController.cs",
-              "RelativeDocumentMoniker": "Badminton.Web\\Controllers\\EvaluateController.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Controllers\\EvaluateController.cs",
-              "RelativeToolTip": "Badminton.Web\\Controllers\\EvaluateController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAfAAAA",
+              "Title": "ISCourtRepository.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Interfaces\\ISCourtRepository.cs",
+              "RelativeDocumentMoniker": "Badminton.Web\\Interfaces\\ISCourtRepository.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Interfaces\\ISCourtRepository.cs",
+              "RelativeToolTip": "Badminton.Web\\Interfaces\\ISCourtRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAA6AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-29T13:34:57.942Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "EvaluateDTO.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\Evaluate\\EvaluateDTO.cs",
-              "RelativeDocumentMoniker": "Badminton.Web\\DTO\\Evaluate\\EvaluateDTO.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\Evaluate\\EvaluateDTO.cs",
-              "RelativeToolTip": "Badminton.Web\\DTO\\Evaluate\\EvaluateDTO.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAApAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-29T13:26:10.312Z",
+              "WhenOpened": "2024-05-30T15:22:33.372Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "CreateEvaluateDTO.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\Evaluate\\CreateEvaluateDTO.cs",
-              "RelativeDocumentMoniker": "Badminton.Web\\DTO\\Evaluate\\CreateEvaluateDTO.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\Evaluate\\CreateEvaluateDTO.cs",
-              "RelativeToolTip": "Badminton.Web\\DTO\\Evaluate\\CreateEvaluateDTO.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAUAAAA",
+              "Title": "SCourtRepository.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Repository\\SCourtRepository.cs",
+              "RelativeDocumentMoniker": "Badminton.Web\\Repository\\SCourtRepository.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Repository\\SCourtRepository.cs",
+              "RelativeToolTip": "Badminton.Web\\Repository\\SCourtRepository.cs",
+              "ViewState": "AQIAAC4AAAAAAAAAAAAkwC4AAAAjAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-29T14:45:26.947Z",
+              "WhenOpened": "2024-05-30T15:23:21.465Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "UpdateEvaluateDTO.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\Evaluate\\UpdateEvaluateDTO.cs",
-              "RelativeDocumentMoniker": "Badminton.Web\\DTO\\Evaluate\\UpdateEvaluateDTO.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\Evaluate\\UpdateEvaluateDTO.cs",
-              "RelativeToolTip": "Badminton.Web\\DTO\\Evaluate\\UpdateEvaluateDTO.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAQAAAAiAAAA",
+              "DocumentIndex": 2,
+              "Title": "SCourtController.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Controllers\\SCourtController.cs",
+              "RelativeDocumentMoniker": "Badminton.Web\\Controllers\\SCourtController.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Controllers\\SCourtController.cs",
+              "RelativeToolTip": "Badminton.Web\\Controllers\\SCourtController.cs",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAjwBYAAAA8AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-29T15:48:53.229Z",
+              "WhenOpened": "2024-05-30T15:26:11.714Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 8,
+              "Title": "TimeSlotController.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Controllers\\TimeSlotController.cs",
+              "RelativeDocumentMoniker": "Badminton.Web\\Controllers\\TimeSlotController.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Controllers\\TimeSlotController.cs",
+              "RelativeToolTip": "Badminton.Web\\Controllers\\TimeSlotController.cs",
+              "ViewState": "AQIAAEgAAAAAAAAAAAAowE8AAAA4AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-01T07:16:23.866Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "CreateTimeSlotDTO.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\TimeSlot\\CreateTimeSlotDTO.cs",
+              "RelativeDocumentMoniker": "Badminton.Web\\DTO\\TimeSlot\\CreateTimeSlotDTO.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\TimeSlot\\CreateTimeSlotDTO.cs",
+              "RelativeToolTip": "Badminton.Web\\DTO\\TimeSlot\\CreateTimeSlotDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-01T08:36:38.95Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
               "Title": "SCourtMapper.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Mappers\\SCourtMapper.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\Mappers\\SCourtMapper.cs",
@@ -252,7 +297,55 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "UpdateEvaluateDTO.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\Evaluate\\UpdateEvaluateDTO.cs",
+              "RelativeDocumentMoniker": "Badminton.Web\\DTO\\Evaluate\\UpdateEvaluateDTO.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\Evaluate\\UpdateEvaluateDTO.cs",
+              "RelativeToolTip": "Badminton.Web\\DTO\\Evaluate\\UpdateEvaluateDTO.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAQAAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-29T15:48:53.229Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 9,
+              "Title": "CreateEvaluateDTO.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\Evaluate\\CreateEvaluateDTO.cs",
+              "RelativeDocumentMoniker": "Badminton.Web\\DTO\\Evaluate\\CreateEvaluateDTO.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\Evaluate\\CreateEvaluateDTO.cs",
+              "RelativeToolTip": "Badminton.Web\\DTO\\Evaluate\\CreateEvaluateDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-29T14:45:26.947Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "EvaluateDTO.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\Evaluate\\EvaluateDTO.cs",
+              "RelativeDocumentMoniker": "Badminton.Web\\DTO\\Evaluate\\EvaluateDTO.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\Evaluate\\EvaluateDTO.cs",
+              "RelativeToolTip": "Badminton.Web\\DTO\\Evaluate\\EvaluateDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAApAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-29T13:26:10.312Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "EvaluateController.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Controllers\\EvaluateController.cs",
+              "RelativeDocumentMoniker": "Badminton.Web\\Controllers\\EvaluateController.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Controllers\\EvaluateController.cs",
+              "RelativeToolTip": "Badminton.Web\\Controllers\\EvaluateController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAfAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-29T13:34:57.942Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
               "Title": "CourtController.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Controllers\\CourtController.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\Controllers\\CourtController.cs",
@@ -260,12 +353,11 @@
               "RelativeToolTip": "Badminton.Web\\Controllers\\CourtController.cs",
               "ViewState": "AQIAAAsAAAAAAAAAAAAAABMAAAAwAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-29T09:42:17.603Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-05-29T09:42:17.603Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 13,
               "Title": "TimeSlotRepository.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Repository\\TimeSlotRepository.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\Repository\\TimeSlotRepository.cs",
@@ -273,12 +365,11 @@
               "RelativeToolTip": "Badminton.Web\\Repository\\TimeSlotRepository.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAADYAAABBAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-01T07:02:52.042Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-01T07:02:52.042Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 14,
               "Title": "UpdateTimeSlotDTO.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\TimeSlot\\UpdateTimeSlotDTO.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\DTO\\TimeSlot\\UpdateTimeSlotDTO.cs",
@@ -286,25 +377,11 @@
               "RelativeToolTip": "Badminton.Web\\DTO\\TimeSlot\\UpdateTimeSlotDTO.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-01T07:31:59.207Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-01T07:31:59.207Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "CreateTimeSlotDTO.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\TimeSlot\\CreateTimeSlotDTO.cs",
-              "RelativeDocumentMoniker": "Badminton.Web\\DTO\\TimeSlot\\CreateTimeSlotDTO.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\TimeSlot\\CreateTimeSlotDTO.cs",
-              "RelativeToolTip": "Badminton.Web\\DTO\\TimeSlot\\CreateTimeSlotDTO.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-01T08:36:38.95Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 17,
               "Title": "TimeSlot.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Models\\TimeSlot.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\Models\\TimeSlot.cs",
@@ -316,7 +393,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 16,
               "Title": "TimeSlotMapper.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Mappers\\TimeSlotMapper.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\Mappers\\TimeSlotMapper.cs",
@@ -328,31 +405,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "SCourtDTO.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\SubCourt\\SCourtDTO.cs",
-              "RelativeDocumentMoniker": "Badminton.Web\\DTO\\SubCourt\\SCourtDTO.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\SubCourt\\SCourtDTO.cs",
-              "RelativeToolTip": "Badminton.Web\\DTO\\SubCourt\\SCourtDTO.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAA4AAAAxAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-30T15:11:39.308Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "SCourtRepository.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Repository\\SCourtRepository.cs",
-              "RelativeDocumentMoniker": "Badminton.Web\\Repository\\SCourtRepository.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Repository\\SCourtRepository.cs",
-              "RelativeToolTip": "Badminton.Web\\Repository\\SCourtRepository.cs",
-              "ViewState": "AQIAAB0AAAAAAAAAAAAgwCUAAAAsAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-30T15:23:21.465Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 19,
               "Title": "CourtRepository.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Repository\\CourtRepository.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\Repository\\CourtRepository.cs",
@@ -364,7 +417,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 18,
               "Title": "CourtSyncContext.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Models\\CourtSyncContext.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\Models\\CourtSyncContext.cs",
@@ -376,7 +429,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 21,
               "Title": "UpdateSCourtDTO.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\SubCourt\\UpdateSCourtDTO.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\DTO\\SubCourt\\UpdateSCourtDTO.cs",
@@ -388,7 +441,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 23,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Program.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\Program.cs",
@@ -400,7 +453,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 22,
               "Title": "ICourtRepository.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Interfaces\\ICourtRepository.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\Interfaces\\ICourtRepository.cs",
@@ -412,19 +465,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "SCourtController.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Controllers\\SCourtController.cs",
-              "RelativeDocumentMoniker": "Badminton.Web\\Controllers\\SCourtController.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Controllers\\SCourtController.cs",
-              "RelativeToolTip": "Badminton.Web\\Controllers\\SCourtController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAfAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-30T15:26:11.714Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 24,
               "Title": "ITimeSlotRepository.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Interfaces\\ITimeSlotRepository.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\Interfaces\\ITimeSlotRepository.cs",
@@ -436,7 +477,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 25,
               "Title": "EvaluateMapper.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Mappers\\EvaluateMapper.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\Mappers\\EvaluateMapper.cs",
@@ -448,7 +489,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 26,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\appsettings.json",
               "RelativeDocumentMoniker": "Badminton.Web\\appsettings.json",
@@ -460,7 +501,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 27,
               "Title": "efpt.config.json",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\efpt.config.json",
               "RelativeDocumentMoniker": "Badminton.Web\\efpt.config.json",
@@ -472,7 +513,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 28,
               "Title": "UpdateCourtDTO.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\Court\\UpdateCourtDTO.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\DTO\\Court\\UpdateCourtDTO.cs",
@@ -484,7 +525,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 29,
               "Title": "WeatherForecastController.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Controllers\\WeatherForecastController.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\Controllers\\WeatherForecastController.cs",
@@ -496,7 +537,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 30,
               "Title": "CourtDTO.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\Court\\CourtDTO.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\DTO\\Court\\CourtDTO.cs",
@@ -508,7 +549,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 31,
               "Title": "CreateCourtDTO.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\Court\\CreateCourtDTO.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\DTO\\Court\\CreateCourtDTO.cs",
@@ -520,7 +561,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 32,
               "Title": "CourtMapper.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Mappers\\CourtMapper.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\Mappers\\CourtMapper.cs",
@@ -532,7 +573,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 33,
               "Title": "CreateSCourtDTO.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\DTO\\SubCourt\\CreateSCourtDTO.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\DTO\\SubCourt\\CreateSCourtDTO.cs",
@@ -544,7 +585,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 34,
               "Title": "WeatherForecast.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\WeatherForecast.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\WeatherForecast.cs",
@@ -556,19 +597,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
-              "Title": "ISCourtRepository.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Interfaces\\ISCourtRepository.cs",
-              "RelativeDocumentMoniker": "Badminton.Web\\Interfaces\\ISCourtRepository.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Interfaces\\ISCourtRepository.cs",
-              "RelativeToolTip": "Badminton.Web\\Interfaces\\ISCourtRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAsAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-30T15:22:33.372Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 35,
               "Title": "IEvaluateRepository.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Interfaces\\IEvaluateRepository.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\Interfaces\\IEvaluateRepository.cs",
@@ -580,7 +609,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 36,
               "Title": "EvaluateRepository.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\Project\\ASP.NET\\SWP391_Project\\Badminton.Web\\Repository\\EvaluateRepository.cs",
               "RelativeDocumentMoniker": "Badminton.Web\\Repository\\EvaluateRepository.cs",

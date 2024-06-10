@@ -1,4 +1,5 @@
 ﻿using Badminton.Web.DTO.SubCourt;
+using Badminton.Web.Helpers;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Mappers;
 using Badminton.Web.Models;
@@ -19,14 +20,14 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QuerySCourt query)
         {
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var sCourts = await _sCourtRepo.GetAllAsync();
+            var sCourts = await _sCourtRepo.GetAllAsync(query);
             var sCourtDTO = sCourts.Select(s => s.ToFormatSCourtDTO()).ToList();
             return Ok(sCourtDTO);
         }

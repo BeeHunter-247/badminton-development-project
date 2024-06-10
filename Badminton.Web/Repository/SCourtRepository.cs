@@ -1,4 +1,5 @@
 ﻿using Badminton.Web.DTO.SubCourt;
+using Badminton.Web.Helpers;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using Microsoft.EntityFrameworkCore;
@@ -33,9 +34,32 @@ namespace Badminton.Web.Repository
             return sCourtModel;
         }
 
-        public async Task<List<SubCourt>> GetAllAsync()
+        public async Task<List<SubCourt>> GetAllAsync(QuerySCourt query)
         {
-            return await _context.SubCourts.ToListAsync();
+            var queryObject = _context.SubCourts.AsQueryable();
+
+            #region Filtering
+            if (!string.IsNullOrEmpty(query.search))
+            {
+                queryObject = queryObject.Where(s => s.Name.ToLower().Contains(query.search.ToLower()));
+            }
+
+            if(query.from.HasValue)
+            {
+                queryObject = queryObject.Where(f => f.PricePerHour >= query.from.Value);
+            }
+
+            if(query.to.HasValue)
+            {
+                queryObject = queryObject.Where(t => t.PricePerHour <= query.to.Value);
+            }
+            #endregion
+
+            #region Pagination
+            var skipNumber = (query.pageNumber - 1) * query.pageSize;
+            #endregion
+
+            return await queryObject.Skip(skipNumber).Take(query.pageSize).ToListAsync();
         }
 
         public async Task<SubCourt?> GetByIdAsync(int id)

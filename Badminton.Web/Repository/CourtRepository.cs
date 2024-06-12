@@ -1,4 +1,5 @@
 ﻿using Badminton.Web.DTO.Court;
+using Badminton.Web.Helpers;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using Microsoft.EntityFrameworkCore;
@@ -38,9 +39,23 @@ namespace Badminton.Web.Repository
             return courtModel;
         }
 
-        public async Task<List<Court>> GetAllAsync()
+        public async Task<List<Court>> GetAllAsync(QueryCourt query)
         {
-            return await _context.Courts.Include(e => e.Evaluates).Include(s => s.SubCourts).ToListAsync();
+            var queryObject = _context.Courts.Include(s => s.SubCourts).Include(e => e.Evaluates).AsQueryable();
+
+            #region Filtering
+            if (!string.IsNullOrEmpty(query.search))
+            {
+                queryObject = queryObject.Where(c => c.CourtName.ToLower().Contains(query.search.ToLower()) 
+                || c.Location.ToLower().Contains(query.search.ToLower()));
+            }
+            #endregion
+
+            #region Pagination
+            var skipNumber = (query.pageNumber - 1) * query.pageSize;
+            #endregion
+
+            return await queryObject.Skip(skipNumber).Take(query.pageSize).ToListAsync();
         }
 
         public async Task<Court?> GetByIdAsync(int id)

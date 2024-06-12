@@ -9,8 +9,6 @@ public partial class Payment
 {
     public int PaymentId { get; set; }
 
-    public int BookingId { get; set; }
-
     public int UserId { get; set; }
 
     public decimal TotalPrice { get; set; }
@@ -19,19 +17,17 @@ public partial class Payment
 
     public string PaymentMethod { get; set; }
 
-    public string PaymentStatus { get; set; }
+    public int PaymentStatus { get; set; }
 
     public DateTime PaymentDate { get; set; }
 
     public int InvoiceId { get; set; }
 
-    public string TransactionId { get; set; }
-
     public string PaymentGateway { get; set; }
 
     public int? PromotionId { get; set; }
 
-    public virtual Booking Booking { get; set; }
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual Invoice Invoice { get; set; }
 

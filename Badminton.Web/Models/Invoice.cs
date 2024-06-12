@@ -9,7 +9,7 @@ public partial class Invoice
 {
     public int InvoiceId { get; set; }
 
-    public int BookingId { get; set; }
+    public int UserId { get; set; }
 
     public decimal TotalAmount { get; set; }
 
@@ -19,9 +19,11 @@ public partial class Invoice
 
     public decimal FinalAmount { get; set; }
 
-    public DateTime? InvoiceDate { get; set; }
+    public DateTime InvoiceDate { get; set; }
 
-    public virtual Booking Booking { get; set; }
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+
+    public virtual User User { get; set; }
 }

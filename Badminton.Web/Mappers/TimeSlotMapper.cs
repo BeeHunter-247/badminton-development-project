@@ -10,7 +10,6 @@ namespace Badminton.Web.Mappers
             return new TimeSlotDTO
             {
                 TimeSlotId = timeModel.TimeSlotId,
-                SubCourtId = timeModel.SubCourtId,
                 StartTime = timeModel.StartTime,
                 EndTime = timeModel.EndTime,
                 SlotType = timeModel.SlotType
@@ -21,7 +20,6 @@ namespace Badminton.Web.Mappers
         {
             return new TimeSlot
             {
-                SubCourtId = timeSlotDTO.SubCourtId,
                 StartTime = TimeOnly.Parse(timeSlotDTO.StartTime),
                 EndTime = TimeOnly.Parse(timeSlotDTO.EndTime),
                 SlotType = timeSlotDTO.SlotType

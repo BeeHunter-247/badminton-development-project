@@ -2,8 +2,6 @@
 {
     public class UpdateTimeSlotDTO
     {
-        public int SubCourtId { get; set; }
-
         public string StartTime { get; set; }
 
         public string EndTime { get; set; }

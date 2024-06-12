@@ -77,7 +77,6 @@ namespace Badminton.Web.Controllers
             {
                 var timeSlotModel = new TimeSlot
                 {
-                    SubCourtId = timeSlotDTO.SubCourtId,
                     StartTime = TimeOnly.Parse(timeSlotDTO.StartTime),
                     EndTime = TimeOnly.Parse(timeSlotDTO.EndTime),
                     SlotType = timeSlotDTO.SlotType,

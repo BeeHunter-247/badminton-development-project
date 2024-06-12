@@ -19,21 +19,23 @@ public partial class Booking
 
     public DateOnly BookingDate { get; set; }
 
-    public decimal TotalHours { get; set; }
-
-    public string Status { get; set; }
+    public int Status { get; set; }
 
     public string CancellationReason { get; set; }
 
     public decimal TotalPrice { get; set; }
 
-    public int PromotionId { get; set; }
+    public int? PromotionId { get; set; }
+
+    public int InvoiceId { get; set; }
+
+    public int PaymentId { get; set; }
 
     public virtual ICollection<CheckIn> CheckIns { get; set; } = new List<CheckIn>();
 
-    public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+    public virtual Invoice Invoice { get; set; }
 
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+    public virtual Payment Payment { get; set; }
 
     public virtual Promotion Promotion { get; set; }
 

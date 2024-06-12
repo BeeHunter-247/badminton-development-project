@@ -10,7 +10,5 @@ namespace Badminton.Web.Interfaces
         Task<TimeSlot?> UpdateAsync(int id, UpdateTimeSlotDTO timeSlotDTO);
         Task<TimeSlot> CreateAsync(TimeSlot timeSlotModel);
         Task<TimeSlot?> DeleteAsync(int id);
-        Task<TimeSlot> GetTime(TimeSlot timeSlot);
-
     }
 }

@@ -9,6 +9,8 @@ public partial class CheckIn
 {
     public int CheckInId { get; set; }
 
+    public int SubCourtId { get; set; }
+
     public int BookingId { get; set; }
 
     public DateTime CheckInTime { get; set; }
@@ -16,6 +18,8 @@ public partial class CheckIn
     public int UserId { get; set; }
 
     public virtual Booking Booking { get; set; }
+
+    public virtual SubCourt SubCourt { get; set; }
 
     public virtual User User { get; set; }
 }

@@ -15,11 +15,15 @@ public partial class SubCourt
 
     public decimal PricePerHour { get; set; }
 
+    public int TimeSlotId { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+    public virtual ICollection<CheckIn> CheckIns { get; set; } = new List<CheckIn>();
 
     public virtual Court Court { get; set; }
 
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
 
-    public virtual ICollection<TimeSlot> TimeSlots { get; set; } = new List<TimeSlot>();
+    public virtual TimeSlot TimeSlot { get; set; }
 }

@@ -12,7 +12,8 @@ namespace Badminton.Web.Mappers
                 SubCourtId = sCourtModel.SubCourtId,
                 CourtId = sCourtModel.CourtId,
                 Name = sCourtModel.Name,
-                PricePerHour = sCourtModel.PricePerHour
+                PricePerHour = sCourtModel.PricePerHour,
+                TimeSlotId = sCourtModel.TimeSlotId
             };
         }
 
@@ -22,7 +23,8 @@ namespace Badminton.Web.Mappers
             {
                 CourtId = courtId,
                 Name = createSCourtDTO.Name,
-                PricePerHour = createSCourtDTO.PricePerHour
+                PricePerHour = createSCourtDTO.PricePerHour,
+                TimeSlotId = createSCourtDTO.TimeSlotId
             };
         }
     }

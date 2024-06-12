@@ -6,8 +6,6 @@ namespace Badminton.Web.DTO.TimeSlot
     {
         public int TimeSlotId { get; set; }
 
-        public int SubCourtId { get; set; }
-
         public TimeOnly StartTime { get; set; } 
 
         public TimeOnly EndTime { get; set; } 

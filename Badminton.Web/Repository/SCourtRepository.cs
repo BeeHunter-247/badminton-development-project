@@ -77,6 +77,7 @@ namespace Badminton.Web.Repository
 
             existingSCourt.Name = sCourtDTO.Name;
             existingSCourt.PricePerHour = sCourtDTO.PricePerHour;
+            existingSCourt.TimeSlotId = sCourtDTO.TimeSlotId;
             await _context.SaveChangesAsync();
             return existingSCourt;
         }

@@ -17,7 +17,7 @@ public partial class User
 
     public string Phone { get; set; }
 
-    public string RoleName { get; set; }
+    public int RoleType { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
@@ -27,7 +27,7 @@ public partial class User
 
     public virtual ICollection<Evaluate> Evaluates { get; set; } = new List<Evaluate>();
 
-    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+    public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 

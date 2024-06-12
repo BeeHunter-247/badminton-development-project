@@ -9,5 +9,6 @@ namespace Badminton.Web.DTO.SubCourt
         [Required]
         [Range(1, 200)]
         public decimal PricePerHour { get; set; }
+        public int TimeSlotId { get; set; }
     }
 }

@@ -1,8 +1,10 @@
-
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using Badminton.Web.Repository;
-using Microsoft.EntityFrameworkCore; 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Badminton.Web
 {
@@ -11,7 +13,25 @@ namespace Badminton.Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            //JWT
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("AppSettings"));
+            var secretKey = builder.Configuration["AppSettings:SecretKey"];
+            var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(op =>
+            {
+                op.TokenValidationParameters = new TokenValidationParameters
+                {
 
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+
+                    ClockSkew = TimeSpan.Zero,
+                };
+            });
             // Add services to the container.
 
             builder.Services.AddControllers();

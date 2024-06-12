@@ -43,13 +43,25 @@ namespace Badminton.Web.Controllers
                 });
             }
 
+            var role = GetUserRole(user.RoleType); // Lấy vai trò dựa trên RoleType
+            if (role == null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid Role"
+                });
+            }
+
+            var token = GenerateToken(user); // Tạo token
             return Ok(new ApiResponse
             {
                 Success = true,
                 Message = "Authentication successful",
-                Data = GenerateToken(user)
+                Data = new { Role = role, Token = token } // Trả về vai trò và token của người dùng
             });
         }
+
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterModel model)
@@ -97,7 +109,8 @@ namespace Badminton.Web.Controllers
                 Username = model.Username,
                 Password = model.Password, // You should hash the password before storing it
                 Email = model.Email,
-                Phone = model.Phone
+                Phone = model.Phone,
+                RoleType = 2 // Set RoleType to 2 for Investor
             };
 
             _context.Users.Add(user);
@@ -109,6 +122,7 @@ namespace Badminton.Web.Controllers
                 Message = "Registration successful"
             });
         }
+
 
 
 
@@ -166,6 +180,20 @@ namespace Badminton.Web.Controllers
 
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
             return jwtTokenHandler.WriteToken(token);
+        }
+        private string GetUserRole(int roleType)
+        {
+            switch (roleType)
+            {
+                case 0:
+                    return "Administrator";
+                case 1:
+                    return "Investor";
+                case 2:
+                    return "User";
+                default:
+                    return null;
+            }
         }
     }
 }

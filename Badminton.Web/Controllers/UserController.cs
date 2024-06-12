@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Badminton.Web.Controllers
 {
@@ -23,6 +24,15 @@ namespace Badminton.Web.Controllers
         [HttpPost("Login")]
         public IActionResult Validate(LoginModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data"
+                });
+            }
+
             var user = _context.Users.SingleOrDefault(p => p.Username == model.UserName && p.Password == model.Password);
             if (user == null)
             {
@@ -33,7 +43,6 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            // Token generation
             return Ok(new ApiResponse
             {
                 Success = true,
@@ -54,13 +63,32 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var existingUser = await _context.Users.SingleOrDefaultAsync(u => u.Username == model.Username);
-            if (existingUser != null)
+            if (model.Password != model.ConfirmPassword)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Password and confirm password do not match"
+                });
+            }
+
+            var existingUserByUsername = await _context.Users.SingleOrDefaultAsync(u => u.Username == model.Username);
+            if (existingUserByUsername != null)
             {
                 return Ok(new ApiResponse
                 {
                     Success = false,
                     Message = "Username already exists"
+                });
+            }
+
+            var existingUserByEmail = await _context.Users.SingleOrDefaultAsync(u => u.Email == model.Email);
+            if (existingUserByEmail != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Email already exists"
                 });
             }
 
@@ -79,6 +107,41 @@ namespace Badminton.Web.Controllers
             {
                 Success = true,
                 Message = "Registration successful"
+            });
+        }
+
+
+
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data"
+                });
+            }
+
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == model.Username);
+            if (user == null || user.Password != model.OldPassword)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid Username or Old Password"
+                });
+            }
+
+            user.Password = model.NewPassword; // You should hash the password before storing it
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Password changed successfully"
             });
         }
 

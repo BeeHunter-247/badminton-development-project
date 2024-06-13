@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace Badminton.Web.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class UserController : ControllerBase
     {
         private readonly CourtSyncContext _context;

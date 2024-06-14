@@ -1,4 +1,4 @@
-﻿using Badminton.Web.DTO.Booking;
+using Badminton.Web.DTO.Booking;
 using Badminton.Web.Enums;
 using Badminton.Web.Models;
 using static Badminton.Web.DTO.Booking.BookingDTO;

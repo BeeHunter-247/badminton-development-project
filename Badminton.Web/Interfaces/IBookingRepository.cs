@@ -29,10 +29,7 @@ namespace Badminton.Web.Interfaces
         Task<Booking?> DeleteAsync(int id);
         Task DeleteBookingAsync(int bookingId);
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 3e6f829d9490eb6136ca66f537b8eaeefa606b0a
         // Kiểm tra
         Task<bool> BookingExists(int id);
         Task<bool> IsTimeSlotAvailableAsync(int subCourtId, int timeSlotId, DateOnly bookingDate);

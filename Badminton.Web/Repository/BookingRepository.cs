@@ -1,4 +1,8 @@
 ﻿using Badminton.Web.DTO.Booking;
+<<<<<<< HEAD
+using Badminton.Web.Enums;
+=======
+>>>>>>> 3e6f829d9490eb6136ca66f537b8eaeefa606b0a
 using Badminton.Web.Interfaces;
 using Badminton.Web.Mappers;
 using Badminton.Web.Models;
@@ -137,9 +141,16 @@ namespace Badminton.Web.Repository
 
             // Cập nhật các thuộc tính của booking từ bookingDTO
             existingBooking.BookingDate = updateBookingDto.BookingDate ?? existingBooking.BookingDate;
+<<<<<<< HEAD
+          
+            
+            existingBooking.Status = updateBookingDto.Status?.GetHashCode() ?? existingBooking.Status;
+            existingBooking.CancellationReason = updateBookingDto.CancellationReason ?? existingBooking.CancellationReason;
+=======
             existingBooking.Status = updateBookingDto.Status ?? existingBooking.Status;
             existingBooking.CancellationReason = updateBookingDto.CancellationReason ?? existingBooking.CancellationReason;
             //existingBooking.TotalPrice = updateBookingDto.Price ?? existingBooking.TotalPrice;
+>>>>>>> 3e6f829d9490eb6136ca66f537b8eaeefa606b0a
             //existingBooking.PromotionId = updateBookingDto.PromotionID ?? existingBooking.PromotionId;
 
             await _context.SaveChangesAsync();
@@ -157,7 +168,11 @@ namespace Badminton.Web.Repository
                 return null; // Hoặc throw new NotFoundException("Booking not found");
             }
 
+<<<<<<< HEAD
+            booking.Status = (int)BookingStatus.Cancelled;
+=======
             booking.Status = "cancelled";
+>>>>>>> 3e6f829d9490eb6136ca66f537b8eaeefa606b0a
             booking.CancellationReason = cancellationReason;
             await _context.SaveChangesAsync();
             await _context.Entry(booking).ReloadAsync(); // Tải lại để có thông tin cập nhật
@@ -181,6 +196,35 @@ namespace Badminton.Web.Repository
 
         public async Task DeleteBookingAsync(int bookingId)
         {
+<<<<<<< HEAD
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    // Xóa các check-in liên quan
+                    _context.CheckIns.RemoveRange(_context.CheckIns.Where(ci => ci.BookingId == bookingId));
+                    await _context.SaveChangesAsync();
+
+                    // Xóa booking
+                    var booking = await _context.Bookings.FindAsync(bookingId);
+                    if (booking != null)
+                    {
+                        _context.Bookings.Remove(booking);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    transaction.Commit(); // Cam kết giao dịch
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback(); // Hoàn tác giao dịch nếu có lỗi
+                    throw; // Ném lại ngoại lệ để thông báo lỗi cho controller
+                }
+            }
+        }
+
+
+=======
             var booking = await _context.Bookings.FindAsync(bookingId);
             if (booking != null)
             {
@@ -189,6 +233,7 @@ namespace Badminton.Web.Repository
             }
         }
 
+>>>>>>> 3e6f829d9490eb6136ca66f537b8eaeefa606b0a
         //Kiểm tra
 
         public async Task<bool> BookingExists(int id)

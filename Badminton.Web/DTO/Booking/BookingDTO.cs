@@ -1,22 +1,36 @@
 ﻿using Badminton.Web.DTO.SubCourt;
 using Badminton.Web.DTO.TimeSlot;
 using System.ComponentModel.DataAnnotations;
+using Badminton.Web.Enums;
 
 namespace Badminton.Web.DTO.Booking
 {
     public class BookingDTO
     {
         public int BookingId { get; set; }
+
         public int UserId { get; set; }
+
         public int SubCourtId { get; set; }
+
         public int TimeSlotId { get; set; }
+
         public int ScheduleId { get; set; }
+
         public DateOnly BookingDate { get; set; }
-        public decimal TotalHours { get; set; }
-        public string Status { get; set; }
-        public string? CancellationReason { get; set; } // Cho phép null nếu không có lý do hủy
+
+        public BookingStatus Status { get; set; } // sử dụng enum
+
+        public string? CancellationReason { get; set; }
+
         public decimal TotalPrice { get; set; }
-        public int PromotionId { get; set; }
+
+        public int? PromotionId { get; set; }
+
+        public int InvoiceId { get; set; }
+
+        public int PaymentId { get; set; }
+
 
         // DTOs liên quan
         //public UserDTO User { get; set; }
@@ -48,7 +62,7 @@ namespace Badminton.Web.DTO.Booking
         public class UpdateBookingDTO
         {
             public DateOnly? BookingDate { get; set; } // Cho phép null nếu không cập nhật ngày
-            public string? Status { get; set; } // Cho phép null nếu không cập nhật trạng thái
+            public BookingStatus? Status { get; set; } // Cho phép null nếu không cập nhật trạng thái
             public string? CancellationReason { get; set; } // Cho phép null nếu không hủy
         }
 

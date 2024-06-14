@@ -1,4 +1,5 @@
-﻿using Badminton.Web.DTO.Booking; 
+﻿using Badminton.Web.DTO.Booking;
+using Badminton.Web.Enums;
 using Badminton.Web.Models;
 using static Badminton.Web.DTO.Booking.BookingDTO;
 
@@ -16,11 +17,12 @@ namespace Badminton.Web.Mappers
                 TimeSlotId = bookingModel.TimeSlotId,
                 ScheduleId = bookingModel.ScheduleId,
                 BookingDate = bookingModel.BookingDate,
-                TotalHours = bookingModel.TotalHours,
-                Status = bookingModel.Status,
+                Status = (BookingStatus)bookingModel.Status,
                 CancellationReason = bookingModel.CancellationReason,
                 TotalPrice = bookingModel.TotalPrice,
                 PromotionId = bookingModel.PromotionId,
+                InvoiceId = bookingModel.InvoiceId,
+                PaymentId = bookingModel.PaymentId,
 
                 SubCourt = bookingModel.SubCourt.ToFormatSCourtDTO(),
                 TimeSlot = bookingModel.TimeSlot.ToFormatTimeSlotDTO()
@@ -36,28 +38,29 @@ namespace Badminton.Web.Mappers
                 TimeSlotId = createBookingDTO.TimeSlotId,
                 ScheduleId = createBookingDTO.ScheduleId,
                 BookingDate = createBookingDTO.BookingDate,
-                // Các thuộc tính khác như TotalHours, Status, TotalPrice, ... sẽ được xử lý sau
+                // Các thuộc tính khác như , Status, TotalPrice, ... sẽ được xử lý sau
             };
         }
         public static Booking ToFormatBookingFromDTO(this BookingDTO bookingDto)
         {
             return new Booking
             {
-                BookingId = bookingDto.BookingId,          // Giả sử BookingId có trong BookingDTO
+                BookingId = bookingDto.BookingId,
                 UserId = bookingDto.UserId,
                 SubCourtId = bookingDto.SubCourtId,
                 TimeSlotId = bookingDto.TimeSlotId,
                 ScheduleId = bookingDto.ScheduleId,
                 BookingDate = bookingDto.BookingDate,
-                TotalHours = bookingDto.TotalHours,
-                Status = bookingDto.Status,
+                Status = (int)bookingDto.Status,
                 CancellationReason = bookingDto.CancellationReason,
                 TotalPrice = bookingDto.TotalPrice,
                 PromotionId = bookingDto.PromotionId,
+                InvoiceId = bookingDto.InvoiceId,
+                PaymentId = bookingDto.PaymentId,
 
-                // Ánh xạ các đối tượng liên quan nếu cần (ví dụ: SubCourt, TimeSlot)
-                //SubCourt = bookingDto.SubCourt?.ToFormatSCourt(),  // Ví dụ
-                //TimeSlot = bookingDto.TimeSlot?.ToFormatTimeSlot(), // Ví dụ
+                // Ánh xạ các đối tượng liên quan nếu cần 
+                //SubCourt = bookingDto.SubCourt?.ToFormatSCourt(),  
+                //TimeSlot = bookingDto.TimeSlot?.ToFormatTimeSlot(), 
             };
         }
 

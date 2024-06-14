@@ -15,7 +15,7 @@ namespace Badminton.Web.Controllers
 
         public BookingController(IBookingRepository bookingRepo)
         {
-            _bookingRepo = bookingRepo; // Sửa đổi ở đây
+            _bookingRepo = bookingRepo; 
         }
 
         [HttpGet]
@@ -56,5 +56,52 @@ namespace Badminton.Web.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        
+        // PUT: api/Booking/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBooking(int id, [FromBody] BookingDTO.UpdateBookingDTO updateBookingDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                // 1. Fetch the existing booking
+                var existingBookingDto = await _bookingRepo.GetBookingByIdAsync(id);
+                if (existingBookingDto == null)
+                {
+                    return NotFound();
+                }
+
+                // 2. Apply updates
+                existingBookingDto.BookingDate = updateBookingDto.BookingDate ?? existingBookingDto.BookingDate;
+                existingBookingDto.Status = updateBookingDto.Status ?? existingBookingDto.Status;
+                existingBookingDto.CancellationReason = updateBookingDto.CancellationReason ?? existingBookingDto.CancellationReason;
+
+                // 3. Update in the repository
+                await _bookingRepo.UpdateBookingAsync(id, existingBookingDto); // Pass the updated BookingDTO
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+
+        // DELETE: api/Booking/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBooking(int id)
+        {
+            await _bookingRepo.DeleteBookingAsync(id);
+            return NoContent();
+        }
+
+
     }
 }

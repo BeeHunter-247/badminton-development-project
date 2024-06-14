@@ -3,6 +3,7 @@ using Badminton.Web.Helpers;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Mappers;
 using Badminton.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Badminton.Web.Controllers
@@ -18,6 +19,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] QueryCourt query)
         {
              if(!ModelState.IsValid)

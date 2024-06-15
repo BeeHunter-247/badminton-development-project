@@ -1,4 +1,4 @@
-﻿using Badminton.Web.DTO.TimeSlot;
+﻿using Badminton.Web.DTO;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using Microsoft.EntityFrameworkCore;

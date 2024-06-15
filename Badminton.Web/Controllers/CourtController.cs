@@ -1,4 +1,5 @@
-﻿using Badminton.Web.DTO.Court;
+﻿using AutoMapper;
+using Badminton.Web.DTO;
 using Badminton.Web.Helpers;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Mappers;
@@ -13,9 +14,12 @@ namespace Badminton.Web.Controllers
     public class CourtController : ControllerBase
     {
         private readonly ICourtRepository _courtRepo;
-        public CourtController(ICourtRepository courtRepo) 
+        private readonly IMapper _mapper;
+
+        public CourtController(ICourtRepository courtRepo, IMapper mapper) 
         {
             _courtRepo = courtRepo;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -28,7 +32,7 @@ namespace Badminton.Web.Controllers
             }
 
             var courts = await _courtRepo.GetAllAsync(query);
-            var courtDTO = courts.Select(c => c.ToFormatCourtDTO());
+            var courtDTO = _mapper.Map<List<CourtDTO>>(courts);
             return Ok(courtDTO);
         }
 
@@ -47,7 +51,7 @@ namespace Badminton.Web.Controllers
                 return NotFound();
             }
 
-            return Ok(court.ToFormatCourtDTO());
+            return Ok(_mapper.Map<CourtDTO>(court));
         }
 
         [HttpDelete]
@@ -65,7 +69,7 @@ namespace Badminton.Web.Controllers
                 return NotFound("Sân không tồn tại!");
             }
 
-            return Ok(courtModel);
+            return NoContent();
         }
 
         [HttpPost]
@@ -76,9 +80,10 @@ namespace Badminton.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var courtModel = courtDTO.ToFormatCourtFromCreate();
+            var courtModel = _mapper.Map<Court>(courtDTO);
+
             await _courtRepo.CreateAsync(courtModel);
-            return CreatedAtAction(nameof(GetById), new { id = courtModel.CourtId }, courtModel.ToFormatCourtDTO());
+            return CreatedAtAction(nameof(GetById), new { id = courtModel.CourtId }, _mapper.Map<CourtDTO>(courtModel));
         }
 
         [HttpPut]
@@ -96,7 +101,7 @@ namespace Badminton.Web.Controllers
                 return NotFound();
             }
 
-            return Ok(courtModel.ToFormatCourtDTO());
+            return Ok(_mapper.Map<CourtDTO>(courtModel));
         }
     }
 }

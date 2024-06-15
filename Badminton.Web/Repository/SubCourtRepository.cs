@@ -1,4 +1,4 @@
-﻿using Badminton.Web.DTO.SubCourt;
+﻿using Badminton.Web.DTO;
 using Badminton.Web.Helpers;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Badminton.Web.Repository
 {
-    public class SCourtRepository : ISCourtRepository
+    public class SubCourtRepository : ISubCourtRepository
     {
         private readonly CourtSyncContext _context;
-        public SCourtRepository(CourtSyncContext context)
+        public SubCourtRepository(CourtSyncContext context)
         {
             _context = context;
         }
@@ -34,7 +34,7 @@ namespace Badminton.Web.Repository
             return sCourtModel;
         }
 
-        public async Task<List<SubCourt>> GetAllAsync(QuerySCourt query)
+        public async Task<List<SubCourt>> GetAllAsync(QueryOptions query)
         {
             var queryObject = _context.SubCourts.AsQueryable();
 
@@ -67,7 +67,7 @@ namespace Badminton.Web.Repository
             return await _context.SubCourts.FirstOrDefaultAsync(s => s.SubCourtId == id);
         }
 
-        public async Task<SubCourt?> UpdateAsync(int id, UpdateSCourtDTO sCourtDTO)
+        public async Task<SubCourt?> UpdateAsync(int id, UpdateSubCourtDTO sCourtDTO)
         {
             var existingSCourt = await _context.SubCourts.FirstOrDefaultAsync(s => s.SubCourtId == id);
             if(existingSCourt == null)

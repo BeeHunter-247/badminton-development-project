@@ -1,4 +1,5 @@
-﻿using Badminton.Web.DTO.SubCourt;
+﻿using AutoMapper;
+using Badminton.Web.DTO;
 using Badminton.Web.Helpers;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Mappers;
@@ -9,18 +10,21 @@ namespace Badminton.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SCourtController : ControllerBase
+    public class SubCourtController : ControllerBase
     {
-        private readonly ISCourtRepository _sCourtRepo;
+        private readonly ISubCourtRepository _sCourtRepo;
         private readonly ICourtRepository _courtRepo;
-        public SCourtController(ISCourtRepository sCourtRepo, ICourtRepository courtRepo)
+        private readonly IMapper _mapper;
+
+        public SubCourtController(ISubCourtRepository sCourtRepo, ICourtRepository courtRepo, IMapper mapper)
         {
             _sCourtRepo = sCourtRepo;
             _courtRepo = courtRepo; 
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] QuerySCourt query)
+        public async Task<IActionResult> GetAll([FromQuery] QueryOptions query)
         {
             if(!ModelState.IsValid)
             {
@@ -28,7 +32,7 @@ namespace Badminton.Web.Controllers
             }
 
             var sCourts = await _sCourtRepo.GetAllAsync(query);
-            var sCourtDTO = sCourts.Select(s => s.ToFormatSCourtDTO()).ToList();
+            var sCourtDTO = _mapper.Map<List<SubCourtDTO>>(sCourts);
             return Ok(sCourtDTO);
         }
 
@@ -47,12 +51,12 @@ namespace Badminton.Web.Controllers
                 return NotFound();
             }
 
-            return Ok(sCourt.ToFormatSCourtDTO());
+            return Ok(_mapper.Map<SubCourtDTO>(sCourt));
         }
 
         [HttpPut]
         [Route("{id:int}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSCourtDTO updateDTO)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSubCourtDTO updateDTO)
         {
             if(!ModelState.IsValid)
             {
@@ -65,11 +69,11 @@ namespace Badminton.Web.Controllers
                 return NotFound("Không tìm thấy sân!");
             }
 
-            return Ok(sCourt.ToFormatSCourtDTO());
+            return Ok(_mapper.Map<SubCourtDTO>(sCourt));
         }
 
         [HttpPost("{courtId:int}")]
-        public async Task<IActionResult> Create([FromRoute] int courtId, CreateSCourtDTO createDTO)
+        public async Task<IActionResult> Create([FromRoute] int courtId, CreateSubCourtDTO createDTO)
         {
             if(!ModelState.IsValid)
             {
@@ -80,9 +84,10 @@ namespace Badminton.Web.Controllers
                 return BadRequest("Sân không tồn tại!");
             }
 
-            var sCourtModel = createDTO.ToFormatSCourtFromCreate(courtId);
+            var sCourtModel = _mapper.Map<SubCourt>(createDTO);
+            sCourtModel.CourtId = courtId;
             await _sCourtRepo.CreateAsync(sCourtModel);
-            return CreatedAtAction(nameof(GetById), new { id = sCourtModel.CourtId }, sCourtModel.ToFormatSCourtDTO());
+            return CreatedAtAction(nameof(GetById), new { id = sCourtModel.CourtId }, _mapper.Map<SubCourtDTO>(sCourtModel));
         }
 
         [HttpDelete]
@@ -100,7 +105,7 @@ namespace Badminton.Web.Controllers
                 return NotFound("Sân không tồn tại!");
             }
 
-            return Ok(sCourtModel);
+            return NoContent();
         }
     }
 }

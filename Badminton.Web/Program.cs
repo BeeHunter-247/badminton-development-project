@@ -1,4 +1,5 @@
 using Badminton.Web.Interfaces;
+using Badminton.Web.Mappers;
 using Badminton.Web.Models;
 using Badminton.Web.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -49,9 +50,11 @@ namespace Badminton.Web
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             builder.Services.AddScoped<ICourtRepository, CourtRepository>();
             builder.Services.AddScoped<IEvaluateRepository, EvaluateRepository>();
-            builder.Services.AddScoped<ISCourtRepository, SCourtRepository>();
+            builder.Services.AddScoped<ISubCourtRepository, SubCourtRepository>();
             builder.Services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
 
 
@@ -66,8 +69,9 @@ namespace Badminton.Web
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
+            app.UseAuthorization();
 
             app.MapControllers();
 

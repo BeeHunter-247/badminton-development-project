@@ -1,14 +1,14 @@
-﻿using Badminton.Web.DTO.SubCourt;
+﻿using Badminton.Web.DTO;
 using Badminton.Web.Helpers;
 using Badminton.Web.Models;
 
 namespace Badminton.Web.Interfaces
 {
-    public interface ISCourtRepository
+    public interface ISubCourtRepository
     {
-        Task<List<SubCourt>> GetAllAsync(QuerySCourt query);
+        Task<List<SubCourt>> GetAllAsync(QueryOptions query);
         Task<SubCourt?> GetByIdAsync(int id);
-        Task<SubCourt?> UpdateAsync(int id, UpdateSCourtDTO sCourtDTO);
+        Task<SubCourt?> UpdateAsync(int id, UpdateSubCourtDTO sCourtDTO);
         Task<SubCourt> CreateAsync(SubCourt sCourtModel);
         Task<SubCourt?> DeleteAsync(int id);
     }

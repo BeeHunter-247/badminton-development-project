@@ -1,6 +1,6 @@
 ﻿namespace Badminton.Web.Helpers
 {
-    public class QuerySCourt
+    public class QueryOptions
     {
         public string? search { get; set; }
         public decimal? from { get; set; }

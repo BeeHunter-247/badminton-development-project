@@ -1,4 +1,4 @@
-﻿using Badminton.Web.DTO.TimeSlot;
+﻿using Badminton.Web.DTO;
 using Badminton.Web.Models;
 
 namespace Badminton.Web.Interfaces

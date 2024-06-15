@@ -1,4 +1,5 @@
-﻿using Badminton.Web.DTO.TimeSlot;
+﻿using AutoMapper;
+using Badminton.Web.DTO;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Mappers;
 using Badminton.Web.Models;
@@ -11,9 +12,12 @@ namespace Badminton.Web.Controllers
     public class TimeSlotController : Controller
     {
         private readonly ITimeSlotRepository _timeSlotRepo;
-        public TimeSlotController(ITimeSlotRepository timeSlotRepo)
+        private readonly IMapper _mapper;
+
+        public TimeSlotController(ITimeSlotRepository timeSlotRepo, IMapper mapper)
         {
             _timeSlotRepo = timeSlotRepo;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -25,7 +29,7 @@ namespace Badminton.Web.Controllers
             }
 
             var timeSlot = await _timeSlotRepo.GetAllAsync();
-            var timeSlotDTO = timeSlot.Select(t => t.ToFormatTimeSlotDTO());
+            var timeSlotDTO = _mapper.Map<List<TimeSlotDTO>>(timeSlot);
             return Ok(timeSlotDTO);
         }
 
@@ -44,7 +48,7 @@ namespace Badminton.Web.Controllers
                 return NotFound();
             }
 
-            return Ok(timeSlot.ToFormatTimeSlotDTO());
+            return Ok(_mapper.Map<TimeSlotDTO>(timeSlot));
         }
 
         [HttpPut]
@@ -62,7 +66,7 @@ namespace Badminton.Web.Controllers
                 return NotFound();
             }
 
-            return Ok(timeSlot.ToFormatTimeSlotDTO());
+            return Ok(_mapper.Map<TimeSlotDTO>(timeSlot));
         }
 
         [HttpPost]
@@ -83,7 +87,7 @@ namespace Badminton.Web.Controllers
                 };
 
                 await _timeSlotRepo.CreateAsync(timeSlotModel);
-                return Ok(timeSlotModel.ToFormatTimeSlotDTO());
+                return Ok(_mapper.Map<TimeSlotDTO>(timeSlotModel));
             }
             catch
             {
@@ -108,7 +112,7 @@ namespace Badminton.Web.Controllers
                 return NotFound("TimeSlot không tồn tại!");
             }
 
-            return Ok(timeSlotModel);
+            return NoContent();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Badminton.Web.DTO.Court;
+﻿using Badminton.Web.DTO;
 using Badminton.Web.Helpers;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;

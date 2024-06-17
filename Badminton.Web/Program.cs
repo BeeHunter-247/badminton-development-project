@@ -36,6 +36,16 @@ namespace Badminton.Web
 
             //
 
+            //CORS
+            builder.Services.AddCors(opts =>
+            {
+                opts.AddPolicy("corspolicy", build =>
+                {
+                    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+                });
+            });
+            //
+
             //Authenr
 
             builder.Services.AddSwaggerGen(option =>
@@ -98,6 +108,8 @@ namespace Badminton.Web
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors("corspolicy");
 
             app.UseHttpsRedirection();
 

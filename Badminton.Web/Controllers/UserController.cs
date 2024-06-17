@@ -32,6 +32,7 @@ namespace Badminton.Web.Controllers
                 {
                     Success = false,
                     Message = "Invalid data"
+                    
                 });
             }
 

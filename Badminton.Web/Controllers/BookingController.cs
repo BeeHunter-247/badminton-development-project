@@ -1,6 +1,10 @@
-﻿using Badminton.Web.DTO.Booking;
+﻿using AutoMapper;
+using Badminton.Web.DTO;
+using Badminton.Web.Enums;
 using Badminton.Web.Interfaces;
+using Badminton.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,23 +16,30 @@ namespace Badminton.Web.Controllers
     public class BookingController : ControllerBase
     {
         private readonly IBookingRepository _bookingRepo;
+        private readonly IMapper _mapper;
+        private readonly ILogger<BookingController> _logger;
+        private readonly CourtSyncContext _context;
 
-        public BookingController(IBookingRepository bookingRepo)
+        // Constructor to inject IBookingRepository, IMapper, ILogger, and CourtSyncContext
+        public BookingController(IBookingRepository bookingRepo, IMapper mapper, ILogger<BookingController> logger, CourtSyncContext context)
         {
-            _bookingRepo = bookingRepo; 
+            _bookingRepo = bookingRepo;
+            _mapper = mapper;
+            _logger = logger;
+            _context = context;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookingDTO>>> GetAllBookings()
         {
-            var bookings = await _bookingRepo.GetAllBookingsAsync();
+            var bookings = await _bookingRepo.GetAllAsync();
             return Ok(bookings);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
-            var booking = await _bookingRepo.GetBookingByIdAsync(id);
+            var booking = await _bookingRepo.GetByIdAsync(id);
             if (booking == null)
             {
                 return NotFound();
@@ -37,68 +48,129 @@ namespace Badminton.Web.Controllers
         }
 
         // POST: api/Booking
+
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] BookingDTO createBookingDto)
+        public async Task<IActionResult> CreateAsync(CreateBookingDTO bookingDTO)
         {
-            if (createBookingDto == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest("Booking data is null.");
+                return BadRequest(ModelState); // Trả về lỗi nếu dữ liệu đầu vào không hợp lệ
             }
 
             try
             {
-                var createdBooking = await _bookingRepo.CreateBookingAsync(createBookingDto);
-                return CreatedAtAction(nameof(GetByIdAsync), new { id = createdBooking.BookingId }, createdBooking);
+                var booking = new Booking
+                {
+                    UserId = bookingDTO.UserId,
+                    SubCourtId = bookingDTO.SubCourtId,
+                    TimeSlotId = bookingDTO.TimeSlotId,
+                    ScheduleId = bookingDTO.ScheduleId,
+                    BookingDate = DateOnly.Parse(bookingDTO.BookingDate),
+                    Status = (int)BookingStatus.Pending,
+                    TotalPrice = (decimal)bookingDTO.TotalPrice,           // Bạn sẽ tính toán giá trị này sau
+                    PromotionId = bookingDTO.PromotionId, // Nếu có khuyến mãi
+                    InvoiceId = bookingDTO.InvoiceId,            // Giá trị ban đầu, sẽ cập nhật sau
+                    PaymentId = bookingDTO.PaymentId            // Giá trị ban đầu, sẽ cập nhật sau
+                };
+
+                // Thêm logic tính toán TotalPrice và điền các trường khác ở đây ...
+
+                await _bookingRepo.CreateAsync(booking);
+                booking.TimeSlot = await _context.TimeSlots.FindAsync(booking.TimeSlotId);
+                booking.SubCourt = await _context.SubCourts.FindAsync(booking.SubCourtId);
+
+
+                return Ok(_mapper.Map<BookingDTO>(booking)); // Trả về BookingDTO
             }
-            catch (Exception ex)
+            catch
             {
-                // Log the exception (not shown here for brevity)
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return BadRequest(); // Trả về BadRequest nếu có lỗi
             }
         }
 
+
+
         
-        // PUT: api/Booking/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBooking(int id, [FromBody] BookingDTO.UpdateBookingDTO updateBookingDto)
+        [HttpPut("{id:int}")]
+      /*  public async Task<IActionResult> UpdateBooking([FromRoute] int id, [FromBody] UpdateBookingDTO updateBookingDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            if (updateBookingDto == null)
+            {
+                return BadRequest(); // Hoặc return NoContent();
+            }
+
             try
             {
-                // 1. Fetch the existing booking
-                var existingBookingDto = await _bookingRepo.GetBookingByIdAsync(id);
-                if (existingBookingDto == null)
+                // 1. Lấy booking hiện tại từ repository
+                var existingBooking = await _bookingRepo.GetByIdAsync(id);
+                if (existingBooking == null)
                 {
-                    return NotFound();
+                    return NotFound(); // Booking không tồn tại
                 }
 
-                // 2. Apply updates
-                existingBookingDto.BookingDate = updateBookingDto.BookingDate ?? existingBookingDto.BookingDate;
-                existingBookingDto.Status = updateBookingDto.Status ?? existingBookingDto.Status;
-                existingBookingDto.CancellationReason = updateBookingDto.CancellationReason ?? existingBookingDto.CancellationReason;
+                // 2. Kiểm tra trạng thái của booking (chỉ cho phép cập nhật khi booking đang chờ)
+                if (existingBooking.Status != 0)
+                {
+                    return BadRequest("Cannot update a booking that is not in pending status.");
+                }
 
-                // 3. Update in the repository
-                await _bookingRepo.UpdateBookingAsync(id, existingBookingDto); // Pass the updated BookingDTO
+                // 3. Kiểm tra xem ngày cập nhật có hợp lệ không (không được ở quá khứ)
+                if (DateOnly.TryParse(updateBookingDto.BookingDate, out var parsedDate) && parsedDate < DateOnly.FromDateTime(DateTime.Now))
+                {
+                    return BadRequest("Booking date cannot be in the past.");
+                }
 
-                return NoContent();
+                // 4. Ánh xạ UpdateBookingDTO vào existingBooking (chỉ ánh xạ các thuộc tính cần cập nhật)
+                _mapper.Map(updateBookingDto, existingBooking);
+
+                // 5. Cập nhật booking trong repository
+                var updatedBooking = await _bookingRepo.UpdateAsync(id, existingBooking); // Truyền model Booking
+
+                if (updatedBooking == null)
+                {
+                    return NotFound(); // Booking không tồn tại sau khi cập nhật (có thể do xung đột)
+                }
+
+                // 6. Trả về kết quả
+                return Ok(_mapper.Map<BookingDTO>(updatedBooking)); // Trả về BookingDTO sau khi cập nhật
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await _bookingRepo.BookingExistsAsync(id))
+                {
+                    return NotFound(); // Booking không tồn tại
+                }
+                else
+                {
+                    throw; // Ném lại exception để xử lý ở tầng cao hơn
+                }
             }
             catch (Exception ex)
             {
-                // Log the exception
-                return StatusCode(500, "Internal server error");
+                _logger.LogError(ex, "An error occurred while updating booking.");
+                return StatusCode(500, "Internal server error.");
             }
         }
+*/
+
+
+
+        // Hàm kiểm tra booking tồn tại
+
+
+
 
 
         // DELETE: api/Booking/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
-            await _bookingRepo.DeleteBookingAsync(id);
+            await _bookingRepo.DeleteAsync(id);
             return NoContent();
         }
 

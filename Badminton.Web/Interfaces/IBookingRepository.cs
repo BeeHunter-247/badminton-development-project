@@ -1,4 +1,4 @@
-﻿using Badminton.Web.DTO.Booking;
+﻿using Badminton.Web.DTO;
 using Badminton.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -10,31 +10,27 @@ namespace Badminton.Web.Interfaces
     {
         // Create
         Task<Booking> CreateAsync(Booking bookingModel);
-        Task<BookingDTO> CreateBookingAsync(BookingDTO createBookingDto);
-
+        
         // Read
-        Task<List<Booking>> GetAllAsync();
-        Task<Booking?> GetByIdAsync(int id);
-        Task<List<BookingDTO>> GetAllBookingsAsync();
-        Task<BookingDTO> GetBookingByIdAsync(int id);
-        Task<List<BookingDTO>> GetBookingsByUserIdAsync(int userId);
-        Task<List<BookingDTO>> GetBookingsBySubCourtIdAsync(int subCourtId);
+        Task<List<BookingDTO>> GetAllAsync();
+        Task<BookingDTO?> GetByIdAsync(int id);
+        Task<List<BookingDTO>> GetBookingsByUserIdAsync(int userId); // Lấy danh sách các booking của một người dùng cụ thể
+        Task<List<BookingDTO>> GetBookingsBySubCourtIdAsync(int subCourtId); //Lấy danh sách các booking trên một sân con cụ thể
 
         // Update
-        Task<Booking?> UpdateAsync(int id, BookingDTO bookingDTO);
-        Task<BookingDTO> UpdateBookingAsync(int id, BookingDTO updateBookingDto);
-        Task<BookingDTO> CancelBookingAsync(int bookingId, string cancellationReason);
+        Task<Booking?> UpdateAsync(int id, Booking booking);
+        Task<bool> BookingExistsAsync(int id);
+     
+        Task<BookingDTO> CancelBookingAsync(int bookingId, string cancellationReason); //Hủy một booking đã tồn tại và cung cấp lý do hủy
 
         // Delete
         Task<Booking?> DeleteAsync(int id);
-        Task DeleteBookingAsync(int bookingId);
-
 
         // Kiểm tra
-        Task<bool> BookingExists(int id);
-        Task<bool> IsTimeSlotAvailableAsync(int subCourtId, int timeSlotId, DateOnly bookingDate);
+        Task<bool> BookingExists(int id); //  Kiểm tra xem một booking có tồn tại trong hệ thống hay không
+        Task<bool> IsTimeSlotAvailableAsync(int subCourtId, int timeSlotId, DateOnly bookingDate);   //Kiểm tra xem một khung giờ trên một sân con có còn trống để đặt hay không
 
         // Tính toán
-        Task<decimal> CalculateBookingPriceAsync(int subCourtId, int timeSlotId, int promotionId);
+        Task<decimal> CalculateBookingPriceAsync(int subCourtId, int timeSlotId, int promotionId);  //Tính toán giá của một booking dựa trên sân con, khung giờ và chương trình khuyến mãi (nếu có).
     }
 }

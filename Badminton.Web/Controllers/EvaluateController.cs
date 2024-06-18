@@ -1,6 +1,8 @@
-﻿using Badminton.Web.DTO.Evaluate;
+﻿using AutoMapper;
+using Badminton.Web.DTO;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Mappers;
+using Badminton.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Badminton.Web.Controllers
@@ -11,17 +13,20 @@ namespace Badminton.Web.Controllers
     {
         private readonly IEvaluateRepository _evaluateRepo;
         private readonly ICourtRepository _courtRepo;
-        public EvaluateController(IEvaluateRepository evaluateRepo, ICourtRepository courtRepo)
+        private readonly IMapper _mapper;
+
+        public EvaluateController(IEvaluateRepository evaluateRepo, ICourtRepository courtRepo, IMapper mapper)
         {
             _evaluateRepo = evaluateRepo;
             _courtRepo = courtRepo;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var evaluates = await _evaluateRepo.GetAllAsync();
-            var evaluateDTO = evaluates.Select(e => e.ToFormatEvaluateDTO());
+            var evaluateDTO = _mapper.Map<List<EvaluateDTO>>(evaluates);
             return Ok(evaluateDTO);
         }
 
@@ -40,7 +45,7 @@ namespace Badminton.Web.Controllers
                 return NotFound();
             }
 
-            return Ok(evaluate.ToFormatEvaluateDTO());
+            return Ok(_mapper.Map<EvaluateDTO>(evaluate));
         }
 
         [HttpPost("{courtId:int}")]
@@ -56,9 +61,10 @@ namespace Badminton.Web.Controllers
                 return BadRequest("Sân không tồn tại!");
             }
 
-            var evaluateModel = evaluateDTO.ToFormatEvaluateFromCreate(courtId);
+            var evaluateModel = _mapper.Map<Evaluate>(evaluateDTO);
+            evaluateModel.CourtId = courtId;
             await _evaluateRepo.CreateAsync(evaluateModel);
-            return CreatedAtAction(nameof(GetById), new {id = evaluateModel.EvaluateId}, evaluateModel.ToFormatEvaluateDTO());
+            return CreatedAtAction(nameof(GetById), new {id = evaluateModel.EvaluateId}, _mapper.Map<EvaluateDTO>(evaluateModel));
         }
 
         [HttpPut]
@@ -76,7 +82,7 @@ namespace Badminton.Web.Controllers
                 return NotFound("Không tìm thấy sân!");
             }
 
-            return Ok(evaluate.ToFormatEvaluateDTO());
+            return Ok(_mapper.Map<EvaluateDTO>(evaluate));
         }
 
         [HttpDelete]
@@ -90,7 +96,7 @@ namespace Badminton.Web.Controllers
                 return NotFound("Đánh giá không tồn tại!");
             }
 
-            return Ok(evaluateModel);
+            return NoContent();
         }
     }
 }

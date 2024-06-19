@@ -17,9 +17,11 @@ public partial class Booking
 
     public int ScheduleId { get; set; }
 
-    public DateOnly BookingDate { get; set; } // Sử dụng DateTime
+    public DateOnly BookingDate { get; set; }
 
-    public int Status { get; set; } // Cân nhắc sử dụng enum
+    public int BookingType { get; set; }
+
+    public int Status { get; set; }
 
     public string CancellationReason { get; set; }
 
@@ -37,7 +39,7 @@ public partial class Booking
 
     public virtual Payment Payment { get; set; }
 
-    public virtual Promotion? Promotion { get; set; } // Có thể null
+    public virtual Promotion Promotion { get; set; }
 
     public virtual Schedule Schedule { get; set; }
 

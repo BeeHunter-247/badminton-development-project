@@ -16,17 +16,16 @@ namespace Badminton.Web.Controllers
         private readonly ICourtRepository _courtRepo;
         private readonly IMapper _mapper;
 
-        public CourtController(ICourtRepository courtRepo, IMapper mapper) 
+        public CourtController(ICourtRepository courtRepo, IMapper mapper)
         {
             _courtRepo = courtRepo;
             _mapper = mapper;
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] QueryCourt query)
         {
-             if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(new ApiResponse
                 {
@@ -49,7 +48,7 @@ namespace Badminton.Web.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(new ApiResponse
                 {
@@ -60,8 +59,8 @@ namespace Badminton.Web.Controllers
             }
 
             var court = await _courtRepo.GetByIdAsync(id);
-            if(court == null) 
-            { 
+            if (court == null)
+            {
                 return NotFound(new ApiResponse
                 {
                     Success = false,
@@ -80,7 +79,7 @@ namespace Badminton.Web.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(new ApiResponse
                 {
@@ -91,7 +90,7 @@ namespace Badminton.Web.Controllers
             }
 
             var courtModel = await _courtRepo.DeleteAsync(id);
-            if(courtModel == null)
+            if (courtModel == null)
             {
                 return NotFound(new ApiResponse
                 {
@@ -106,7 +105,7 @@ namespace Badminton.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCourtDTO courtDTO)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(new ApiResponse
                 {
@@ -130,7 +129,7 @@ namespace Badminton.Web.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCourtDTO courtDTO)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(new ApiResponse
                 {
@@ -141,7 +140,7 @@ namespace Badminton.Web.Controllers
             }
 
             var courtModel = await _courtRepo.UpdateAsync(id, courtDTO);
-            if(courtModel == null)
+            if (courtModel == null)
             {
                 return NotFound(new ApiResponse
                 {

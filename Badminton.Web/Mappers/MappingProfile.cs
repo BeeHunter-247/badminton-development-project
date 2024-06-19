@@ -16,6 +16,7 @@ namespace Badminton.Web.Mappers
             CreateMap<SubCourt, SubCourtDTO>();
             CreateMap<CreateSubCourtDTO, SubCourt>();
             CreateMap<TimeSlot, TimeSlotDTO>();
+            CreateMap<User, UserDTO>();
         }
     }
 }

@@ -76,7 +76,6 @@ namespace Badminton.Web.DTO
 
         public string Username { get; set; } // Tên người dùng
 
-
         //public string PromotionName { get; set; } // Tên khuyến mãi -- chưa làm 
     }
 

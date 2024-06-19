@@ -8,14 +8,17 @@ namespace Badminton.Web.Mappers
     {
         public MappingProfile()
         {
-            CreateMap<Booking, BookingDTO>()
+            CreateMap<UpdateBookingDTO, Booking>();
+            CreateMap<Booking, BookingDTO>();
+
+            /*CreateMap<Booking, BookingDTO>()
                 .ForMember(dest => dest.TimeSlot, opt => opt.MapFrom(src => src.TimeSlot))
                 .ForMember(dest => dest.SubCourt, opt => opt.MapFrom(src => src.SubCourt)); // Ánh xạ các DTO liên quan
             
             CreateMap<CreateBookingDTO, Booking>();
 
             CreateMap<UpdateBookingDTO, Booking>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));*/
 
             // Map từ Schedule sang ScheduleDTO
             CreateMap<Schedule, ScheduleDTO>()

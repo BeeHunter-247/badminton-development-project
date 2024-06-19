@@ -18,9 +18,10 @@ namespace Badminton.Web.Controllers
         private readonly IScheduleRepository _scheduleRepository;
         private readonly IMapper _mapper;
 
-        public ScheduleController(IScheduleRepository scheduleRepository)
+        public ScheduleController(IScheduleRepository scheduleRepository, IMapper mapper)
         {
             _scheduleRepository = scheduleRepository ?? throw new ArgumentNullException(nameof(scheduleRepository));
+            _mapper = mapper;
         }
 
         [HttpPost]

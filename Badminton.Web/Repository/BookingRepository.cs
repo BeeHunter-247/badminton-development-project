@@ -32,28 +32,6 @@ namespace Badminton.Web.Repository
             await _context.SaveChangesAsync();
             return bookingModel;
         }
-
-        //read
-        /*public async Task<List<Booking>> GetAllAsync()
-        {
-            return await _context.Bookings
-                .Include(b => b.User)
-                .Include(b => b.SubCourt)
-                .Include(b => b.TimeSlot)
-                .Include(b => b.Schedule)
-                .Include(b => b.Promotion)
-                .ToListAsync(); // Eager loading các đối tượng liên quan
-        }
-        public async Task<Booking?> GetByIdAsync(int id)
-        {
-            return await _context.Bookings
-                .Include(b => b.User)
-                .Include(b => b.SubCourt)
-                .Include(b => b.TimeSlot)
-                .Include(b => b.Schedule)
-                .Include(b => b.Promotion)
-                .FirstOrDefaultAsync(b => b.BookingId == id); // Eager loading các đối tượng liên quan
-        }*/
         public async Task<List<BookingDTO>> GetAllAsync()
         {
             var bookings = await _context.Bookings
@@ -105,19 +83,24 @@ namespace Badminton.Web.Repository
         }
 
         //Update
-        public async Task<Booking?> UpdateAsync(int id, Booking bookingToUpdate) // Nhận model Booking
+        public async Task<Booking?> UpdateAsync(int id, UpdateBookingDTO booking)
         {
             // Tìm booking cần cập nhật dựa trên id
-            var booking = await _context.Bookings.FindAsync(id);
-            if (booking == null)
+            var existingBooking = await _context.Bookings.FirstOrDefaultAsync(b => b.BookingId == id);
+            if (existingBooking == null)
             {
                 return null; // Trả về null nếu không tìm thấy booking
             }
 
-            // Cập nhật các thuộc tính của booking từ bookingToUpdate
-            booking.BookingDate = bookingToUpdate.BookingDate;
-            booking.Status = bookingToUpdate.Status;
-            booking.CancellationReason = bookingToUpdate.CancellationReason;
+            // Cập nhật các thuộc tính của booking từ đối tượng truyền vào
+            if (DateOnly.TryParse(booking.BookingDate.ToString(), out var parsedDate))
+            {
+                existingBooking.BookingDate = parsedDate;
+            }
+            existingBooking.Status = (int)booking.Status;
+            existingBooking.CancellationReason = booking.CancellationReason;
+            
+            
 
             // Lưu các thay đổi vào cơ sở dữ liệu
             try
@@ -130,8 +113,9 @@ namespace Badminton.Web.Repository
                 throw;
             }
 
-            return booking; // Trả về đối tượng Booking sau khi cập nhật
+            return existingBooking; // Trả về đối tượng Booking sau khi cập nhật
         }
+
 
         public async Task<bool> BookingExistsAsync(int id)
         {

@@ -18,7 +18,7 @@ namespace Badminton.Web.Interfaces
         Task<List<BookingDTO>> GetBookingsBySubCourtIdAsync(int subCourtId); //Lấy danh sách các booking trên một sân con cụ thể
 
         // Update
-        Task<Booking?> UpdateAsync(int id, Booking booking);
+        Task<Booking?> UpdateAsync(int id, UpdateBookingDTO  updateBookingDto);
         Task<bool> BookingExistsAsync(int id);
      
         Task<BookingDTO> CancelBookingAsync(int bookingId, string cancellationReason); //Hủy một booking đã tồn tại và cung cấp lý do hủy

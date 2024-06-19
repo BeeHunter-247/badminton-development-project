@@ -90,9 +90,9 @@ namespace Badminton.Web.Controllers
 
 
 
-        
+
         [HttpPut("{id:int}")]
-      /*  public async Task<IActionResult> UpdateBooking([FromRoute] int id, [FromBody] UpdateBookingDTO updateBookingDto)
+        public async Task<IActionResult> UpdateBooking([FromRoute] int id, [FromBody] UpdateBookingDTO updateBookingDto)
         {
             if (!ModelState.IsValid)
             {
@@ -107,14 +107,14 @@ namespace Badminton.Web.Controllers
             try
             {
                 // 1. Lấy booking hiện tại từ repository
-                var existingBooking = await _bookingRepo.GetByIdAsync(id);
-                if (existingBooking == null)
+                var bookingModle = await _bookingRepo.GetByIdAsync(id);
+                if (bookingModle == null)
                 {
                     return NotFound(); // Booking không tồn tại
                 }
 
-                // 2. Kiểm tra trạng thái của booking (chỉ cho phép cập nhật khi booking đang chờ)
-                if (existingBooking.Status != 0)
+                /*// 2. Kiểm tra trạng thái của booking (chỉ cho phép cập nhật khi booking đang chờ)
+                if (bookingModle.Status != BookingStatus.Pending) // Giả sử Pending là 0
                 {
                     return BadRequest("Cannot update a booking that is not in pending status.");
                 }
@@ -123,13 +123,13 @@ namespace Badminton.Web.Controllers
                 if (DateOnly.TryParse(updateBookingDto.BookingDate, out var parsedDate) && parsedDate < DateOnly.FromDateTime(DateTime.Now))
                 {
                     return BadRequest("Booking date cannot be in the past.");
-                }
+                }*/
 
                 // 4. Ánh xạ UpdateBookingDTO vào existingBooking (chỉ ánh xạ các thuộc tính cần cập nhật)
-                _mapper.Map(updateBookingDto, existingBooking);
+                _mapper.Map(updateBookingDto, bookingModle);
 
                 // 5. Cập nhật booking trong repository
-                var updatedBooking = await _bookingRepo.UpdateAsync(id, existingBooking); // Truyền model Booking
+                var updatedBooking = await _bookingRepo.UpdateAsync(id, updateBookingDto); // Truyền model Booking
 
                 if (updatedBooking == null)
                 {
@@ -156,15 +156,6 @@ namespace Badminton.Web.Controllers
                 return StatusCode(500, "Internal server error.");
             }
         }
-*/
-
-
-
-        // Hàm kiểm tra booking tồn tại
-
-
-
-
 
         // DELETE: api/Booking/{id}
         [HttpDelete("{id}")]

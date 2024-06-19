@@ -25,9 +25,23 @@ namespace Badminton.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
             var evaluates = await _evaluateRepo.GetAllAsync();
             var evaluateDTO = _mapper.Map<List<EvaluateDTO>>(evaluates);
-            return Ok(evaluateDTO);
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = evaluateDTO
+            });
         }
 
         [HttpGet]
@@ -36,16 +50,29 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             var evaluate = await _evaluateRepo.GetByIdAsync(id);
             if(evaluate == null)
             {
-                return NotFound();
+                return NotFound(new ApiResponse
+                {
+                    Success= false,
+                    Message = "Evaluate not found!"
+                });
             }
 
-            return Ok(_mapper.Map<EvaluateDTO>(evaluate));
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<EvaluateDTO>(evaluate)
+            });
         }
 
         [HttpPost("{courtId:int}")]
@@ -53,18 +80,31 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             if(!await _courtRepo.CourtExist(courtId))
             {
-                return BadRequest("Sân không tồn tại!");
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Court does not exist!"
+                });
             }
 
             var evaluateModel = _mapper.Map<Evaluate>(evaluateDTO);
             evaluateModel.CourtId = courtId;
             await _evaluateRepo.CreateAsync(evaluateModel);
-            return CreatedAtAction(nameof(GetById), new {id = evaluateModel.EvaluateId}, _mapper.Map<EvaluateDTO>(evaluateModel));
+            return CreatedAtAction(nameof(GetById), new {id = evaluateModel.EvaluateId}, new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<EvaluateDTO>(evaluateModel)
+            });
         }
 
         [HttpPut]
@@ -73,27 +113,54 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             var evaluate = await _evaluateRepo.UpdateAsync(id, updateDTO);
             if(evaluate == null) 
             { 
-                return NotFound("Không tìm thấy sân!");
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Evaluate not found!"
+                });
             }
 
-            return Ok(_mapper.Map<EvaluateDTO>(evaluate));
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<EvaluateDTO>(evaluate)
+            });
         }
 
         [HttpDelete]
         [Route("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
             var evaluateModel = await _evaluateRepo.DeleteAsync(id);
 
             if(evaluateModel == null)
             {
-                return NotFound("Đánh giá không tồn tại!");
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Evaluate does not exist!"
+                });
             }
 
             return NoContent();

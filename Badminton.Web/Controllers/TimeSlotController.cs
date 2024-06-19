@@ -25,12 +25,21 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             var timeSlot = await _timeSlotRepo.GetAllAsync();
             var timeSlotDTO = _mapper.Map<List<TimeSlotDTO>>(timeSlot);
-            return Ok(timeSlotDTO);
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = timeSlotDTO
+            });
         }
 
         [HttpGet]
@@ -39,16 +48,29 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             var timeSlot = await _timeSlotRepo.GetByIdAsync(id);
             if(timeSlot == null)
             {
-                return NotFound();
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "TimeSlot not found!"
+                });
             }
 
-            return Ok(_mapper.Map<TimeSlotDTO>(timeSlot));
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<TimeSlotDTO>(timeSlot)
+            });
         }
 
         [HttpPut]
@@ -57,16 +79,29 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             var timeSlot = await _timeSlotRepo.UpdateAsync(id, timeSlotDTO);
             if(timeSlot == null)
             {
-                return NotFound();
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "TimeSlot not found!"
+                });
             }
 
-            return Ok(_mapper.Map<TimeSlotDTO>(timeSlot));
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<TimeSlotDTO>(timeSlot)
+            });
         }
 
         [HttpPost]
@@ -74,7 +109,12 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             try
@@ -83,11 +123,14 @@ namespace Badminton.Web.Controllers
                 {
                     StartTime = TimeOnly.Parse(timeSlotDTO.StartTime),
                     EndTime = TimeOnly.Parse(timeSlotDTO.EndTime),
-                   
                 };
 
                 await _timeSlotRepo.CreateAsync(timeSlotModel);
-                return Ok(_mapper.Map<TimeSlotDTO>(timeSlotModel));
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Data = _mapper.Map<TimeSlotDTO>(timeSlotModel)
+                });
             }
             catch
             {
@@ -103,13 +146,22 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
             
             var timeSlotModel = await _timeSlotRepo.DeleteAsync(id);
             if(timeSlotModel == null)
             {
-                return NotFound("TimeSlot không tồn tại!");
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "TimeSlot does not exist!"
+                });
             }
 
             return NoContent();

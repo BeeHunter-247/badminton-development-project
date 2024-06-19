@@ -1,4 +1,6 @@
-﻿using Badminton.Web.Models;
+﻿using AutoMapper;
+using Badminton.Web.DTO;
+using Badminton.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -16,11 +18,13 @@ namespace Badminton.Web.Controllers
     {
         private readonly CourtSyncContext _context;
         private readonly AppSetting _appSettings;
+        private readonly IMapper _mapper;
 
-        public UserController(CourtSyncContext context, IOptionsMonitor<AppSetting> optionsMonitor)
+        public UserController(CourtSyncContext context, IOptionsMonitor<AppSetting> optionsMonitor, IMapper mapper)
         {
             _context = context;
             _appSettings = optionsMonitor.CurrentValue;
+            _mapper = mapper;
         }
 
         [HttpPost("Login")]
@@ -36,7 +40,7 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var user = _context.Users.SingleOrDefault(p => p.Username == model.UserName && p.Password == model.Password);
+            var user = _context.Users.SingleOrDefault(p => p.UserName == model.UserName && p.Password == model.Password);
             if (user == null)
             {
                 return Ok(new ApiResponse
@@ -87,7 +91,7 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var existingUserByUsername = await _context.Users.SingleOrDefaultAsync(u => u.Username == model.Username);
+            var existingUserByUsername = await _context.Users.SingleOrDefaultAsync(u => u.UserName == model.Username);
             if (existingUserByUsername != null)
             {
                 return Ok(new ApiResponse
@@ -109,11 +113,12 @@ namespace Badminton.Web.Controllers
 
             var user = new User
             {
-                Username = model.Username,
+                UserName = model.Username,
                 Password = model.Password, // You should hash the password before storing it
+                Name = model.Name,
                 Email = model.Email,
                 Phone = model.Phone,
-                RoleType = 2 // Set RoleType to 2 for Investor
+                RoleType = 3 // Set RoleType to 2 for Investor
             };
 
             _context.Users.Add(user);
@@ -141,7 +146,7 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == model.Username);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == model.Username);
             if (user == null || user.Password != model.OldPassword)
             {
                 return Ok(new ApiResponse
@@ -179,7 +184,7 @@ namespace Badminton.Web.Controllers
             return Ok(new ApiResponse
             {
                 Success = true,
-                Data = users
+                Data = _mapper.Map<List<UserDTO>>(users)
             });
         }
 
@@ -209,7 +214,7 @@ namespace Badminton.Web.Controllers
             return Ok(new ApiResponse
             {
                 Success = true,
-                Data = user
+                Data = _mapper.Map<UserDTO>(user)
             });
         }
         //Edi Acoount
@@ -243,7 +248,7 @@ namespace Badminton.Web.Controllers
                     Message = "User not found"
                 });
             }
-
+            user.Name = model.Name;
             user.Email = model.Email;
             user.Phone = model.Phone;
             user.RoleType = model.RoleType;
@@ -304,7 +309,8 @@ namespace Badminton.Web.Controllers
                 {
             new Claim(ClaimTypes.MobilePhone, user.Phone),
             new Claim(ClaimTypes.Email, user.Email),
-            new Claim("UserName", user.Username),
+            new Claim("UserName", user.UserName),
+            new Claim("Name", user.Name),
             new Claim("Id", user.UserId.ToString()),
             new Claim("TokenId", Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.Role, GetUserRole(user.RoleType)) // Add role to claims
@@ -324,8 +330,10 @@ namespace Badminton.Web.Controllers
                 case 0:
                     return "Administrator";
                 case 1:
-                    return "Investor";
+                    return "Manager";
                 case 2:
+                    return "Staff";
+                case 3:
                     return "User";
                 default:
                     return null;

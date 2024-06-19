@@ -35,10 +35,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Notification]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[Payment]",
          "ObjectType": 0
       },

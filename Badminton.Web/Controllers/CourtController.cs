@@ -28,12 +28,21 @@ namespace Badminton.Web.Controllers
         {
              if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             var courts = await _courtRepo.GetAllAsync(query);
             var courtDTO = _mapper.Map<List<CourtDTO>>(courts);
-            return Ok(courtDTO);
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = courtDTO
+            });
         }
 
         [HttpGet]
@@ -42,16 +51,29 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             var court = await _courtRepo.GetByIdAsync(id);
             if(court == null) 
             { 
-                return NotFound();
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Court not found!"
+                });
             }
 
-            return Ok(_mapper.Map<CourtDTO>(court));
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<CourtDTO>(court)
+            });
         }
 
         [HttpDelete]
@@ -60,13 +82,22 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             var courtModel = await _courtRepo.DeleteAsync(id);
             if(courtModel == null)
             {
-                return NotFound("Sân không tồn tại!");
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Court does not exist!"
+                });
             }
 
             return NoContent();
@@ -77,13 +108,22 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             var courtModel = _mapper.Map<Court>(courtDTO);
 
             await _courtRepo.CreateAsync(courtModel);
-            return CreatedAtAction(nameof(GetById), new { id = courtModel.CourtId }, _mapper.Map<CourtDTO>(courtModel));
+            return CreatedAtAction(nameof(GetById), new { id = courtModel.CourtId }, new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<CourtDTO>(courtModel)
+            });
         }
 
         [HttpPut]
@@ -92,16 +132,29 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             var courtModel = await _courtRepo.UpdateAsync(id, courtDTO);
             if(courtModel == null)
             {
-                return NotFound();
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Court not found!"
+                });
             }
 
-            return Ok(_mapper.Map<CourtDTO>(courtModel));
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<CourtDTO>(courtModel)
+            });
         }
     }
 }

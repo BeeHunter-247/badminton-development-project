@@ -28,12 +28,21 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             var sCourts = await _sCourtRepo.GetAllAsync(query);
             var sCourtDTO = _mapper.Map<List<SubCourtDTO>>(sCourts);
-            return Ok(sCourtDTO);
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = sCourtDTO
+            });
         }
 
         [HttpGet]
@@ -42,16 +51,29 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             var sCourt = await _sCourtRepo.GetByIdAsync(id);
             if(sCourt == null)
             {
-                return NotFound();
+                return NotFound(new ApiResponse
+                {
+                    Success= false,
+                    Message = "SubCourt not found!"
+                });
             }
 
-            return Ok(_mapper.Map<SubCourtDTO>(sCourt));
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<SubCourtDTO>(sCourt)
+            });
         }
 
         [HttpPut]
@@ -60,16 +82,29 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             var sCourt = await _sCourtRepo.UpdateAsync(id, updateDTO);
             if( sCourt == null)
             {
-                return NotFound("Không tìm thấy sân!");
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "SubCourt not found!"
+                });
             }
 
-            return Ok(_mapper.Map<SubCourtDTO>(sCourt));
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<SubCourtDTO>(sCourt)
+            });
         }
 
         [HttpPost("{courtId:int}")]
@@ -77,17 +112,30 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             if(!await _courtRepo.CourtExist(courtId)) {
-                return BadRequest("Sân không tồn tại!");
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Court does not exist!"
+                });
             }
 
             var sCourtModel = _mapper.Map<SubCourt>(createDTO);
             sCourtModel.CourtId = courtId;
             await _sCourtRepo.CreateAsync(sCourtModel);
-            return CreatedAtAction(nameof(GetById), new { id = sCourtModel.CourtId }, _mapper.Map<SubCourtDTO>(sCourtModel));
+            return CreatedAtAction(nameof(GetById), new { id = sCourtModel.CourtId }, new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<SubCourtDTO>(sCourtModel)
+            });
         }
 
         [HttpDelete]
@@ -96,13 +144,22 @@ namespace Badminton.Web.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             var sCourtModel = await _sCourtRepo.DeleteAsync(id);
             if(sCourtModel == null)
             {
-                return NotFound("Sân không tồn tại!");
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "SubCourt does not exist!"
+                });
             }
 
             return NoContent();

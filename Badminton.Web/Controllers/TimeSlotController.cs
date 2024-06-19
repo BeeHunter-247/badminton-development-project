@@ -83,7 +83,7 @@ namespace Badminton.Web.Controllers
                 {
                     StartTime = TimeOnly.Parse(timeSlotDTO.StartTime),
                     EndTime = TimeOnly.Parse(timeSlotDTO.EndTime),
-                    SlotType = timeSlotDTO.SlotType,
+                   
                 };
 
                 await _timeSlotRepo.CreateAsync(timeSlotModel);

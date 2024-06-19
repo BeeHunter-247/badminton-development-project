@@ -15,13 +15,11 @@ public partial class Schedule
 
     public DateOnly BookingDate { get; set; }
 
-    public TimeOnly StartTime { get; set; }
-
-    public TimeOnly EndTime { get; set; }
+    public string Time { get; set; }
 
     public decimal TotalHours { get; set; }
 
-    public string BookingType { get; set; }
+    public int BookingType { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 

@@ -35,8 +35,8 @@ namespace Badminton.Web.Controllers
                 return BadRequest(new ApiResponse
                 {
                     Success = false,
-                    Message = "Invalid data"
-                    
+                    Message = "Invalid data",
+                    Data = ModelState
                 });
             }
 
@@ -69,7 +69,6 @@ namespace Badminton.Web.Controllers
             });
         }
 
-
         [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterModel model)
         {
@@ -78,7 +77,8 @@ namespace Badminton.Web.Controllers
                 return BadRequest(new ApiResponse
                 {
                     Success = false,
-                    Message = "Invalid data"
+                    Message = "Invalid data",
+                    Data = ModelState
                 });
             }
 
@@ -131,9 +131,6 @@ namespace Badminton.Web.Controllers
             });
         }
 
-
-
-
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
@@ -142,7 +139,8 @@ namespace Badminton.Web.Controllers
                 return BadRequest(new ApiResponse
                 {
                     Success = false,
-                    Message = "Invalid data"
+                    Message = "Invalid data",
+                    Data = ModelState
                 });
             }
 
@@ -217,6 +215,7 @@ namespace Badminton.Web.Controllers
                 Data = _mapper.Map<UserDTO>(user)
             });
         }
+
         //Edi Acoount
         [HttpPut("EditUser/{id}")]
         public async Task<IActionResult> EditUser(int id, EditUserModel model)
@@ -263,6 +262,7 @@ namespace Badminton.Web.Controllers
                 Message = "User updated successfully"
             });
         }
+
         //Delete Acoount
         [HttpDelete("DeleteUser/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
@@ -295,8 +295,6 @@ namespace Badminton.Web.Controllers
                 Message = "User deleted successfully"
             });
         }
-
-
 
         private string GenerateToken(User user)
         {
@@ -343,8 +341,5 @@ namespace Badminton.Web.Controllers
         {
             return user.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
         }
-
-
-
     }
 }

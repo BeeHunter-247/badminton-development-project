@@ -49,7 +49,11 @@ namespace Badminton.Web.Controllers
                     Message = "Invalid Username/Password"
                 });
             }
+            var username = user.UserName;
             var name = user.Name;
+            var id = user.UserId;
+            var email = user.Email;
+            var phone = user.Phone;
             var role = GetUserRole(user.RoleType); // Lấy vai trò dựa trên RoleType
             if (role == null)
             {
@@ -65,7 +69,7 @@ namespace Badminton.Web.Controllers
             {
                 Success = true,
                 Message = "Authentication successful",
-                Data = new { Name = name, Role = role, Token = token } // Trả về vai trò và token của người dùng
+                Data = new { Id = id, UserName = username ,Name = name,Email = email, Phone = phone ,Role = role, Token = token } // Trả về vai trò và token của người dùng
             });
         }
 

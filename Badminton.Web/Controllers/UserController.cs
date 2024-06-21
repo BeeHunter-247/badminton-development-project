@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using Badminton.Web.DTO;
+using Badminton.Web.DTO.User;
 using Badminton.Web.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -28,7 +31,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpPost("Login")]
-        public IActionResult Validate(LoginModel model)
+        public async Task<IActionResult> Validate(LoginModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -36,7 +39,6 @@ namespace Badminton.Web.Controllers
                 {
                     Success = false,
                     Message = "Invalid data"
-                    
                 });
             }
 
@@ -54,7 +56,7 @@ namespace Badminton.Web.Controllers
             var id = user.UserId;
             var email = user.Email;
             var phone = user.Phone;
-            var role = GetUserRole(user.RoleType); // Lấy vai trò dựa trên RoleType
+            var role = GetUserRole(user.RoleType);
             if (role == null)
             {
                 return Ok(new ApiResponse
@@ -64,14 +66,38 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var token = GenerateToken(user); // Tạo token
+            // Generate the claims for the cookie
+            var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, id.ToString()),
+        new Claim(ClaimTypes.Name, username),
+        new Claim(ClaimTypes.Email, email),
+        new Claim(ClaimTypes.MobilePhone, phone),
+        new Claim("Name", name),
+        new Claim("Id", id.ToString()),
+        new Claim(ClaimTypes.Role, role)
+    };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(3)
+            };
+
+            // Sign in the user with the cookie authentication scheme
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+
+            var token = GenerateToken(user);
+
             return Ok(new ApiResponse
             {
                 Success = true,
                 Message = "Authentication successful",
-                Data = new { Id = id, UserName = username ,Name = name,Email = email, Phone = phone ,Role = role, Token = token } // Trả về vai trò và token của người dùng
+                Data = new { Id = id, UserName = username, Name = name, Email = email, Phone = phone, Role = role, Token = token }
             });
         }
+
 
 
         [HttpPost("Register")]
@@ -221,11 +247,12 @@ namespace Badminton.Web.Controllers
                 Data = _mapper.Map<UserDTO>(user)
             });
         }
-        //Edi Acoount
-        [HttpPut("EditUser/{id}")]
-        public async Task<IActionResult> EditUser(int id, EditUserModel model)
+        //Edit Account (User)
+        [HttpPut("EditSelf")]
+        public async Task<IActionResult> EditSelf(EditSelfModel model)
         {
-            if (!IsAdmin(User))
+            // Check if the user is authenticated
+            if (!User.Identity.IsAuthenticated)
             {
                 return Unauthorized(new ApiResponse
                 {
@@ -233,6 +260,9 @@ namespace Badminton.Web.Controllers
                     Message = "Unauthorized"
                 });
             }
+
+            // Get the ID of the user making the request
+            var currentUserId = int.Parse(User.FindFirstValue("Id"));
 
             if (!ModelState.IsValid)
             {
@@ -243,7 +273,7 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users.FindAsync(currentUserId);
             if (user == null)
             {
                 return NotFound(new ApiResponse
@@ -252,10 +282,11 @@ namespace Badminton.Web.Controllers
                     Message = "User not found"
                 });
             }
+
             user.Name = model.Name;
             user.Email = model.Email;
             user.Phone = model.Phone;
-            user.RoleType = model.RoleType;
+
             // Update other fields as needed
 
             _context.Users.Update(user);
@@ -267,6 +298,7 @@ namespace Badminton.Web.Controllers
                 Message = "User updated successfully"
             });
         }
+       
         //Delete Acoount
         [HttpDelete("DeleteUser/{id}")]
         public async Task<IActionResult> DeleteUser(int id)

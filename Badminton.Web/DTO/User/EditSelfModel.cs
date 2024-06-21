@@ -6,7 +6,7 @@ namespace Badminton.Web.DTO.User
     public class EditSelfModel
     {
 
-        public string Name { get; set; }
+        public string FullName { get; set; }
         [Required]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }

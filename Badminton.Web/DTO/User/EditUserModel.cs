@@ -4,7 +4,7 @@ namespace Badminton.Web.Models
 {
     public class EditUserModel
     {
-        public string Name { get; set; }
+        public string FullName { get; set; }
         [Required]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }

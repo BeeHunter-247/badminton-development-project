@@ -39,12 +39,14 @@ public partial class CourtSyncContext : DbContext
     {
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.BookingId).HasName("PK__Booking__73951ACDE8CB7973");
+            entity.HasKey(e => e.BookingId).HasName("PK__Booking__73951ACD0292BC2A");
 
             entity.ToTable("Booking");
 
             entity.Property(e => e.BookingId).HasColumnName("BookingID");
-            entity.Property(e => e.CancellationReason).HasMaxLength(255);
+            entity.Property(e => e.CancellationReason)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.InvoiceId).HasColumnName("InvoiceID");
             entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
             entity.Property(e => e.PromotionId).HasColumnName("PromotionID");
@@ -91,7 +93,7 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<CheckIn>(entity =>
         {
-            entity.HasKey(e => e.CheckInId).HasName("PK__CheckIn__E64976A405AA329B");
+            entity.HasKey(e => e.CheckInId).HasName("PK__CheckIn__E64976A4CFF1886D");
 
             entity.ToTable("CheckIn");
 
@@ -119,22 +121,26 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<Court>(entity =>
         {
-            entity.HasKey(e => e.CourtId).HasName("PK__Court__C3A67CFAFD9D4768");
+            entity.HasKey(e => e.CourtId).HasName("PK__Court__C3A67CFAEB13A01C");
 
             entity.ToTable("Court");
 
             entity.Property(e => e.CourtId).HasColumnName("CourtID");
-            entity.Property(e => e.Announcement).HasMaxLength(2000);
+            entity.Property(e => e.Announcement)
+                .HasMaxLength(2000)
+                .IsUnicode(false);
             entity.Property(e => e.CourtManagerId).HasColumnName("CourtManagerID");
             entity.Property(e => e.CourtName)
                 .IsRequired()
-                .HasMaxLength(255);
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.Image)
                 .IsRequired()
                 .IsUnicode(false);
             entity.Property(e => e.Location)
                 .IsRequired()
-                .HasMaxLength(255);
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.OpeningHours)
                 .IsRequired()
                 .HasMaxLength(100)
@@ -151,11 +157,12 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<Evaluate>(entity =>
         {
-            entity.HasKey(e => e.EvaluateId).HasName("PK__Evaluate__2092E4DAE8B7B29F");
+            entity.HasKey(e => e.EvaluateId).HasName("PK__Evaluate__2092E4DA56F85C48");
 
             entity.ToTable("Evaluate");
 
             entity.Property(e => e.EvaluateId).HasColumnName("EvaluateID");
+            entity.Property(e => e.Comment).IsUnicode(false);
             entity.Property(e => e.CourtId).HasColumnName("CourtID");
             entity.Property(e => e.EvaluateDate).HasColumnType("datetime");
             entity.Property(e => e.UserId).HasColumnName("UserID");
@@ -173,7 +180,7 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<Invoice>(entity =>
         {
-            entity.HasKey(e => e.InvoiceId).HasName("PK__Invoice__D796AAD57F58335B");
+            entity.HasKey(e => e.InvoiceId).HasName("PK__Invoice__D796AAD58490DB23");
 
             entity.ToTable("Invoice");
 
@@ -193,7 +200,7 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A58A1120F8C");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A5834DC6694");
 
             entity.ToTable("Payment");
 
@@ -230,7 +237,7 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<Promotion>(entity =>
         {
-            entity.HasKey(e => e.PromotionId).HasName("PK__Promotio__52C42F2F6B6440A7");
+            entity.HasKey(e => e.PromotionId).HasName("PK__Promotio__52C42F2FEE556A90");
 
             entity.ToTable("Promotion");
 
@@ -240,7 +247,9 @@ public partial class CourtSyncContext : DbContext
                 .IsRequired()
                 .HasColumnType("text");
             entity.Property(e => e.DiscountPercentage).HasColumnType("decimal(5, 2)");
-            entity.Property(e => e.PromotionName).HasMaxLength(255);
+            entity.Property(e => e.PromotionName)
+                .HasMaxLength(255)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.Court).WithMany(p => p.Promotions)
                 .HasForeignKey(d => d.CourtId)
@@ -250,16 +259,12 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<Schedule>(entity =>
         {
-            entity.HasKey(e => e.ScheduleId).HasName("PK__Schedule__9C8A5B694119B9F4");
+            entity.HasKey(e => e.ScheduleId).HasName("PK__Schedule__9C8A5B692CF9EE75");
 
             entity.ToTable("Schedule");
 
             entity.Property(e => e.ScheduleId).HasColumnName("ScheduleID");
             entity.Property(e => e.SubCourtId).HasColumnName("SubCourtID");
-            entity.Property(e => e.Time)
-                .IsRequired()
-                .HasMaxLength(100)
-                .IsUnicode(false);
             entity.Property(e => e.TotalHours).HasColumnType("decimal(5, 2)");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -276,7 +281,7 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<SubCourt>(entity =>
         {
-            entity.HasKey(e => e.SubCourtId).HasName("PK__SubCourt__D8ADDD0C3EC47278");
+            entity.HasKey(e => e.SubCourtId).HasName("PK__SubCourt__D8ADDD0C83AC0764");
 
             entity.ToTable("SubCourt");
 
@@ -284,7 +289,8 @@ public partial class CourtSyncContext : DbContext
             entity.Property(e => e.CourtId).HasColumnName("CourtID");
             entity.Property(e => e.Name)
                 .IsRequired()
-                .HasMaxLength(255);
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.PricePerHour).HasColumnType("decimal(10, 2)");
 
             entity.HasOne(d => d.Court).WithMany(p => p.SubCourts)
@@ -300,7 +306,7 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<TimeSlot>(entity =>
         {
-            entity.HasKey(e => e.TimeSlotId).HasName("PK__TimeSlot__41CC1F526D821161");
+            entity.HasKey(e => e.TimeSlotId).HasName("PK__TimeSlot__41CC1F522A363248");
 
             entity.ToTable("TimeSlot");
 
@@ -309,21 +315,22 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__User__1788CCAC473B043D");
+            entity.HasKey(e => e.UserId).HasName("PK__User__1788CCACF7A6F4C2");
 
             entity.ToTable("User");
 
-            entity.HasIndex(e => e.Email, "UQ__User__A9D105349E17E1F3").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__User__A9D10534B405A3B9").IsUnique();
 
-            entity.HasIndex(e => e.UserName, "UQ__User__C9F28456638D90BA").IsUnique();
+            entity.HasIndex(e => e.UserName, "UQ__User__C9F28456012EBB25").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Email)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.Name)
+            entity.Property(e => e.FullName)
                 .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.Password)
                 .IsRequired()
                 .HasMaxLength(255)

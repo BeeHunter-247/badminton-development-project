@@ -15,7 +15,7 @@ public partial class Schedule
 
     public DateOnly BookingDate { get; set; }
 
-    public string Time { get; set; }
+    public int Time { get; set; }
 
     public decimal TotalHours { get; set; }
 

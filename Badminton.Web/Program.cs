@@ -22,6 +22,7 @@ namespace Badminton.Web
             builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("AppSettings"));
             var secretKey = builder.Configuration["AppSettings:SecretKey"];
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
+
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -103,7 +104,6 @@ namespace Badminton.Web
             builder.Services.AddScoped<IEvaluateRepository, EvaluateRepository>();
             builder.Services.AddScoped<ISubCourtRepository, SubCourtRepository>();
             builder.Services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
-            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             var app = builder.Build();
 
@@ -119,7 +119,6 @@ namespace Badminton.Web
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
-
 
             app.UseAuthorization();
 

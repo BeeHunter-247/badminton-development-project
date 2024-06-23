@@ -269,7 +269,7 @@ namespace Badminton.Web.Controllers
             });
         }
 
-        [HttpGet("GetCurrentUser")]
+        [HttpGet("GetCurrentUser(User)")]
         [Authorize]
         public async Task<IActionResult> GetCurrentUser()
         {
@@ -383,8 +383,7 @@ namespace Badminton.Web.Controllers
             });
         }
 
-
-        [HttpDelete("DeleteUser/{id}")]
+        [HttpDelete("DeleteUser(Admin)/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             if (!IsAdmin(User))

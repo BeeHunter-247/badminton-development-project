@@ -54,7 +54,6 @@ namespace Badminton.Web.Repository
             
             existingTimeSlot.StartTime = TimeOnly.Parse(timeSlotDTO.StartTime);
             existingTimeSlot.EndTime = TimeOnly.Parse(timeSlotDTO.EndTime);
-            
 
             await _context.SaveChangesAsync();
             return existingTimeSlot;

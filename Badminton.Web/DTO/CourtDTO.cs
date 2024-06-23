@@ -33,7 +33,7 @@ namespace Badminton.Web.DTO
         public string Location { get; set; }
 
         [Required]
-        [RegularExpression(@"^\d{10}$", ErrorMessage = "Số điện thoại phải chính xác 10 số.")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
         public string Phone { get; set; }
 
         public string OpeningHours { get; set; }
@@ -50,7 +50,7 @@ namespace Badminton.Web.DTO
         public string Location { get; set; }
 
         [Required]
-        [RegularExpression(@"^\d{10}$", ErrorMessage = "Số điện thoại phải chính xác 10 số.")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
         public string Phone { get; set; }
 
         public string OpeningHours { get; set; }

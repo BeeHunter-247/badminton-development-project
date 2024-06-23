@@ -39,7 +39,8 @@ namespace Badminton.Web.Controllers
                 return BadRequest(new ApiResponse
                 {
                     Success = false,
-                    Message = "Invalid data"
+                    Message = "Invalid data",
+                    Data = ModelState
                 });
             }
 
@@ -109,7 +110,8 @@ namespace Badminton.Web.Controllers
                 return BadRequest(new ApiResponse
                 {
                     Success = false,
-                    Message = "Invalid data"
+                    Message = "Invalid data",
+                    Data = ModelState
                 });
             }
 
@@ -162,9 +164,6 @@ namespace Badminton.Web.Controllers
             });
         }
 
-
-
-
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
@@ -173,7 +172,8 @@ namespace Badminton.Web.Controllers
                 return BadRequest(new ApiResponse
                 {
                     Success = false,
-                    Message = "Invalid data"
+                    Message = "Invalid data",
+                    Data = ModelState
                 });
             }
 
@@ -383,10 +383,13 @@ namespace Badminton.Web.Controllers
             });
         }
 
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> 9c37127f9a7636390ba02b630025ed911e5f0a51
         //Delete Acoount
         [HttpDelete("DeleteUser/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
@@ -419,8 +422,6 @@ namespace Badminton.Web.Controllers
                 Message = "User deleted successfully"
             });
         }
-
-
 
         private string GenerateToken(User user)
         {
@@ -469,8 +470,5 @@ namespace Badminton.Web.Controllers
         {
             return user.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
         }
-
-
-
     }
 }

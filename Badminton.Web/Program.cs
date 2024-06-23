@@ -22,6 +22,7 @@ namespace Badminton.Web
             builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("AppSettings"));
             var secretKey = builder.Configuration["AppSettings:SecretKey"];
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
+
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -119,7 +120,6 @@ namespace Badminton.Web
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
-
 
             app.UseAuthorization();
 

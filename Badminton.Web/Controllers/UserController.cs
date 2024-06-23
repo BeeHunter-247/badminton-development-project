@@ -383,14 +383,7 @@ namespace Badminton.Web.Controllers
             });
         }
 
-<<<<<<< HEAD
 
-
-
-
-=======
->>>>>>> 9c37127f9a7636390ba02b630025ed911e5f0a51
-        //Delete Acoount
         [HttpDelete("DeleteUser/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {

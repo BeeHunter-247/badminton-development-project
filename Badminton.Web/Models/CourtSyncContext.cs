@@ -256,7 +256,7 @@ public partial class CourtSyncContext : DbContext
 
             entity.Property(e => e.ScheduleId).HasColumnName("ScheduleID");
             entity.Property(e => e.SubCourtId).HasColumnName("SubCourtID");
-            entity.Property(e => e.Time)
+            entity.Property(e => e.TimeSlotID)
                 .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);

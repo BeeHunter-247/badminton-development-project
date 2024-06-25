@@ -41,6 +41,24 @@ namespace Badminton.Web.Repository
         }
 
         // update
+        public async Task<Promotion?> UpdateAsync (int id, UpdatePromotionDTO promotionDTO)
+        {
+            
+            var existingPromotion = await _context.Promotions.FirstOrDefaultAsync(e => e.PromotionId == id);
+            if (existingPromotion != null)
+            {
+                return null;
+            }
+            existingPromotion.PromotionName = promotionDTO.PromotionName;
+            existingPromotion.Description = promotionDTO.Description;   
+            existingPromotion.DiscountPercentage = promotionDTO.DiscountPercentage;
+            existingPromotion.StartDate = DateOnly.Parse(promotionDTO.StartDate);
+            existingPromotion.EndDate = DateOnly.Parse(promotionDTO.EndDate);
+
+
+            await _context.SaveChangesAsync();
+            return existingPromotion;
+        }
 
         //delete
         public async Task<Promotion?> DeleteAsync(int id)

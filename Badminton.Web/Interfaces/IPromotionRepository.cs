@@ -11,8 +11,8 @@ namespace Badminton.Web.Interfaces
         Task<List<PromotionDTO>> GetAll();
         Task<PromotionDTO?> GetByIdAsync(int id);
         // Update
-       /* Task<Promotion?> UpdateAsync(int id, UpdatePromotionDTO updatePromotionDto);
-        // Delete*/
+        Task<Promotion?> UpdateAsync(int id, UpdatePromotionDTO promotionDTO);
+        // Delete
         Task<Promotion?> DeleteAsync(int id);
 
     }

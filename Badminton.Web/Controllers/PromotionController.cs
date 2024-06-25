@@ -101,7 +101,7 @@ namespace Badminton.Web.Controllers
 
             return Ok(new ApiResponse
             {
-                Success = false,
+                Success = true,
                 Data = _mapper.Map<PromotionDTO>(promotion)
             });
         }
@@ -132,6 +132,36 @@ namespace Badminton.Web.Controllers
             return NoContent();
 
 
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, UpdatePromotionDTO promotionDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+             var promotion = await _promotionRepository.UpdateAsync(id, promotionDTO);
+            if(promotion == null) 
+            { 
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Promotion not found!"
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<PromotionDTO>(promotion)
+            });
         }
 
     }

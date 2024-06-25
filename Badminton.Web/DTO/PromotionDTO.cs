@@ -11,9 +11,9 @@ namespace Badminton.Web.DTO
 
         public string PromotionName { get; set; }
 
-        public string Description { get; set; }
+        public string Description { get; set; } 
 
-        public decimal? DiscountPercentage { get; set; }
+        public decimal DiscountPercentage { get; set; }
 
         [DataType(DataType.Date)]
         public DateOnly StartDate { get; set; }
@@ -25,31 +25,28 @@ namespace Badminton.Web.DTO
 
     public class CreatePromotionDTO
     {
-        public int CourtId { get; set; }
+        public String PromotionName { get; set; }
 
-        [Required(ErrorMessage = "UserId is required")]
-        public String? PromotionName { get; set; }
-
-        public String? Description { get; set; }
+        public String Description { get; set; }
 
         public decimal DiscountPercentage { get; set; }
-
-        public String? StartDate { get; set; }
-
-        public String? EndDate { get; set; }
+        [DataType(DataType.Date)]
+        public String StartDate { get; set; }
+        [DataType(DataType.Date)]
+        public String EndDate { get; set; }
     }
 
     public class UpdatePromotionDTO
     {
-        public String? PromotionName { get; set; }
+        public String PromotionName { get; set; }
 
-        public String? Description { get; set; }
+        public String Description { get; set; }
 
         public decimal DiscountPercentage { get; set; }
-
-        public String? StartDate { get; set; }
-
-        public String? EndDate { get; set; }
+        [DataType(DataType.Date)]
+        public String StartDate { get; set; }
+        [DataType(DataType.Date)]
+        public String EndDate { get; set; }
     }
 
 }

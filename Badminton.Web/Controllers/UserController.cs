@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using Badminton.Web.DTO;
+using Badminton.Web.DTO.User;
 using Badminton.Web.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -9,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Badminton.Web.Controllers
 {
@@ -28,7 +32,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpPost("Login")]
-        public IActionResult Validate(LoginModel model)
+        public async Task<IActionResult> Validate(LoginModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -49,8 +53,12 @@ namespace Badminton.Web.Controllers
                     Message = "Invalid Username/Password"
                 });
             }
-            var name = user.Name;
-            var role = GetUserRole(user.RoleType); // Lấy vai trò dựa trên RoleType
+            var username = user.UserName;
+            var fullname = user.FullName;
+            var id = user.UserId;
+            var email = user.Email;
+            var phone = user.Phone;
+            var role = GetUserRole(user.RoleType);
             if (role == null)
             {
                 return Ok(new ApiResponse
@@ -60,14 +68,39 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var token = GenerateToken(user); // Tạo token
+            // Generate the claims for the cookie
+            var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, id.ToString()),
+        new Claim(ClaimTypes.Name, username),
+        new Claim(ClaimTypes.Email, email),
+        new Claim(ClaimTypes.MobilePhone, phone),
+        new Claim("FullName", fullname),
+        new Claim("Id", id.ToString()), // Ensure this claim is added
+        new Claim(ClaimTypes.Role, role)
+    };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(3)
+            };
+
+            // Sign in the user with the cookie authentication scheme
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+
+            var token = GenerateToken(user);
+
             return Ok(new ApiResponse
             {
                 Success = true,
                 Message = "Authentication successful",
-                Data = new { Name = name, Role = role, Token = token } // Trả về vai trò và token của người dùng
+                Data = new { Id = id, UserName = username, FullName = fullname, Email = email, Phone = phone, Role = role, Token = token }
             });
         }
+
+
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterModel model)
@@ -115,7 +148,7 @@ namespace Badminton.Web.Controllers
             {
                 UserName = model.Username,
                 Password = model.Password, // You should hash the password before storing it
-                Name = model.Name,
+                FullName = model.FullName,
                 Email = model.Email,
                 Phone = model.Phone,
                 RoleType = 3 // Set RoleType to 2 for Investor
@@ -164,9 +197,9 @@ namespace Badminton.Web.Controllers
                 Message = "Password changed successfully"
             });
         }
+        // Assuming necessary using statements are included
 
-        //Get All
-        [HttpGet("GetAllUsers")]
+        [HttpGet("GetAllUsers(Admin)")]
         public async Task<IActionResult> GetAllUsers()
         {
             if (!IsAdmin(User))
@@ -179,15 +212,29 @@ namespace Badminton.Web.Controllers
             }
 
             var users = await _context.Users.ToListAsync();
+
+            // Map each user to UserAdminDTO
+            var userDtoList = new List<UserAdminDTO>();
+            foreach (var user in users)
+            {
+                var userDto = _mapper.Map<UserAdminDTO>(user);
+
+                // Convert RoleType from int to string (assuming GetUserRole is a method you have elsewhere)
+                userDto.RoleType = GetUserRole(user.RoleType);
+
+                userDtoList.Add(userDto);
+            }
+
             return Ok(new ApiResponse
             {
                 Success = true,
-                Data = _mapper.Map<List<UserDTO>>(users)
+                Data = userDtoList
             });
         }
 
-        //GetById
-        [HttpGet("GetUserById/{id}")]
+
+        // GetById
+        [HttpGet("GetUserById(Admin)/{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
             if (!IsAdmin(User))
@@ -209,26 +256,80 @@ namespace Badminton.Web.Controllers
                 });
             }
 
+            // Map the user to UserAdminDTO
+            var userDto = _mapper.Map<UserAdminDTO>(user);
+
+            // Convert the RoleType from int to string
+            userDto.RoleType = GetUserRole(user.RoleType);
+
             return Ok(new ApiResponse
             {
                 Success = true,
-                Data = _mapper.Map<UserDTO>(user)
+                Data = userDto
             });
         }
 
-        //Edi Acoount
-        [HttpPut("EditUser/{id}")]
-        public async Task<IActionResult> EditUser(int id, EditUserModel model)
+        [HttpGet("GetCurrentUser(User)")]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUser()
         {
-            if (!IsAdmin(User))
+            // Log claims for debugging
+            foreach (var claim in User.Claims)
+            {
+                Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
+            }
+
+            // Get the user ID from the claims
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
             {
                 return Unauthorized(new ApiResponse
                 {
                     Success = false,
-                    Message = "Unauthorized"
+                    Message = "User ID claim not found"
                 });
             }
 
+            // Parse the user ID
+            if (!int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid user ID"
+                });
+            }
+
+            // Retrieve the user from the database
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "User not found"
+                });
+            }
+
+            // Map the user to a DTO
+            var userDTO = _mapper.Map<UserDTO>(user);
+
+            // Return the user details
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "User found",
+                Data = userDTO
+            });
+        }
+
+
+
+        //Edit Account (User)
+        [HttpPut("EditSelf")]
+        [Authorize]
+        public async Task<IActionResult> EditSelf(EditSelfModel model)
+        {
             if (!ModelState.IsValid)
             {
                 return BadRequest(new ApiResponse
@@ -238,7 +339,27 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var user = await _context.Users.FindAsync(id);
+            // Get the ID of the user making the request
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    Success = false,
+                    Message = "User ID claim not found"
+                });
+            }
+
+            if (!int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid user ID"
+                });
+            }
+
+            var user = await _context.Users.FindAsync(userId);
             if (user == null)
             {
                 return NotFound(new ApiResponse
@@ -247,11 +368,10 @@ namespace Badminton.Web.Controllers
                     Message = "User not found"
                 });
             }
-            user.Name = model.Name;
+
+            user.FullName = model.FullName;
             user.Email = model.Email;
             user.Phone = model.Phone;
-            user.RoleType = model.RoleType;
-            // Update other fields as needed
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
@@ -263,8 +383,7 @@ namespace Badminton.Web.Controllers
             });
         }
 
-        //Delete Acoount
-        [HttpDelete("DeleteUser/{id}")]
+        [HttpDelete("DeleteUser(Admin)/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             if (!IsAdmin(User))
@@ -305,21 +424,23 @@ namespace Badminton.Web.Controllers
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-            new Claim(ClaimTypes.MobilePhone, user.Phone),
+            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+            new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.Email, user.Email),
-            new Claim("UserName", user.UserName),
-            new Claim("Name", user.Name),
-            new Claim("Id", user.UserId.ToString()),
-            new Claim("TokenId", Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Role, GetUserRole(user.RoleType)) // Add role to claims
+            new Claim(ClaimTypes.MobilePhone, user.Phone),
+            new Claim("FullName", user.FullName),
+            new Claim(ClaimTypes.Role, GetUserRole(user.RoleType))
         }),
-                Expires = DateTime.UtcNow.AddMinutes(60), // Extend token expiration as needed
+                Expires = DateTime.UtcNow.AddHours(3),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
             return jwtTokenHandler.WriteToken(token);
         }
+
+
+
 
         private string GetUserRole(int roleType)
         {

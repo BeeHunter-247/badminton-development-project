@@ -7,7 +7,7 @@ namespace Badminton.Web.Models
         [Required]
         public string Username { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string FullName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

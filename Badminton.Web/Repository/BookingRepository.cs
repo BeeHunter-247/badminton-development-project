@@ -32,28 +32,15 @@ namespace Badminton.Web.Repository
             await _context.SaveChangesAsync();
             return bookingModel;
         }
-        public async Task<List<BookingDTO>> GetAllAsync()
+        public async Task<List<BookingDTO>> GetAll()
         {
-            var bookings = await _context.Bookings
-                .Include(b => b.User)
-                .Include(b => b.SubCourt)
-                .Include(b => b.TimeSlot)
-                .Include(b => b.Schedule)
-                .Include(b => b.Promotion)
-                .ToListAsync();
-
+            var bookings = await _context.Bookings.ToListAsync();
             return _mapper.Map<List<BookingDTO>>(bookings);
         }
-        public async Task<BookingDTO> GetByIdAsync(int id)
+        public async Task<BookingDTO> GetById(int id)
         {
             var booking = await _context.Bookings
-                .Include(b => b.User)
-                .Include(b => b.SubCourt)
-                .Include(b => b.TimeSlot)
-                .Include(b => b.Schedule)
-                .Include(b => b.Promotion)
-                .FirstOrDefaultAsync(b => b.BookingId == id);
-
+               .FirstOrDefaultAsync(b => b.BookingId== id);
 
             return _mapper.Map<BookingDTO>(booking);
         }
@@ -83,37 +70,21 @@ namespace Badminton.Web.Repository
         }
 
         //Update
-        public async Task<Booking?> UpdateAsync(int id, UpdateBookingDTO booking)
+        public async Task<Booking?> UpdateAsync(int id, UpdateBookingDTO bookingDTO)
         {
-            // Tìm booking cần cập nhật dựa trên id
             var existingBooking = await _context.Bookings.FirstOrDefaultAsync(b => b.BookingId == id);
             if (existingBooking == null)
             {
-                return null; // Trả về null nếu không tìm thấy booking
+                return null;
             }
 
-            // Cập nhật các thuộc tính của booking từ đối tượng truyền vào
-            if (DateOnly.TryParse(booking.BookingDate.ToString(), out var parsedDate))
-            {
-                existingBooking.BookingDate = parsedDate;
-            }
-            existingBooking.Status = (int)booking.Status;
-            existingBooking.CancellationReason = booking.CancellationReason;
             
-            
+            existingBooking.BookingDate = DateOnly.Parse(bookingDTO.BookingDate);
+            existingBooking.Status = (int)bookingDTO.Status;
+            existingBooking.CancellationReason = bookingDTO.CancellationReason;
+            await _context.SaveChangesAsync();
 
-            // Lưu các thay đổi vào cơ sở dữ liệu
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                // Xử lý xung đột cập nhật dữ liệu nếu cần
-                throw;
-            }
-
-            return existingBooking; // Trả về đối tượng Booking sau khi cập nhật
+            return existingBooking;
         }
 
 
@@ -128,15 +99,14 @@ namespace Badminton.Web.Repository
             var booking = await _context.Bookings.FindAsync(bookingId);
             if (booking == null)
             {
-                return null; // Hoặc throw new NotFoundException("Booking not found");
+                return null; 
             }
 
             booking.Status = (int)BookingStatus.Cancelled;
             booking.CancellationReason = cancellationReason;
             await _context.SaveChangesAsync();
-            await _context.Entry(booking).ReloadAsync(); // Tải lại để có thông tin cập nhật
-
-            return _mapper.Map<BookingDTO>(booking); // Trả về BookingDTO sau khi cập nhật
+            await _context.Entry(booking).ReloadAsync(); 
+            return _mapper.Map<BookingDTO>(booking); 
         }
 
         // Delete

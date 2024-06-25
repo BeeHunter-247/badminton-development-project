@@ -3,6 +3,7 @@ using Badminton.Web.DTO;
 using Badminton.Web.Enums;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
+using Badminton.Web.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -20,7 +21,6 @@ namespace Badminton.Web.Controllers
         private readonly ILogger<BookingController> _logger;
         private readonly CourtSyncContext _context;
 
-        // Constructor to inject IBookingRepository, IMapper, ILogger, and CourtSyncContext
         public BookingController(IBookingRepository bookingRepo, IMapper mapper, ILogger<BookingController> logger, CourtSyncContext context)
         {
             _bookingRepo = bookingRepo;
@@ -30,31 +30,67 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookingDTO>>> GetAllBookings()
+        public async Task<IActionResult> GetAll()
         {
-            var bookings = await _bookingRepo.GetAllAsync();
-            return Ok(bookings);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+            var bookings = await _bookingRepo.GetAll();
+            var bookingDto = _mapper.Map<List<BookingDTO>>(bookings);
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = bookingDto
+            });
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
-            var booking = await _bookingRepo.GetByIdAsync(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            var booking = await _bookingRepo.GetById(id);
             if (booking == null)
             {
-                return NotFound();
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Booking not found!"
+                });
             }
-            return Ok(booking);
-        }
 
-        // POST: api/Booking
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<BookingDTO>(booking)
+            });
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateAsync(CreateBookingDTO bookingDTO)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); // Trả về lỗi nếu dữ liệu đầu vào không hợp lệ
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
             try
@@ -67,97 +103,66 @@ namespace Badminton.Web.Controllers
                     ScheduleId = bookingDTO.ScheduleId,
                     BookingDate = DateOnly.Parse(bookingDTO.BookingDate),
                     Status = (int)BookingStatus.Pending,
-                    TotalPrice = (decimal)bookingDTO.TotalPrice,           // Bạn sẽ tính toán giá trị này sau
-                    PromotionId = bookingDTO.PromotionId, // Nếu có khuyến mãi
-                    InvoiceId = bookingDTO.InvoiceId,            // Giá trị ban đầu, sẽ cập nhật sau
-                    PaymentId = bookingDTO.PaymentId            // Giá trị ban đầu, sẽ cập nhật sau
+                    TotalPrice = (decimal)bookingDTO.TotalPrice,
+                    PromotionId = bookingDTO.PromotionId,
+                    InvoiceId = bookingDTO.InvoiceId,
+                    PaymentId = bookingDTO.PaymentId
                 };
 
-                // Thêm logic tính toán TotalPrice và điền các trường khác ở đây ...
+                //TotalPrice ..
 
                 await _bookingRepo.CreateAsync(booking);
                 booking.TimeSlot = await _context.TimeSlots.FindAsync(booking.TimeSlotId);
                 booking.SubCourt = await _context.SubCourts.FindAsync(booking.SubCourtId);
 
-
-                return Ok(_mapper.Map<BookingDTO>(booking)); // Trả về BookingDTO
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Data = _mapper.Map<BookingDTO>(booking)
+                });
             }
             catch
             {
-                return BadRequest(); // Trả về BadRequest nếu có lỗi
+                return BadRequest();
             }
         }
-
-
-
-
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateBooking([FromRoute] int id, [FromBody] UpdateBookingDTO updateBookingDto)
+        public async Task<IActionResult> UpdateBooking(int id, [FromBody] UpdateBookingDTO bookingDTO)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
-            if (updateBookingDto == null)
+            if (bookingDTO == null)
             {
-                return BadRequest(); // Hoặc return NoContent();
+                return BadRequest();
             }
 
-            try
+            var bookingU = await _bookingRepo.UpdateAsync(id, bookingDTO);
+            if (bookingU == null)
             {
-                // 1. Lấy booking hiện tại từ repository
-                var bookingModle = await _bookingRepo.GetByIdAsync(id);
-                if (bookingModle == null)
+                return NotFound(new ApiResponse
                 {
-                    return NotFound(); // Booking không tồn tại
-                }
-
-                /*// 2. Kiểm tra trạng thái của booking (chỉ cho phép cập nhật khi booking đang chờ)
-                if (bookingModle.Status != BookingStatus.Pending) // Giả sử Pending là 0
-                {
-                    return BadRequest("Cannot update a booking that is not in pending status.");
-                }
-
-                // 3. Kiểm tra xem ngày cập nhật có hợp lệ không (không được ở quá khứ)
-                if (DateOnly.TryParse(updateBookingDto.BookingDate, out var parsedDate) && parsedDate < DateOnly.FromDateTime(DateTime.Now))
-                {
-                    return BadRequest("Booking date cannot be in the past.");
-                }*/
-
-                // 4. Ánh xạ UpdateBookingDTO vào existingBooking (chỉ ánh xạ các thuộc tính cần cập nhật)
-                _mapper.Map(updateBookingDto, bookingModle);
-
-                // 5. Cập nhật booking trong repository
-                var updatedBooking = await _bookingRepo.UpdateAsync(id, updateBookingDto); // Truyền model Booking
-
-                if (updatedBooking == null)
-                {
-                    return NotFound(); // Booking không tồn tại sau khi cập nhật (có thể do xung đột)
-                }
-
-                // 6. Trả về kết quả
-                return Ok(_mapper.Map<BookingDTO>(updatedBooking)); // Trả về BookingDTO sau khi cập nhật
+                    Success = false,
+                    Message = "Booking not found!"
+                });
             }
-            catch (DbUpdateConcurrencyException)
+
+            return Ok(new ApiResponse
             {
-                if (!await _bookingRepo.BookingExistsAsync(id))
-                {
-                    return NotFound(); // Booking không tồn tại
-                }
-                else
-                {
-                    throw; // Ném lại exception để xử lý ở tầng cao hơn
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while updating booking.");
-                return StatusCode(500, "Internal server error.");
-            }
+                Success = true,
+                Data = _mapper.Map<BookingDTO>(bookingDTO)
+            });
         }
 
-        // DELETE: api/Booking/{id}
+
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking(int id)
         {

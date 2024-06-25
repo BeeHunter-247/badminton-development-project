@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Badminton.Web.DTO;
 using Badminton.Web.Models;
+using System.Globalization;
 
 namespace Badminton.Web.Mappers
 {
@@ -8,13 +9,14 @@ namespace Badminton.Web.Mappers
     {
         public MappingProfile()
         {
-            CreateMap<UpdateBookingDTO, Booking>();
+            
             CreateMap<Booking, BookingDTO>();
+            
+            CreateMap<UpdateBookingDTO, BookingDTO>();
 
             CreateMap<Schedule, ScheduleDTO>();
             CreateMap<ScheduleDTO, Schedule>();
-            CreateMap<CreateScheduleDTO, Schedule>()
-                .ForMember(dest => dest.BookingDate, opt => opt.MapFrom(src => src.BookingDate));
+            CreateMap<CreateScheduleDTO, Schedule>();
 
             CreateMap<Promotion, PromotionDTO>();
 
@@ -29,5 +31,6 @@ namespace Badminton.Web.Mappers
             CreateMap<TimeSlot, TimeSlotDTO>();
             CreateMap<User, UserDTO>();
         }
+
     }
 }

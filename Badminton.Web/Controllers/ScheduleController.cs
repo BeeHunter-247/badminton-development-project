@@ -7,6 +7,7 @@ using Badminton.Web.DTO;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using AutoMapper;
+using Badminton.Web.Enums;
 
 
 namespace Badminton.Web.Controllers
@@ -17,28 +18,56 @@ namespace Badminton.Web.Controllers
     {
         private readonly IScheduleRepository _scheduleRepository;
         private readonly IMapper _mapper;
-
-        public ScheduleController(IScheduleRepository scheduleRepository, IMapper mapper)
+        private readonly CourtSyncContext _context;
+        private readonly ILogger<BookingController> _logger;
+        public ScheduleController(IScheduleRepository scheduleRepository, IMapper mapper, CourtSyncContext context, ILogger<BookingController> logger)
         {
             _scheduleRepository = scheduleRepository ?? throw new ArgumentNullException(nameof(scheduleRepository));
             _mapper = mapper;
+            _context = context;
+            _logger = logger;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateSchedule([FromBody] CreateBookingDTO scheduleDto)
+        public async Task<IActionResult> CreateSchedule([FromBody] CreateScheduleDTO scheduleDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var createdSchedule = _mapper.Map<Schedule>(scheduleDto);
-            return CreatedAtAction(nameof(GetScheduleById), new { id = createdSchedule.ScheduleId }, _mapper.Map<Schedule>(scheduleDto));
+            try
+            {
+                if (!DateOnly.TryParse(scheduleDto.BookingDate, out var parsedBookingDate))
+                {
+                    ModelState.AddModelError("BookingDate", "Invalid BookingDate format. Please use yyyy-MM-dd.");
+                    return BadRequest(ModelState);
+                }
+
+                var schedule = new Schedule
+                {
+                    UserId = scheduleDto.UserId,
+                    SubCourtId = scheduleDto.SubCourtId,
+                    BookingDate = parsedBookingDate,
+                    TimeSlotID = scheduleDto.TimeSlotID,
+                    TotalHours = scheduleDto.TotalHours,
+                    BookingType = (int)BookingType.Daily
+                };
+
+                await _scheduleRepository.Create(schedule);
+
+                return Ok(_mapper.Map<ScheduleDTO>(schedule));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating schedule.");
+                return StatusCode(500, "Internal server error.");
+            }
         }
 
 
 
-        [HttpPut("{id}")]
+        /*[HttpPut("{id}")]
         public async Task<IActionResult> UpdateSchedule(int id, [FromBody] UpdateScheduleDTO updateScheduleDTO)
         {
             if (!ModelState.IsValid || id != updateScheduleDTO.ScheduleId)
@@ -63,7 +92,7 @@ namespace Badminton.Web.Controllers
             var updatedScheduleDto = _mapper.Map<ScheduleDTO>(updatedSchedule);
 
             return Ok(updatedScheduleDto);
-        }
+        }*/
 
 
 

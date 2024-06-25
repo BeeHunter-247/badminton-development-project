@@ -1,38 +1,37 @@
-﻿namespace Badminton.Web.DTO
+﻿using Badminton.Web.Enums;
+using System.ComponentModel.DataAnnotations;
+
+namespace Badminton.Web.DTO
 {
     public class ScheduleDTO
     {
         public int ScheduleId { get; set; }
         public int UserId { get; set; }
         public int SubCourtId { get; set; }
+        
+        [DataType(DataType.Date)]
         public DateOnly BookingDate { get; set; }
-        public TimeOnly StartTime { get; set; }
-        public TimeOnly EndTime { get; set; }
         public decimal TotalHours { get; set; }
         public string BookingType { get; set; }
+        public int TimeSlotID { get; set; }
 
-        /*public UserDTO User { get; set; }*/
-        public SubCourtDTO SubCourt { get; set; }
     }
     public class CreateScheduleDTO
     {
         public int UserId { get; set; }
         public int SubCourtId { get; set; }
-        public DateOnly BookingDate { get; set; }
-        public TimeOnly StartTime { get; set; }
-        public TimeOnly EndTime { get; set; }
+        public String BookingDate { get; set; }
+        public int TimeSlotID { get; set; }
         public decimal TotalHours { get; set; }
-        public string BookingType { get; set; }
+        public BookingType? BookingType { get; set; }
     }
 
     public class UpdateScheduleDTO
     {
         public int ScheduleId { get; set; }
-
-        public DateOnly? BookingDate { get; set; }
-        public TimeOnly? StartTime { get; set; }
-        public TimeOnly? EndTime { get; set; }
+        public int TimeSlotID { get; set; }
+        public String BookingDate { get; set; }
         public decimal? TotalHours { get; set; }
-        public string BookingType { get; set; }
+        public BookingType? BookingType { get; set; }
     }
 }

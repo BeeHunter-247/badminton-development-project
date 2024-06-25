@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Badminton.Web.DTO;
 using Badminton.Web.Interfaces;
+using Badminton.Web.Enums;
 using Badminton.Web.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -33,16 +34,20 @@ namespace Badminton.Web.Repository
 
 
         //create
-        public async Task<ScheduleDTO> Create(ScheduleDTO scheduleDto)
+        public async Task<Schedule> Create(Schedule scheduleModel)
         {
-            var schedule = _mapper.Map<Schedule>(scheduleDto);
-            _context.Schedules.Add(schedule);
+            if (scheduleModel == null)
+            {
+                throw new ArgumentException(nameof(scheduleModel));
+            }
+
+            _context.Schedules.Add(scheduleModel);
             await _context.SaveChangesAsync();
-            return _mapper.Map<ScheduleDTO>(schedule);
+            return scheduleModel;
         }
 
         //update
-        public async Task<ScheduleDTO> Update(int id, ScheduleDTO scheduleDto)
+        /*public async Task<ScheduleDTO> Update(int id, ScheduleDTO scheduleDto)
         {
             var schedule = await _context.Schedules.FindAsync(id);
             if (schedule == null)
@@ -54,12 +59,12 @@ namespace Badminton.Web.Repository
             schedule.StartTime = scheduleDto.StartTime;
             schedule.EndTime = scheduleDto.EndTime;
             schedule.TotalHours = scheduleDto.TotalHours;
-            schedule.BookingType = scheduleDto.BookingType;
+            schedule.BookingType = BoookingType.scheduleDto.BookingType;
 
             _context.Schedules.Update(schedule);
             await _context.SaveChangesAsync();
             return _mapper.Map<ScheduleDTO>(schedule);
-        }
+        }*/
 
         // delete
         public async Task<bool> Delete(int id)
@@ -75,6 +80,12 @@ namespace Badminton.Web.Repository
             return true;
         }
 
-        // Các phương thức khác như Get, Delete...
+        public async Task<bool> ScheduleExistsAsync(Schedule scheduleCheck)
+        {
+            return await _context.Schedules.AnyAsync(s =>
+                s.SubCourtId == scheduleCheck.SubCourtId &&
+                s.BookingDate == scheduleCheck.BookingDate &&
+                s.TimeSlotID == scheduleCheck.TimeSlotID);
+        }
     }
 }

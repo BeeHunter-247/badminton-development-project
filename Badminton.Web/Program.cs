@@ -100,8 +100,6 @@ namespace Badminton.Web
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
-            builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
             builder.Services.AddScoped<ICourtRepository, CourtRepository>();
             builder.Services.AddScoped<IEvaluateRepository, EvaluateRepository>();
             builder.Services.AddScoped<ISubCourtRepository, SubCourtRepository>();

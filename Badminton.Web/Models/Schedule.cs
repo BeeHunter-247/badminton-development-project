@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Badminton.Web.Models;
 
@@ -15,7 +16,7 @@ public partial class Schedule
 
     public DateOnly BookingDate { get; set; }
 
-    public int Time { get; set; }
+    public int TimeSlotID { get; set; }
 
     public decimal TotalHours { get; set; }
 

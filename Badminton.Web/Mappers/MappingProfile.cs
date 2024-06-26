@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Badminton.Web.DTO;
 using Badminton.Web.Models;
+using System.Globalization;
 
 namespace Badminton.Web.Mappers
 {
@@ -8,8 +9,20 @@ namespace Badminton.Web.Mappers
     {
         public MappingProfile()
         {
+            
+            CreateMap<Booking, BookingDTO>();
+            
+            CreateMap<UpdateBookingDTO, BookingDTO>();
+
+            CreateMap<Schedule, ScheduleDTO>();
+            CreateMap<ScheduleDTO, Schedule>();
+            CreateMap<CreateScheduleDTO, Schedule>();
+
+            CreateMap<Promotion, PromotionDTO>();
+
             CreateMap<Court, CourtDTO>();
             CreateMap<CreateCourtDTO, Court>();
+
             CreateMap<Evaluate, EvaluateDTO>();
             CreateMap<CreateEvaluateDTO, Evaluate>();
             CreateMap<UpdateEvaluateDTO, Evaluate>();
@@ -19,5 +32,6 @@ namespace Badminton.Web.Mappers
             CreateMap<User, UserDTO>();
             CreateMap<User, UserAdminDTO>();
         }
+
     }
 }

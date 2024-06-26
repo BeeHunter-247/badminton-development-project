@@ -46,26 +46,6 @@ namespace Badminton.Web.Repository
             return scheduleModel;
         }
 
-        //update
-        /*public async Task<ScheduleDTO> Update(int id, ScheduleDTO scheduleDto)
-        {
-            var schedule = await _context.Schedules.FindAsync(id);
-            if (schedule == null)
-            {
-                return null;
-            }
-
-            schedule.BookingDate = scheduleDto.BookingDate;
-            schedule.StartTime = scheduleDto.StartTime;
-            schedule.EndTime = scheduleDto.EndTime;
-            schedule.TotalHours = scheduleDto.TotalHours;
-            schedule.BookingType = BoookingType.scheduleDto.BookingType;
-
-            _context.Schedules.Update(schedule);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<ScheduleDTO>(schedule);
-        }*/
-
         // delete
         public async Task<bool> Delete(int id)
         {

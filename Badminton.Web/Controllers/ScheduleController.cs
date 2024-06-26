@@ -66,36 +66,6 @@ namespace Badminton.Web.Controllers
         }
 
 
-
-        /*[HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSchedule(int id, [FromBody] UpdateScheduleDTO updateScheduleDTO)
-        {
-            if (!ModelState.IsValid || id != updateScheduleDTO.ScheduleId)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var scheduleToUpdate = await _scheduleRepository.GetById(id);
-            if (scheduleToUpdate == null)
-            {
-                return NotFound();
-            }
-
-            // Update only properties that should be updated (excluding ID)
-            scheduleToUpdate.BookingDate = updateScheduleDTO.BookingDate ?? scheduleToUpdate.BookingDate;
-            scheduleToUpdate.StartTime = updateScheduleDTO.StartTime ?? scheduleToUpdate.StartTime;
-            scheduleToUpdate.EndTime = updateScheduleDTO.EndTime ?? scheduleToUpdate.EndTime;
-            scheduleToUpdate.TotalHours = updateScheduleDTO.TotalHours ?? scheduleToUpdate.TotalHours;
-            scheduleToUpdate.BookingType = updateScheduleDTO.BookingType ?? scheduleToUpdate.BookingType;
-
-            var updatedSchedule = await _scheduleRepository.Update(id, scheduleToUpdate);
-            var updatedScheduleDto = _mapper.Map<ScheduleDTO>(updatedSchedule);
-
-            return Ok(updatedScheduleDto);
-        }*/
-
-
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSchedule(int id)
         {

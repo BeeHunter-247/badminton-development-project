@@ -54,7 +54,8 @@ namespace Badminton.Web.Repository
 
             existingEvaluate.Rating = evaluateDTO.Rating;
             existingEvaluate.Comment = evaluateDTO.Comment;
-            existingEvaluate.EvaluateDate = evaluateDTO.EvaluateDate;
+            DateTime currentTime = DateTime.Now;
+            existingEvaluate.EvaluateDate = currentTime;
 
             await _context.SaveChangesAsync();
             return existingEvaluate;

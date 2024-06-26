@@ -4,6 +4,8 @@ namespace Badminton.Web.DTO
 {
     public class InvoiceDTO
     {
+        public int InvoiceId { get; set; }
+
         public int UserId { get; set; }
 
         public decimal TotalAmount { get; set; }
@@ -14,7 +16,7 @@ namespace Badminton.Web.DTO
 
         public decimal FinalAmount { get; set; }
 
-        public DateTime InvoiceDate { get; set; }
+        public DateTime InvoiceDate { get; set; } = DateTime.Now;
 
     }
 
@@ -28,6 +30,10 @@ namespace Badminton.Web.DTO
 
         public decimal? Discount { get; set; }
 
+        public decimal FinalAmount { get; set; }
+
+        public DateTime InvoiceDate { get; set; } = DateTime.Now;
+
     }
 
     public class UpdateInvoiceDTO
@@ -37,5 +43,8 @@ namespace Badminton.Web.DTO
         public decimal? Discount { get; set; }
 
         public decimal TotalAmount { get; set; }
+        public decimal FinalAmount { get; set; }
+
+        public DateTime InvoiceDate { get; set; } = DateTime.Now;
     }
 }

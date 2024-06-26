@@ -65,7 +65,7 @@ namespace Badminton.Web.Repository
             return await _context.Schedules.AnyAsync(s =>
                 s.SubCourtId == scheduleCheck.SubCourtId &&
                 s.BookingDate == scheduleCheck.BookingDate &&
-                s.TimeSlotID == scheduleCheck.TimeSlotID);
+                s.TimeSlotId == scheduleCheck.TimeSlotId);
         }
     }
 }

@@ -1,47 +1,38 @@
 ﻿using AutoMapper;
 using Badminton.Web.DTO;
+using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Badminton.Web.Repository
 {
-    public class InvoiceRepository
+    public class InvoiceRepository : IInvoiceRepository
     {
         private readonly CourtSyncContext _context;
-        private readonly IMapper _mapper;
         
-        public InvoiceRepository(CourtSyncContext context, IMapper mapper)
+        public InvoiceRepository(CourtSyncContext context)
         {
             _context = context;
-            _mapper = mapper;
         } 
 
-        //create
         public async Task<Invoice> CreateAsync(Invoice invoice)
         {
-            if(invoice == null) throw new ArgumentNullException(nameof(invoice));
-            _context.Invoices.Add(invoice);
+            await _context.AddAsync(invoice);
             await _context.SaveChangesAsync();
             return invoice;
         }
 
-        // read
-        public async Task<List<InvoiceDTO>> GetAll()
+        public async Task<List<Invoice>> GetAllAsync()
         {
-            var invoice = await _context.Invoices.ToListAsync();
-            return _mapper.Map<List<InvoiceDTO>>(invoice);
+            return await _context.Invoices.ToListAsync();
         }
 
-        public async Task<InvoiceDTO> GetByIdAsync(int id)
+        public async Task<Invoice> GetByIdAsync(int id)
         {
-            var invoice = await _context.Invoices
-                .FirstOrDefaultAsync(i => i.InvoiceId== id);
-
-            return _mapper.Map<InvoiceDTO>(invoice);
+            return await _context.Invoices.FirstOrDefaultAsync(i => i.InvoiceId == id);
         }
 
-        //delete
-        public async Task<Invoice> DeleteAsync(int id)
+        public async Task<Invoice?> DeleteAsync(int id)
         {
             var invoice = await _context.Invoices.FirstOrDefaultAsync(i => i.InvoiceId == id);
             if (invoice == null)
@@ -54,22 +45,24 @@ namespace Badminton.Web.Repository
             return invoice;
         }
 
-        //update
-        public async Task<Invoice> UpdateAsync(int id, UpdateInvoiceDTO invoiceDTO)
+        public async Task<Invoice?> UpdateAsync(int id, UpdateInvoiceDTO invoiceDTO)
         {
 
-            var existingInvoice= await _context.Invoices.FirstOrDefaultAsync(i => i.InvoiceId== id);
-            if (existingInvoice != null)
+            var existingInvoice = await _context.Invoices.FirstOrDefaultAsync(i => i.InvoiceId== id);
+
+            if (existingInvoice == null)
             {
                 return null;
             }
+
             existingInvoice.Tax = invoiceDTO.Tax;
             existingInvoice.Discount = invoiceDTO.Discount;
             existingInvoice.TotalAmount = invoiceDTO.TotalAmount;
-
+            existingInvoice.FinalAmount = invoiceDTO.FinalAmount;
+            DateTime currentTime = DateTime.Now;
+            existingInvoice.InvoiceDate = currentTime;
             await _context.SaveChangesAsync();
             return existingInvoice;
         }
-
     }
 }

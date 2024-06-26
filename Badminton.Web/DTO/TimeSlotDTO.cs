@@ -1,4 +1,6 @@
-﻿namespace Badminton.Web.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Badminton.Web.DTO
 {
     public class TimeSlotDTO
     {
@@ -11,6 +13,7 @@
 
     public class CreateTimeSlotDTO
     {
+        [DataType(DataType.Time)]
         public string StartTime { get; set; }
 
         public string EndTime { get; set; }

@@ -99,6 +99,8 @@ namespace Badminton.Web.Controllers
 
             var evaluateModel = _mapper.Map<Evaluate>(evaluateDTO);
             evaluateModel.CourtId = courtId;
+            DateTime currentTime = DateTime.Now;
+            evaluateModel.EvaluateDate = currentTime;
             await _evaluateRepo.CreateAsync(evaluateModel);
             return CreatedAtAction(nameof(GetById), new {id = evaluateModel.EvaluateId}, new ApiResponse
             {

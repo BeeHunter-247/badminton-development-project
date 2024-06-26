@@ -5,10 +5,10 @@ namespace Badminton.Web.Interfaces
 {
     public interface IInvoiceRepository
     {
-        Task<List<InvoiceDTO>> GetAll();
-        Task<InvoiceDTO> GetById(int id);
-        Task<Invoice> Create(Invoice invoice);
-        Task<Invoice> Update(int id, UpdateInvoiceDTO invoiceDTO);
-
+        Task<List<Invoice>> GetAllAsync();
+        Task<Invoice?> GetByIdAsync(int id);
+        Task<Invoice> CreateAsync(Invoice invoice);
+        Task<Invoice?> UpdateAsync(int id, UpdateInvoiceDTO invoiceDTO);
+        Task<Invoice?> DeleteAsync(int id);
     }
 }

@@ -9,20 +9,14 @@ namespace Badminton.Web.Mappers
     {
         public MappingProfile()
         {
-            
             CreateMap<Booking, BookingDTO>();
-            
             CreateMap<UpdateBookingDTO, BookingDTO>();
-
             CreateMap<Schedule, ScheduleDTO>();
             CreateMap<ScheduleDTO, Schedule>();
             CreateMap<CreateScheduleDTO, Schedule>();
-
             CreateMap<Promotion, PromotionDTO>();
-
             CreateMap<Court, CourtDTO>();
             CreateMap<CreateCourtDTO, Court>();
-
             CreateMap<Evaluate, EvaluateDTO>();
             CreateMap<CreateEvaluateDTO, Evaluate>();
             CreateMap<UpdateEvaluateDTO, Evaluate>();
@@ -31,7 +25,8 @@ namespace Badminton.Web.Mappers
             CreateMap<TimeSlot, TimeSlotDTO>();
             CreateMap<User, UserDTO>();
             CreateMap<User, UserAdminDTO>();
+            CreateMap<Invoice, InvoiceDTO>();
+            CreateMap<CreateInvoiceDTO, Invoice>();
         }
-
     }
 }

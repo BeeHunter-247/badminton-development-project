@@ -25,28 +25,28 @@ namespace Badminton.Web.DTO
 
     public class CreatePromotionDTO
     {
-        public String PromotionName { get; set; }
+        public string PromotionName { get; set; }
 
-        public String Description { get; set; }
+        public string Description { get; set; }
 
         public decimal DiscountPercentage { get; set; }
         [DataType(DataType.Date)]
-        public String StartDate { get; set; }
+        public string StartDate { get; set; }
         [DataType(DataType.Date)]
-        public String EndDate { get; set; }
+        public string EndDate { get; set; }
     }
 
     public class UpdatePromotionDTO
     {
-        public String PromotionName { get; set; }
+        public string PromotionName { get; set; }
 
-        public String Description { get; set; }
+        public string Description { get; set; }
 
         public decimal DiscountPercentage { get; set; }
         [DataType(DataType.Date)]
-        public String StartDate { get; set; }
+        public string StartDate { get; set; }
         [DataType(DataType.Date)]
-        public String EndDate { get; set; }
+        public string EndDate { get; set; }
     }
 
 }

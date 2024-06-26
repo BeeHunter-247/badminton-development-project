@@ -13,15 +13,15 @@ namespace Badminton.Web.DTO
         public DateOnly BookingDate { get; set; }
         public decimal TotalHours { get; set; }
         public string BookingType { get; set; }
-        public int TimeSlotID { get; set; }
+        public int TimeSlotId { get; set; }
 
     }
     public class CreateScheduleDTO
     {
         public int UserId { get; set; }
         public int SubCourtId { get; set; }
-        public String BookingDate { get; set; }
-        public int TimeSlotID { get; set; }
+        public string BookingDate { get; set; }
+        public int TimeSlotId { get; set; }
         public decimal TotalHours { get; set; }
         public BookingType? BookingType { get; set; }
     }
@@ -29,8 +29,8 @@ namespace Badminton.Web.DTO
     public class UpdateScheduleDTO
     {
         public int ScheduleId { get; set; }
-        public int TimeSlotID { get; set; }
-        public String BookingDate { get; set; }
+        public int TimeSlotId { get; set; }
+        public string BookingDate { get; set; }
         public decimal? TotalHours { get; set; }
         public BookingType? BookingType { get; set; }
     }

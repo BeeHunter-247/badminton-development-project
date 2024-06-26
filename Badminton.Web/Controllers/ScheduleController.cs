@@ -49,7 +49,7 @@ namespace Badminton.Web.Controllers
                     UserId = scheduleDto.UserId,
                     SubCourtId = scheduleDto.SubCourtId,
                     BookingDate = parsedBookingDate,
-                    TimeSlotID = scheduleDto.TimeSlotID,
+                    TimeSlotId = scheduleDto.TimeSlotId,
                     TotalHours = scheduleDto.TotalHours,
                     BookingType = (int)BookingType.Daily
                 };

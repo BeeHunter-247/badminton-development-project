@@ -32,6 +32,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpPost("Login")]
+        //User/Admin
         public async Task<IActionResult> Validate(LoginModel model)
         {
             if (!ModelState.IsValid)
@@ -44,8 +45,8 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var user = _context.Users.SingleOrDefault(p => p.UserName == model.UserName && p.Password == model.Password);
-            if (user == null)
+            var user = _context.Users.SingleOrDefault(p => p.UserName == model.UserName);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
             {
                 return Ok(new ApiResponse
                 {
@@ -53,6 +54,7 @@ namespace Badminton.Web.Controllers
                     Message = "Invalid Username/Password"
                 });
             }
+
             var username = user.UserName;
             var fullname = user.FullName;
             var id = user.UserId;
@@ -68,7 +70,6 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            // Generate the claims for the cookie
             var claims = new List<Claim>
     {
         new Claim(ClaimTypes.NameIdentifier, id.ToString()),
@@ -87,7 +88,6 @@ namespace Badminton.Web.Controllers
                 ExpiresUtc = DateTimeOffset.UtcNow.AddHours(3)
             };
 
-            // Sign in the user with the cookie authentication scheme
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
             var token = GenerateToken(user);
@@ -99,6 +99,7 @@ namespace Badminton.Web.Controllers
                 Data = new { Id = id, UserName = username, FullName = fullname, Email = email, Phone = phone, Role = role, Token = token }
             });
         }
+
 
 
 

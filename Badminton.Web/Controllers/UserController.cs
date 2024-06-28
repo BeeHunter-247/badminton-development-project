@@ -32,6 +32,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpPost("Login")]
+        //User/Admin
         public async Task<IActionResult> Validate(LoginModel model)
         {
             if (!ModelState.IsValid)
@@ -44,8 +45,8 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var user = _context.Users.SingleOrDefault(p => p.UserName == model.UserName && p.Password == model.Password);
-            if (user == null)
+            var user = _context.Users.SingleOrDefault(p => p.UserName == model.UserName);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
             {
                 return Ok(new ApiResponse
                 {
@@ -53,6 +54,7 @@ namespace Badminton.Web.Controllers
                     Message = "Invalid Username/Password"
                 });
             }
+
             var username = user.UserName;
             var fullname = user.FullName;
             var id = user.UserId;
@@ -68,7 +70,6 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            // Generate the claims for the cookie
             var claims = new List<Claim>
     {
         new Claim(ClaimTypes.NameIdentifier, id.ToString()),
@@ -87,7 +88,6 @@ namespace Badminton.Web.Controllers
                 ExpiresUtc = DateTimeOffset.UtcNow.AddHours(3)
             };
 
-            // Sign in the user with the cookie authentication scheme
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
             var token = GenerateToken(user);
@@ -99,6 +99,7 @@ namespace Badminton.Web.Controllers
                 Data = new { Id = id, UserName = username, FullName = fullname, Email = email, Phone = phone, Role = role, Token = token }
             });
         }
+
 
 
 
@@ -144,14 +145,26 @@ namespace Badminton.Web.Controllers
                 });
             }
 
+            var existingUserByPhone = await _context.Users.SingleOrDefaultAsync(u => u.Phone == model.Phone);
+            if (existingUserByPhone != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Phone number already exists"
+                });
+            }
+
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Password); //hash pass
+
             var user = new User
             {
                 UserName = model.Username,
-                Password = model.Password, // You should hash the password before storing it
+                Password = hashedPassword,
                 FullName = model.FullName,
                 Email = model.Email,
                 Phone = model.Phone,
-                RoleType = 3 // Set RoleType to 2 for Investor
+                RoleType = 3 // Set RoleType to 3 for User 
             };
 
             _context.Users.Add(user);
@@ -163,6 +176,8 @@ namespace Badminton.Web.Controllers
                 Message = "Registration successful"
             });
         }
+
+
 
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
@@ -178,16 +193,16 @@ namespace Badminton.Web.Controllers
             }
 
             var user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == model.Username);
-            if (user == null || user.Password != model.OldPassword)
+            if (user == null || !BCrypt.Net.BCrypt.Verify(model.OldPassword, user.Password))//Hash pass
             {
                 return Ok(new ApiResponse
                 {
                     Success = false,
-                    Message = "Invalid Username or Old Password"
+                    Message = "Invalid Username or Old Password. Please again"
                 });
             }
 
-            user.Password = model.NewPassword; // You should hash the password before storing it
+            user.Password = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
@@ -197,9 +212,9 @@ namespace Badminton.Web.Controllers
                 Message = "Password changed successfully"
             });
         }
-        // Assuming necessary using statements are included
 
-        [HttpGet("GetAllUsers(Admin)")]
+
+        [HttpGet("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
             if (!IsAdmin(User))
@@ -234,7 +249,8 @@ namespace Badminton.Web.Controllers
 
 
         // GetById
-        [HttpGet("GetUserById(Admin)/{id}")]
+        //
+        [HttpGet("GetUserById/{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
             if (!IsAdmin(User))
@@ -269,8 +285,9 @@ namespace Badminton.Web.Controllers
             });
         }
 
-        [HttpGet("GetCurrentUser(User)")]
+        [HttpGet("GetCurrentUser")]
         [Authorize]
+        //User and Admin
         public async Task<IActionResult> GetCurrentUser()
         {
             // Log claims for debugging
@@ -369,6 +386,26 @@ namespace Badminton.Web.Controllers
                 });
             }
 
+            var existingUserByEmail = await _context.Users.SingleOrDefaultAsync(u => u.Email == model.Email && u.UserId != userId);
+            if (existingUserByEmail != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Email already exists"
+                });
+            }
+
+            var existingUserByPhone = await _context.Users.SingleOrDefaultAsync(u => u.Phone == model.Phone && u.UserId != userId);
+            if (existingUserByPhone != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Phone number already exists"
+                });
+            }
+
             user.FullName = model.FullName;
             user.Email = model.Email;
             user.Phone = model.Phone;
@@ -383,7 +420,8 @@ namespace Badminton.Web.Controllers
             });
         }
 
-        [HttpDelete("DeleteUser(Admin)/{id}")]
+
+        [HttpDelete("DeleteUser/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             if (!IsAdmin(User))

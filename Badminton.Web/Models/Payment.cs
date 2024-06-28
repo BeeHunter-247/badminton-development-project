@@ -13,6 +13,8 @@ public partial class Payment
 
     public decimal Tax { get; set; }
 
+    public int? PromotionId { get; set; }
+
     public decimal TotalPrice { get; set; }
 
     public decimal? RefundAmount { get; set; }
@@ -24,6 +26,8 @@ public partial class Payment
     public DateTime PaymentDate { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+    public virtual Promotion Promotion { get; set; }
 
     public virtual User User { get; set; }
 }

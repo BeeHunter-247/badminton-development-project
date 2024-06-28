@@ -154,10 +154,12 @@ namespace Badminton.Web.Controllers
                 });
             }
 
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Password); //hash pass
+
             var user = new User
             {
                 UserName = model.Username,
-                Password = model.Password, // You should hash the password before storing it
+                Password = hashedPassword,
                 FullName = model.FullName,
                 Email = model.Email,
                 Phone = model.Phone,
@@ -175,6 +177,7 @@ namespace Badminton.Web.Controllers
         }
 
 
+
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
@@ -189,7 +192,7 @@ namespace Badminton.Web.Controllers
             }
 
             var user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == model.Username);
-            if (user == null || user.Password != model.OldPassword)
+            if (user == null || !BCrypt.Net.BCrypt.Verify(model.OldPassword, user.Password))//Hash pass
             {
                 return Ok(new ApiResponse
                 {
@@ -198,7 +201,7 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            user.Password = model.NewPassword; // You should hash the password before storing it
+            user.Password = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
@@ -208,7 +211,7 @@ namespace Badminton.Web.Controllers
                 Message = "Password changed successfully"
             });
         }
-        // Assuming necessary using statements are included
+
 
         [HttpGet("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
@@ -245,6 +248,7 @@ namespace Badminton.Web.Controllers
 
 
         // GetById
+        //
         [HttpGet("GetUserById/{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
@@ -282,6 +286,7 @@ namespace Badminton.Web.Controllers
 
         [HttpGet("GetCurrentUser")]
         [Authorize]
+        //User and Admin
         public async Task<IActionResult> GetCurrentUser()
         {
             // Log claims for debugging

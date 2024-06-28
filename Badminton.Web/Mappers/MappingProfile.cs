@@ -14,7 +14,6 @@ namespace Badminton.Web.Mappers
             CreateMap<Schedule, ScheduleDTO>();
             CreateMap<ScheduleDTO, Schedule>();
             CreateMap<CreateScheduleDTO, Schedule>();
-            CreateMap<Promotion, PromotionDTO>();
             CreateMap<Court, CourtDTO>();
             CreateMap<CreateCourtDTO, Court>();
             CreateMap<Evaluate, EvaluateDTO>();
@@ -25,8 +24,6 @@ namespace Badminton.Web.Mappers
             CreateMap<TimeSlot, TimeSlotDTO>();
             CreateMap<User, UserDTO>();
             CreateMap<User, UserAdminDTO>();
-            CreateMap<Invoice, InvoiceDTO>();
-            CreateMap<CreateInvoiceDTO, Invoice>();
         }
     }
 }

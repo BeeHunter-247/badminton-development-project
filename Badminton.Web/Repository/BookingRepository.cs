@@ -52,7 +52,6 @@ namespace Badminton.Web.Repository
                 .Include(b => b.SubCourt)
                 .Include(b => b.TimeSlot)
                 .Include(b => b.Schedule)
-                .Include(b => b.Promotion)
                 .ToListAsync();
             return _mapper.Map<List<BookingDTO>>(bookings);
         }
@@ -64,7 +63,6 @@ namespace Badminton.Web.Repository
                 .Include(b => b.SubCourt)
                 .Include(b => b.TimeSlot)
                 .Include(b => b.Schedule)
-                .Include(b => b.Promotion)
                 .ToListAsync();
             return _mapper.Map<List<BookingDTO>>(bookings);
         }
@@ -79,7 +77,7 @@ namespace Badminton.Web.Repository
             }
 
             
-            existingBooking.BookingDate = DateOnly.Parse(bookingDTO.BookingDate);
+            existingBooking.BookingDate = DateTime.Parse(bookingDTO.BookingDate);
             existingBooking.Status = (int)bookingDTO.Status;
             existingBooking.CancellationReason = bookingDTO.CancellationReason;
             await _context.SaveChangesAsync();
@@ -128,7 +126,7 @@ namespace Badminton.Web.Repository
         {
             return await _context.Bookings.AnyAsync(b => b.BookingId == id);
         }
-        public async Task<bool> IsTimeSlotAvailableAsync(int subCourtId, int timeSlotId, DateOnly bookingDate)
+        public async Task<bool> IsTimeSlotAvailableAsync(int subCourtId, int timeSlotId, DateTime bookingDate)
         {
             return !await _context.Bookings.AnyAsync(b =>
                 b.SubCourtId == subCourtId &&

@@ -29,7 +29,7 @@ namespace Badminton.Web.Interfaces
 
         // Kiểm tra
         Task<bool> BookingExists(int id);
-        Task<bool> IsTimeSlotAvailableAsync(int subCourtId, int timeSlotId, DateOnly bookingDate);
+        Task<bool> IsTimeSlotAvailableAsync(int subCourtId, int timeSlotId, DateTime bookingDate);
 
         // Tính toán
         Task<decimal> CalculateBookingPriceAsync(int subCourtId, int timeSlotId, int promotionId);

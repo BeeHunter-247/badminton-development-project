@@ -15,6 +15,8 @@ public partial class CheckIn
 
     public DateTime CheckInTime { get; set; }
 
+    public bool CheckInStatus { get; set; }
+
     public int UserId { get; set; }
 
     public virtual Booking Booking { get; set; }

@@ -11,9 +11,11 @@ public partial class Payment
 
     public int UserId { get; set; }
 
+    public decimal Tax { get; set; }
+
     public decimal TotalPrice { get; set; }
 
-    public decimal RefundAmount { get; set; }
+    public decimal? RefundAmount { get; set; }
 
     public string PaymentMethod { get; set; }
 
@@ -21,17 +23,7 @@ public partial class Payment
 
     public DateTime PaymentDate { get; set; }
 
-    public int InvoiceId { get; set; }
-
-    public string PaymentGateway { get; set; }
-
-    public int? PromotionId { get; set; }
-
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
-
-    public virtual Invoice Invoice { get; set; }
-
-    public virtual Promotion Promotion { get; set; }
 
     public virtual User User { get; set; }
 }

@@ -101,19 +101,10 @@ namespace Badminton.Web.Controllers
                     SubCourtId = bookingDTO.SubCourtId,
                     TimeSlotId = bookingDTO.TimeSlotId,
                     ScheduleId = bookingDTO.ScheduleId,
-                    BookingDate = DateOnly.Parse(bookingDTO.BookingDate),
+                    BookingDate = DateTime.Parse(bookingDTO.BookingDate),
                     Status = (int)BookingStatus.Pending,
-                    TotalPrice = (decimal)bookingDTO.TotalPrice,
-                    PromotionId = bookingDTO.PromotionId,
-                    InvoiceId = bookingDTO.InvoiceId,
                     PaymentId = bookingDTO.PaymentId
                 };
-
-                //TotalPrice ..
-
-                await _bookingRepo.CreateAsync(booking);
-                booking.TimeSlot = await _context.TimeSlots.FindAsync(booking.TimeSlotId);
-                booking.SubCourt = await _context.SubCourts.FindAsync(booking.SubCourtId);
 
                 return Ok(new ApiResponse
                 {

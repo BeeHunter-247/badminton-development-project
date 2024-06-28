@@ -16,19 +16,16 @@ namespace Badminton.Web.DTO
 
         public int ScheduleId { get; set; }
 
-        [DataType(DataType.Date)]
-        public DateOnly BookingDate { get; set; }
+        [DataType(DataType.DateTime)]
+        public DateTime BookingDate { get; set; }
+
+        [Required]
+        [Range(0, 2)]
+        public int BookingType { get; set; }
 
         public BookingStatus Status { get; set; }
 
         public string? CancellationReason { get; set; }
-
-        [Range(0, double.MaxValue, ErrorMessage = "TotalPrice must be non-negative")]
-        public decimal TotalPrice { get; set; }
-
-        public int? PromotionId { get; set; }
-
-        public int InvoiceId { get; set; }
 
         public int PaymentId { get; set; }
     }
@@ -49,26 +46,23 @@ namespace Badminton.Web.DTO
 
         [Required(ErrorMessage = "BookingDate is required")]
         
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         public string BookingDate { get; set; }
 
-        [Range(0, double.MaxValue, ErrorMessage = "TotalPrice must be non-negative")]
-        public decimal? TotalPrice { get; set; } // Cho phép null để tính sau
+        [Required]
+        [Range(0, 2)]
+        public int BookingType { get; set; }
 
-        public int? PromotionId { get; set; }
-        public int InvoiceId { get; set; }
         public int PaymentId { get; set; }
     }
 
     public class UpdateBookingDTO
     {
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         public string BookingDate { get; set; } 
         public BookingStatus Status { get; set; } 
 
         [StringLength(255, ErrorMessage = "CancellationReason cannot exceed 255 characters")]
         public string? CancellationReason { get; set; } 
     }
-
-
 }

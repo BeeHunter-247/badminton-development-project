@@ -17,7 +17,7 @@ public partial class Booking
 
     public int ScheduleId { get; set; }
 
-    public DateOnly BookingDate { get; set; }
+    public DateTime BookingDate { get; set; }
 
     public int BookingType { get; set; }
 
@@ -25,21 +25,11 @@ public partial class Booking
 
     public string CancellationReason { get; set; }
 
-    public decimal TotalPrice { get; set; }
-
-    public int? PromotionId { get; set; }
-
-    public int InvoiceId { get; set; }
-
     public int PaymentId { get; set; }
 
     public virtual ICollection<CheckIn> CheckIns { get; set; } = new List<CheckIn>();
 
-    public virtual Invoice Invoice { get; set; }
-
     public virtual Payment Payment { get; set; }
-
-    public virtual Promotion Promotion { get; set; }
 
     public virtual Schedule Schedule { get; set; }
 

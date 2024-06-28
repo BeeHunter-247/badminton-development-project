@@ -144,6 +144,16 @@ namespace Badminton.Web.Controllers
                 });
             }
 
+            var existingUserByPhone = await _context.Users.SingleOrDefaultAsync(u => u.Phone == model.Phone);
+            if (existingUserByPhone != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Phone number already exists"
+                });
+            }
+
             var user = new User
             {
                 UserName = model.Username,
@@ -151,7 +161,7 @@ namespace Badminton.Web.Controllers
                 FullName = model.FullName,
                 Email = model.Email,
                 Phone = model.Phone,
-                RoleType = 3 // Set RoleType to 2 for Investor
+                RoleType = 3 // Set RoleType to 3 for User
             };
 
             _context.Users.Add(user);
@@ -163,6 +173,7 @@ namespace Badminton.Web.Controllers
                 Message = "Registration successful"
             });
         }
+
 
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
@@ -199,7 +210,7 @@ namespace Badminton.Web.Controllers
         }
         // Assuming necessary using statements are included
 
-        [HttpGet("GetAllUsers(Admin)")]
+        [HttpGet("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
             if (!IsAdmin(User))
@@ -234,7 +245,7 @@ namespace Badminton.Web.Controllers
 
 
         // GetById
-        [HttpGet("GetUserById(Admin)/{id}")]
+        [HttpGet("GetUserById/{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
             if (!IsAdmin(User))
@@ -269,7 +280,7 @@ namespace Badminton.Web.Controllers
             });
         }
 
-        [HttpGet("GetCurrentUser(User)")]
+        [HttpGet("GetCurrentUser")]
         [Authorize]
         public async Task<IActionResult> GetCurrentUser()
         {
@@ -369,6 +380,26 @@ namespace Badminton.Web.Controllers
                 });
             }
 
+            var existingUserByEmail = await _context.Users.SingleOrDefaultAsync(u => u.Email == model.Email && u.UserId != userId);
+            if (existingUserByEmail != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Email already exists"
+                });
+            }
+
+            var existingUserByPhone = await _context.Users.SingleOrDefaultAsync(u => u.Phone == model.Phone && u.UserId != userId);
+            if (existingUserByPhone != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Phone number already exists"
+                });
+            }
+
             user.FullName = model.FullName;
             user.Email = model.Email;
             user.Phone = model.Phone;
@@ -383,7 +414,8 @@ namespace Badminton.Web.Controllers
             });
         }
 
-        [HttpDelete("DeleteUser(Admin)/{id}")]
+
+        [HttpDelete("DeleteUser/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             if (!IsAdmin(User))

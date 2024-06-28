@@ -27,7 +27,5 @@ public partial class Court
 
     public virtual ICollection<Evaluate> Evaluates { get; set; } = new List<Evaluate>();
 
-    public virtual ICollection<Promotion> Promotions { get; set; } = new List<Promotion>();
-
     public virtual ICollection<SubCourt> SubCourts { get; set; } = new List<SubCourt>();
 }

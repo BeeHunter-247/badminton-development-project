@@ -15,7 +15,7 @@ public partial class Schedule
 
     public DateOnly BookingDate { get; set; }
 
-    public int Time { get; set; }
+    public int TimeSlotId { get; set; }
 
     public decimal TotalHours { get; set; }
 
@@ -24,6 +24,8 @@ public partial class Schedule
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual SubCourt SubCourt { get; set; }
+
+    public virtual TimeSlot TimeSlot { get; set; }
 
     public virtual User User { get; set; }
 }

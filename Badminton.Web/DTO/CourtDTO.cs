@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Badminton.Web.DTO
 {
@@ -38,9 +39,12 @@ namespace Badminton.Web.DTO
 
         public string OpeningHours { get; set; }
 
-        public string Image { get; set; }
+        public string? Image { get; set; }
 
         public string Announcement { get; set; }
+
+        [NotMapped]
+        public IFormFile? formFile { get; set; }
     }
 
     public class UpdateCourtDTO
@@ -55,7 +59,7 @@ namespace Badminton.Web.DTO
 
         public string OpeningHours { get; set; }
 
-        public string Image { get; set; }
+        public string? Image { get; set; }
 
         public string Announcement { get; set; }
     }

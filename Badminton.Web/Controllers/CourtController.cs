@@ -15,11 +15,13 @@ namespace Badminton.Web.Controllers
     {
         private readonly ICourtRepository _courtRepo;
         private readonly IMapper _mapper;
+        private readonly IFileRepository _fileRepo;
 
-        public CourtController(ICourtRepository courtRepo, IMapper mapper)
+        public CourtController(ICourtRepository courtRepo, IMapper mapper, IFileRepository fileRepo)
         {
             _courtRepo = courtRepo;
             _mapper = mapper;
+            _fileRepo = fileRepo;
         }
 
         [HttpGet]
@@ -103,7 +105,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateCourtDTO courtDTO)
+        public async Task<IActionResult> Create([FromForm] CreateCourtDTO courtDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -115,14 +117,38 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var courtModel = _mapper.Map<Court>(courtDTO);
-
-            await _courtRepo.CreateAsync(courtModel);
-            return CreatedAtAction(nameof(GetById), new { id = courtModel.CourtId }, new ApiResponse
+            if(courtDTO.formFile != null)
             {
-                Success = true,
-                Data = _mapper.Map<CourtDTO>(courtModel)
-            });
+                var fileResult = _fileRepo.SaveImage(courtDTO.formFile);
+                if(fileResult.Item1 == 1)
+                {
+                    courtDTO.Image = fileResult.Item2;
+                }
+
+                var courtModel = _mapper.Map<Court>(courtDTO);
+                var success = await _courtRepo.CreateAsync(courtModel);
+                if(success != null)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = true,
+                        StatusCode = 1,
+                        Message = "Added successfully",
+                        Data = _mapper.Map<CourtDTO>(courtModel)
+                    });
+                }
+                else
+                {
+                    return BadRequest(new ApiResponse
+                    {
+                        Success= false,
+                        StatusCode = 0,
+                        Message = "Error on adding Court"
+                    });   
+                }
+            }
+
+            return Ok();
         }
 
         [HttpPut]

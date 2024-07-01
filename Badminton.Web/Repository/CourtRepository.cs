@@ -46,16 +46,11 @@ namespace Badminton.Web.Repository
             #region Filtering
             if (!string.IsNullOrEmpty(query.search))
             {
-                queryObject = queryObject.Where(c => c.CourtName.ToLower().Contains(query.search.ToLower()) 
-                || c.Location.ToLower().Contains(query.search.ToLower()));
+                queryObject = queryObject.Where(c => c.Location.ToLower().Contains(query.search.ToLower()));
             }
             #endregion
 
-            #region Pagination
-            var skipNumber = (query.pageNumber - 1) * query.pageSize;
-            #endregion
-
-            return await queryObject.Skip(skipNumber).Take(query.pageSize).ToListAsync();
+            return await queryObject.ToListAsync();
         }
 
         public async Task<Court?> GetByIdAsync(int id)

@@ -5,6 +5,7 @@ using Badminton.Web.Repository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -106,6 +107,7 @@ namespace Badminton.Web
             builder.Services.AddScoped<ISubCourtRepository, SubCourtRepository>();
             builder.Services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
             builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
+            builder.Services.AddScoped<IFileRepository, FileRepository>();
 
             var app = builder.Build();
 
@@ -119,6 +121,13 @@ namespace Badminton.Web
             app.UseCors("corspolicy");
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
+                RequestPath = "/Uploads"
+            });
 
             app.UseAuthentication();
 

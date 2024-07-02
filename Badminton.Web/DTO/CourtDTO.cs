@@ -62,5 +62,8 @@ namespace Badminton.Web.DTO
         public string? Image { get; set; }
 
         public string Announcement { get; set; }
+
+        [NotMapped]
+        public IFormFile? formFile { get; set; }
     }
 }

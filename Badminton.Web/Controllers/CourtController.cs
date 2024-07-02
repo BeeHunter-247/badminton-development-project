@@ -153,7 +153,7 @@ namespace Badminton.Web.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCourtDTO courtDTO)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromForm] UpdateCourtDTO courtDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -163,6 +163,15 @@ namespace Badminton.Web.Controllers
                     Message = "Invalid data",
                     Data = ModelState
                 });
+            }
+
+            if(courtDTO.formFile != null)
+            {
+                var fileResult = _fileRepo.SaveImage(courtDTO.formFile);
+                if (fileResult.Item1 == 1)
+                {
+                    courtDTO.Image = fileResult.Item2;
+                }
             }
 
             var courtModel = await _courtRepo.UpdateAsync(id, courtDTO);

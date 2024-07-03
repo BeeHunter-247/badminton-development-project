@@ -103,9 +103,13 @@ namespace Badminton.Web.Controllers
                     ScheduleId = bookingDTO.ScheduleId,
                     BookingDate = DateTime.Parse(bookingDTO.BookingDate),
                     Status = (int)BookingStatus.Pending,
+                    BookingType = (int)BookingType.Daily,
                     PaymentId = bookingDTO.PaymentId
                 };
 
+
+                await _bookingRepo.CreateAsync(booking);
+                
                 return Ok(new ApiResponse
                 {
                     Success = true,

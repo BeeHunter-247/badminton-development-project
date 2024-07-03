@@ -21,7 +21,7 @@ namespace Badminton.Web.DTO
 
         [Required]
         [Range(0, 2)]
-        public int BookingType { get; set; }
+        public BookingType BookingType { get; set; }
 
         public BookingStatus Status { get; set; }
 
@@ -48,10 +48,6 @@ namespace Badminton.Web.DTO
         
         [DataType(DataType.DateTime)]
         public string BookingDate { get; set; }
-
-        [Required]
-        [Range(0, 2)]
-        public int BookingType { get; set; }
 
         public int PaymentId { get; set; }
     }

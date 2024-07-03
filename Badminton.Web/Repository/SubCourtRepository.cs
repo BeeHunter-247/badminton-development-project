@@ -55,11 +55,7 @@ namespace Badminton.Web.Repository
             }
             #endregion
 
-            #region Pagination
-            var skipNumber = (query.pageNumber - 1) * query.pageSize;
-            #endregion
-
-            return await queryObject.Skip(skipNumber).Take(query.pageSize).ToListAsync();
+            return await queryObject.ToListAsync();
         }
 
         public async Task<SubCourt?> GetByIdAsync(int id)

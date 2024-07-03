@@ -46,7 +46,7 @@ namespace Badminton.Web.Controllers
             }
 
             var user = _context.Users.SingleOrDefault(p => p.UserName == model.UserName);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
+            if (user == null)
             {
                 return Ok(new ApiResponse
                 {
@@ -55,6 +55,30 @@ namespace Badminton.Web.Controllers
                 });
             }
 
+            bool passwordValid = false;
+
+            // Check if the stored password is hashed
+            if (user.Password.StartsWith("$2a$"))
+            {
+                // Password is hashed, verify using BCrypt
+                passwordValid = BCrypt.Net.BCrypt.Verify(model.Password, user.Password);
+            }
+            else
+            {
+                // Password is plain text, compare directly
+                passwordValid = (model.Password == user.Password);
+            }
+
+            if (!passwordValid)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid Username/Password"
+                });
+            }
+
+            // Continue with authentication and claims generation
             var username = user.UserName;
             var fullname = user.FullName;
             var id = user.UserId;

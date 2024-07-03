@@ -1,33 +1,29 @@
 ﻿using AutoMapper;
 using Badminton.Web.DTO;
-using Badminton.Web.Helpers;
 using Badminton.Web.Interfaces;
-using Badminton.Web.Mappers;
 using Badminton.Web.Models;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Badminton.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CourtController : ControllerBase
+    public class PromotionController : ControllerBase
     {
-        private readonly ICourtRepository _courtRepo;
+        private readonly IPromotionRepository _promotionRepo;
         private readonly IMapper _mapper;
-        private readonly IFileRepository _fileRepo;
 
-        public CourtController(ICourtRepository courtRepo, IMapper mapper, IFileRepository fileRepo)
+        public PromotionController(IPromotionRepository promotionRepo, IMapper mapper)
         {
-            _courtRepo = courtRepo;
+            _promotionRepo = promotionRepo;
             _mapper = mapper;
-            _fileRepo = fileRepo;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] QueryCourt query)
+        public async Task<IActionResult> GetAll()
         {
-            if (!ModelState.IsValid)
+            if(!ModelState.IsValid)
             {
                 return BadRequest(new ApiResponse
                 {
@@ -37,12 +33,12 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var courts = await _courtRepo.GetAllAsync(query);
-            var courtDTO = _mapper.Map<List<CourtDTO>>(courts);
+            var promotions = await _promotionRepo.GetAllAsync();
+            var promotionDTO = _mapper.Map<List<PromotionDTO>>(promotions);
             return Ok(new ApiResponse
             {
                 Success = true,
-                Data = courtDTO
+                Data = promotionDTO
             });
         }
 
@@ -60,20 +56,21 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var court = await _courtRepo.GetByIdAsync(id);
-            if (court == null)
+            var promotion = await _promotionRepo.GetByIdAsync(id);
+
+            if(promotion == null)
             {
                 return NotFound(new ApiResponse
                 {
                     Success = false,
-                    Message = "Court not found!"
+                    Message = "Promotion not found!"
                 });
             }
 
             return Ok(new ApiResponse
             {
                 Success = true,
-                Data = _mapper.Map<CourtDTO>(court)
+                Data = _mapper.Map<PromotionDTO>(promotion)
             });
         }
 
@@ -91,13 +88,14 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var courtModel = await _courtRepo.DeleteAsync(id);
-            if (courtModel == null)
+            var promotion = await _promotionRepo.DeleteAsync(id);
+
+            if( promotion == null)
             {
                 return NotFound(new ApiResponse
                 {
                     Success = false,
-                    Message = "Court does not exist!"
+                    Message = "Promotion does not exist!"
                 });
             }
 
@@ -105,7 +103,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] CreateCourtDTO courtDTO)
+        public async Task<IActionResult> Create([FromBody] CreatePromotionDTO promotionDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -117,43 +115,33 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            if(courtDTO.formFile != null)
+            try
             {
-                var fileResult = _fileRepo.SaveImage(courtDTO.formFile);
-                if(fileResult.Item1 == 1)
+                var promotionModel = new Promotion
                 {
-                    courtDTO.Image = fileResult.Item2;
-                }
+                    PromotionCode = promotionDTO.PromotionCode,
+                    Description = promotionDTO.Description,
+                    Percentage = promotionDTO.Percentage,
+                    StartDate = DateOnly.Parse(promotionDTO.StartDate),
+                    EndDate = DateOnly.Parse(promotionDTO.EndDate)
+                };
 
-                var courtModel = _mapper.Map<Court>(courtDTO);
-                var success = await _courtRepo.CreateAsync(courtModel);
-                if(success != null)
+                await _promotionRepo.CreateAsync(promotionModel);
+                return Ok(new ApiResponse
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        StatusCode = 1,
-                        Message = "Added successfully",
-                        Data = _mapper.Map<CourtDTO>(courtModel)
-                    });
-                }
-                else
-                {
-                    return BadRequest(new ApiResponse
-                    {
-                        Success= false,
-                        StatusCode = 0,
-                        Message = "Error on adding Court"
-                    });   
-                }
+                    Success = true,
+                    Data = _mapper.Map<PromotionDTO>(promotionModel)
+                });
             }
-
-            return Ok();
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPut]
         [Route("{id:int}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromForm] UpdateCourtDTO courtDTO)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdatePromotionDTO promotionDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -165,29 +153,21 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            if(courtDTO.formFile != null)
-            {
-                var fileResult = _fileRepo.SaveImage(courtDTO.formFile);
-                if (fileResult.Item1 == 1)
-                {
-                    courtDTO.Image = fileResult.Item2;
-                }
-            }
+            var promotion = await _promotionRepo.UpdateAsync(id, promotionDTO);
 
-            var courtModel = await _courtRepo.UpdateAsync(id, courtDTO);
-            if (courtModel == null)
+            if(promotion == null)
             {
                 return NotFound(new ApiResponse
                 {
-                    Success = false,
-                    Message = "Court not found!"
-                });
+                    Success= false,
+                    Message = "Promotion not found!"
+                });  
             }
 
             return Ok(new ApiResponse
             {
                 Success = true,
-                Data = _mapper.Map<CourtDTO>(courtModel)
+                Data = _mapper.Map<PromotionDTO>(promotion)
             });
         }
     }

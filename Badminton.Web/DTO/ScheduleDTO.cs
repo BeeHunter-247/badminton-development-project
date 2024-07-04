@@ -28,7 +28,7 @@ namespace Badminton.Web.DTO
 
     public class UpdateScheduleDTO
     {
-        public int ScheduleId { get; set; }
+        public int SubCourtId { get; set; }
         public int TimeSlotId { get; set; }
         public string BookingDate { get; set; }
         public decimal? TotalHours { get; set; }

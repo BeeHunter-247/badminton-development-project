@@ -7,11 +7,10 @@ namespace Badminton.Web.Interfaces
     public interface IScheduleRepository
     {
         Task<Schedule> Create(Schedule scheduleModel);
-        Task<bool> Delete(int id);
-        Task<List<ScheduleDTO>> GetAll();
-        Task<ScheduleDTO> GetById(int id);
+        Task<List<Schedule>> GetAll();
+        Task<Schedule?> GetById(int id);
+        Task<Schedule?> Update(int id, UpdateScheduleDTO scheduleDTO);
+        Task<Schedule?> Delete(int id);
         Task<bool> ScheduleExistsAsync(Schedule scheduleCheck);
-
-
     }
 }

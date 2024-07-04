@@ -12,24 +12,19 @@ namespace Badminton.Web.Repository
     public class ScheduleRepository : IScheduleRepository
     {
         private readonly CourtSyncContext _context;
-        private readonly IMapper _mapper;
-
-        public ScheduleRepository(CourtSyncContext context, IMapper mapper)
+        public ScheduleRepository(CourtSyncContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         //get
-        public async Task<List<ScheduleDTO>> GetAll()
+        public async Task<List<Schedule>> GetAll()
         {
-            var schedules = await _context.Schedules.ToListAsync();
-            return _mapper.Map<List<ScheduleDTO>>(schedules);
+            return await _context.Schedules.ToListAsync();
         }
-        public async Task<ScheduleDTO> GetById(int id)
+        public async Task<Schedule?> GetById(int id)
         {
-            var schedule = await _context.Schedules.FindAsync(id);
-            return _mapper.Map<ScheduleDTO>(schedule);
+            return await _context.Schedules.FirstOrDefaultAsync(s => s.ScheduleId== id);
         }
 
 
@@ -46,18 +41,38 @@ namespace Badminton.Web.Repository
             return scheduleModel;
         }
 
-        // delete
-        public async Task<bool> Delete(int id)
+        //Update
+        public async Task<Schedule?> Update(int id, UpdateScheduleDTO scheduleDTO)
         {
-            var schedule = await _context.Schedules.FindAsync(id);
-            if (schedule == null)
+            var existingSchedule = await _context.Schedules.FirstOrDefaultAsync(s => s.ScheduleId == id);
+            if (existingSchedule == null)
             {
-                return false;
+                return null;
             }
 
-            _context.Schedules.Remove(schedule);
+            existingSchedule.SubCourtId = scheduleDTO.SubCourtId;
+            existingSchedule.TimeSlotId = scheduleDTO.TimeSlotId;
+            existingSchedule.BookingDate = DateOnly.Parse(scheduleDTO.BookingDate);
+            existingSchedule.TotalHours = (decimal)scheduleDTO.TotalHours;
+            existingSchedule.BookingType = (int)scheduleDTO.BookingType;
+
             await _context.SaveChangesAsync();
-            return true;
+            return existingSchedule;
+        }
+
+        // delete
+
+        public async Task<Schedule?> Delete(int id)
+        {
+            var scheduleModel = await _context.Schedules.FirstOrDefaultAsync(s => s.ScheduleId == id);
+            if (scheduleModel == null)
+            {
+                return null;
+            }
+
+            _context.Schedules.Remove(scheduleModel);
+            await _context.SaveChangesAsync();
+            return scheduleModel;
         }
 
         public async Task<bool> ScheduleExistsAsync(Schedule scheduleCheck)
@@ -67,5 +82,7 @@ namespace Badminton.Web.Repository
                 s.BookingDate == scheduleCheck.BookingDate &&
                 s.TimeSlotId == scheduleCheck.TimeSlotId);
         }
+
+
     }
 }

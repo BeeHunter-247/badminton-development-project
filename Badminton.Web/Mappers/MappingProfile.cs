@@ -26,6 +26,9 @@ namespace Badminton.Web.Mappers
             CreateMap<User, UserAdminDTO>();
             CreateMap<Promotion, PromotionDTO>();
             CreateMap<CreatePromotionDTO, Promotion>();
+            CreateMap<CheckIn, CheckInDTO>();
+            CreateMap<CreateCheckInDTO, CheckIn>();
+
         }
     }
 }

@@ -13,11 +13,10 @@ namespace Badminton.Web.Repository
     {
 
         private readonly CourtSyncContext _context;
-        private readonly IMapper _mapper;
-        public BookingRepository (CourtSyncContext context, IMapper mapper)
+        
+        public BookingRepository (CourtSyncContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         // create
@@ -32,39 +31,15 @@ namespace Badminton.Web.Repository
             await _context.SaveChangesAsync();
             return bookingModel;
         }
-        public async Task<List<BookingDTO>> GetAll()
-        {
-            var bookings = await _context.Bookings.ToListAsync();
-            return _mapper.Map<List<BookingDTO>>(bookings);
-        }
-        public async Task<BookingDTO> GetById(int id)
-        {
-            var booking = await _context.Bookings
-               .FirstOrDefaultAsync(b => b.BookingId== id);
 
-            return _mapper.Map<BookingDTO>(booking);
-        }
-        public async Task<List<BookingDTO>> GetBookingsByUserIdAsync(int userId)
+        //read
+        public async Task<List<Booking>> GetAll()
         {
-            var bookings = await _context.Bookings
-                .Where(b => b.UserId == userId)
-                .Include(b => b.User)
-                .Include(b => b.SubCourt)
-                .Include(b => b.TimeSlot)
-                .Include(b => b.Schedule)
-                .ToListAsync();
-            return _mapper.Map<List<BookingDTO>>(bookings);
+            return await _context.Bookings.ToListAsync();
         }
-        public async Task<List<BookingDTO>> GetBookingsBySubCourtIdAsync(int subCourtId)
+        public async Task<Booking?> GetById(int id)
         {
-            var bookings = await _context.Bookings
-                .Where(b => b.SubCourtId == subCourtId)
-                .Include(b => b.User)
-                .Include(b => b.SubCourt)
-                .Include(b => b.TimeSlot)
-                .Include(b => b.Schedule)
-                .ToListAsync();
-            return _mapper.Map<List<BookingDTO>>(bookings);
+            return await _context.Bookings.FirstOrDefaultAsync(c => c.BookingId == id);
         }
 
         //Update
@@ -85,26 +60,26 @@ namespace Badminton.Web.Repository
             return existingBooking;
         }
 
-
-        public async Task<bool> BookingExistsAsync(int id)
-        {
-            return await _context.Bookings.AnyAsync(e => e.BookingId == id);
-        }
-
-
-        public async Task<BookingDTO> CancelBookingAsync(int bookingId, string cancellationReason)
+        // cancel
+        public async Task CancelBookingAsync (int bookingId, string cancellationReason)
         {
             var booking = await _context.Bookings.FindAsync(bookingId);
             if (booking == null)
             {
-                return null; 
+                throw new KeyNotFoundException("Booking not found.");
             }
 
             booking.Status = (int)BookingStatus.Cancelled;
             booking.CancellationReason = cancellationReason;
-            await _context.SaveChangesAsync();
-            await _context.Entry(booking).ReloadAsync(); 
-            return _mapper.Map<BookingDTO>(booking); 
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while cancelling the booking.", ex);
+            }
         }
 
         // Delete
@@ -121,7 +96,11 @@ namespace Badminton.Web.Repository
             return booking;
         }
 
-        //Kiểm tra
+        // check
+        public async Task<bool> BookingExistsAsync(int id)
+        {
+            return await _context.Bookings.AnyAsync(e => e.BookingId == id);
+        }
         public async Task<bool> BookingExists(int id)
         {
             return await _context.Bookings.AnyAsync(b => b.BookingId == id);
@@ -133,13 +112,5 @@ namespace Badminton.Web.Repository
                 b.TimeSlotId == timeSlotId &&
                 b.BookingDate == bookingDate);
         }
-
-        // tính toán
-        public Task<decimal> CalculateBookingPriceAsync(int subCourtId, int timeSlotId, int promotionId)
-        {
-            throw new NotImplementedException();
-        }
-
-
     }
 }

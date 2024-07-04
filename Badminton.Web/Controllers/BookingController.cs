@@ -18,14 +18,12 @@ namespace Badminton.Web.Controllers
     {
         private readonly IBookingRepository _bookingRepo;
         private readonly IMapper _mapper;
-        private readonly ILogger<BookingController> _logger;
         private readonly CourtSyncContext _context;
 
-        public BookingController(IBookingRepository bookingRepo, IMapper mapper, ILogger<BookingController> logger, CourtSyncContext context)
+        public BookingController(IBookingRepository bookingRepo, IMapper mapper, CourtSyncContext context)
         {
             _bookingRepo = bookingRepo;
             _mapper = mapper;
-            _logger = logger;
             _context = context;
         }
 
@@ -156,12 +154,30 @@ namespace Badminton.Web.Controllers
             });
         }
 
-
-
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBooking(int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            await _bookingRepo.DeleteAsync(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            var booking = await _bookingRepo.DeleteAsync(id);
+
+            if (booking == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Booking does not exist!"
+                });
+            }
+
             return NoContent();
         }
 

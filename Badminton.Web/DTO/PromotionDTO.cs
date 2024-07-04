@@ -1,4 +1,6 @@
-﻿namespace Badminton.Web.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Badminton.Web.DTO
 {
     public class PromotionDTO
     {
@@ -23,8 +25,12 @@
 
         public decimal Percentage { get; set; }
 
+        [Required]
+        [DataType(DataType.Date)]
         public string StartDate { get; set; }
 
+        [Required]
+        [DataType(DataType.Date)]
         public string EndDate { get; set; }
     }
 
@@ -36,8 +42,12 @@
 
         public decimal Percentage { get; set; }
 
+        [Required]
+        [DataType(DataType.Date)]
         public string StartDate { get; set; }
 
+        [Required]
+        [DataType(DataType.Date)]
         public string EndDate { get; set; }
     }
 }

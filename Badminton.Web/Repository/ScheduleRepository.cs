@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
 using Badminton.Web.DTO;
 using Badminton.Web.Interfaces;
-using Badminton.Web.Enums;
 using Badminton.Web.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Badminton.Web.Repository
 {

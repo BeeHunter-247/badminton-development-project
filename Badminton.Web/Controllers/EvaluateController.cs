@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Badminton.Web.DTO;
 using Badminton.Web.Interfaces;
-using Badminton.Web.Mappers;
 using Badminton.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 

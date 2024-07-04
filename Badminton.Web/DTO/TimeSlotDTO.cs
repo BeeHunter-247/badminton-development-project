@@ -13,16 +13,23 @@ namespace Badminton.Web.DTO
 
     public class CreateTimeSlotDTO
     {
+        [Required]
         [DataType(DataType.Time)]
         public string StartTime { get; set; }
 
+        [Required]
+        [DataType(DataType.Time)]
         public string EndTime { get; set; }
     }
 
     public class UpdateTimeSlotDTO
     {
+        [Required]
+        [DataType(DataType.Time)]
         public string StartTime { get; set; }
 
+        [Required]
+        [DataType(DataType.Time)]
         public string EndTime { get; set; }
     }
 }

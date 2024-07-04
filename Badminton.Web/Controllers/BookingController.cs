@@ -3,12 +3,7 @@ using Badminton.Web.DTO;
 using Badminton.Web.Enums;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
-using Badminton.Web.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Badminton.Web.Controllers
 {

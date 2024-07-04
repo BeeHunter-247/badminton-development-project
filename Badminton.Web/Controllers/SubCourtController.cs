@@ -2,7 +2,6 @@
 using Badminton.Web.DTO;
 using Badminton.Web.Helpers;
 using Badminton.Web.Interfaces;
-using Badminton.Web.Mappers;
 using Badminton.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 

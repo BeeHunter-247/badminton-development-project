@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using Badminton.Web.DTO;
+using Badminton.Web.Enums;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
-using AutoMapper;
-using Badminton.Web.Enums;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace Badminton.Web.Controllers

@@ -1,7 +1,6 @@
 ﻿using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace Badminton.Web.Repository
 {

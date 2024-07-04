@@ -123,12 +123,12 @@ namespace Badminton.Web
 
             app.UseHttpsRedirection();
 
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
-                RequestPath = "/Uploads"
-            });
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider(
+            //        Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
+            //    RequestPath = "/Uploads"
+            //});
 
             app.UseAuthentication();
 

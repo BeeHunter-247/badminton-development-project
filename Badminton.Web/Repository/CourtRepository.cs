@@ -46,7 +46,8 @@ namespace Badminton.Web.Repository
             #region Filtering
             if (!string.IsNullOrEmpty(query.search))
             {
-                queryObject = queryObject.Where(c => c.Location.ToLower().Contains(query.search.ToLower()));
+                queryObject = queryObject.Where(c => c.Location.ToLower().Contains(query.search.ToLower()) ||
+                c.CourtName.ToLower().Contains(query.search.ToLower()));
             }
             #endregion
 

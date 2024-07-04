@@ -2,7 +2,6 @@
 using Badminton.Web.DTO;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Badminton.Web.Controllers

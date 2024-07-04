@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Badminton.Web.DTO;
 using Badminton.Web.Interfaces;
-using Badminton.Web.Mappers;
 using Badminton.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -75,7 +74,7 @@ namespace Badminton.Web.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateTimeSlotDTO timeSlotDTO)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromForm] UpdateTimeSlotDTO timeSlotDTO)
         {
             if(!ModelState.IsValid)
             {
@@ -105,7 +104,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateTimeSlotDTO timeSlotDTO)
+        public async Task<IActionResult> Create([FromForm] CreateTimeSlotDTO timeSlotDTO)
         {
             if(!ModelState.IsValid)
             {
@@ -134,7 +133,7 @@ namespace Badminton.Web.Controllers
             }
             catch
             {
-                return BadRequest();
+                return BadRequest("Format Time must be HH:mm:ss");
             }
             
         }

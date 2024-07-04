@@ -2,9 +2,7 @@
 using Badminton.Web.DTO;
 using Badminton.Web.Helpers;
 using Badminton.Web.Interfaces;
-using Badminton.Web.Mappers;
 using Badminton.Web.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Badminton.Web.Controllers
@@ -180,6 +178,7 @@ namespace Badminton.Web.Controllers
                 return NotFound(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = 0,
                     Message = "Court not found!"
                 });
             }
@@ -187,6 +186,7 @@ namespace Badminton.Web.Controllers
             return Ok(new ApiResponse
             {
                 Success = true,
+                StatusCode = 1,
                 Data = _mapper.Map<CourtDTO>(courtModel)
             });
         }

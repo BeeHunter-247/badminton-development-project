@@ -27,6 +27,9 @@ namespace Badminton.Web.Mappers
             CreateMap<User, UserAdminDTO>().ReverseMap();
             CreateMap<Promotion, PromotionDTO>().ReverseMap();
             CreateMap<CreatePromotionDTO, Promotion>().ReverseMap();
+            CreateMap<CheckIn, CheckInDTO>().ReverseMap();
+            CreateMap<CreateCheckInDTO, CheckIn>().ReverseMap();
+            
         }
     }
 }

@@ -14,14 +14,10 @@ namespace Badminton.Web.Controllers
     {
         private readonly IScheduleRepository _scheduleRepository;
         private readonly IMapper _mapper;
-        private readonly CourtSyncContext _context;
-        private readonly ILogger<BookingController> _logger;
-        public ScheduleController(IScheduleRepository scheduleRepository, IMapper mapper, CourtSyncContext context, ILogger<BookingController> logger)
+        public ScheduleController(IScheduleRepository scheduleRepository, IMapper mapper)
         {
             _scheduleRepository = scheduleRepository ?? throw new ArgumentNullException(nameof(scheduleRepository));
             _mapper = mapper;
-            _context = context;
-            _logger = logger;
         }
 
         [HttpPost]
@@ -29,9 +25,13 @@ namespace Badminton.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
-
             try
             {
                 if (!DateOnly.TryParse(scheduleDto.BookingDate, out var parsedBookingDate))
@@ -51,49 +51,133 @@ namespace Badminton.Web.Controllers
                 };
 
                 await _scheduleRepository.Create(schedule);
-
-                return Ok(_mapper.Map<ScheduleDTO>(schedule));
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Data = _mapper.Map<ScheduleDTO>(schedule)
+                });
             }
-            catch (Exception ex)
+            catch
             {
-                _logger.LogError(ex, "An error occurred while creating schedule.");
-                return StatusCode(500, "Internal server error.");
+                return BadRequest();
             }
         }
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSchedule(int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var deleted = await _scheduleRepository.Delete(id);
-            if (!deleted)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            var schedule = await _scheduleRepository.Delete(id);
+
+            if (schedule == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Schedule does not exist!"
+                });
             }
 
             return NoContent();
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllSchedules()
+        public async Task<IActionResult> GetAll()
         {
-            var schedules = await _scheduleRepository.GetAll();
-            var scheduleDtos = _mapper.Map<List<ScheduleDTO>>(schedules);
-            return Ok(scheduleDtos);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetScheduleById(int id)
-        {
-            var schedule = await _scheduleRepository.GetById(id);
-            if (schedule == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
             }
 
-            var scheduleDto = _mapper.Map<ScheduleDTO>(schedule);
-            return Ok(scheduleDto);
+            var schedules = await _scheduleRepository.GetAll();
+            var scheduleDTO = _mapper.Map<List<ScheduleDTO>>(schedules);
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = scheduleDTO
+            });
         }
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            var schedule = await _scheduleRepository.GetById(id);
+
+            if (schedule == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Schedule not found!"
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<ScheduleDTO>(schedule)
+            });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateScheduleDTO scheduleDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            var schedule = await _scheduleRepository.Update(id, scheduleDTO);
+
+            if (schedule == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Schedule not found!"
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<ScheduleDTO>(schedule)
+            });
+        }
+
+
+
     }
 
 }

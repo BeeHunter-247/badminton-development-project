@@ -1,25 +1,23 @@
 ﻿using AutoMapper;
 using Badminton.Web.DTO;
-using Badminton.Web.Enums;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Badminton.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookingController : ControllerBase
+    public class CheckInController : ControllerBase
     {
-        private readonly IBookingRepository _bookingRepo;
+        private readonly ICheckInRepository _checkInRepository;
         private readonly IMapper _mapper;
-        private readonly CourtSyncContext _context;
 
-        public BookingController(IBookingRepository bookingRepo, IMapper mapper, CourtSyncContext context)
+        public CheckInController(ICheckInRepository checkInRepository, IMapper mapper)
         {
-            _bookingRepo = bookingRepo;
+            _checkInRepository = checkInRepository;
             _mapper = mapper;
-            _context = context;
         }
 
         [HttpGet]
@@ -34,17 +32,18 @@ namespace Badminton.Web.Controllers
                     Data = ModelState
                 });
             }
-            var bookings = await _bookingRepo.GetAll();
-            var bookingDto = _mapper.Map<List<BookingDTO>>(bookings);
+
+            var checkIns = await _checkInRepository.GetAllAsync();
+            var checkInDTO = _mapper.Map<List<CheckInDTO>>(checkIns);
             return Ok(new ApiResponse
             {
                 Success = true,
-                Data = bookingDto
+                Data = checkInDTO
             });
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -56,25 +55,26 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var booking = await _bookingRepo.GetById(id);
-            if (booking == null)
+            var checkIn = await _checkInRepository.GetByIdAsync(id);
+
+            if (checkIn == null)
             {
                 return NotFound(new ApiResponse
                 {
                     Success = false,
-                    Message = "Booking not found!"
+                    Message = "Promotion not found!"
                 });
             }
 
             return Ok(new ApiResponse
             {
                 Success = true,
-                Data = _mapper.Map<BookingDTO>(booking)
+                Data = _mapper.Map<CheckInDTO>(checkIn)
             });
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(CreateBookingDTO bookingDTO)
+        public async Task<IActionResult> Create([FromBody] CreateCheckInDTO checkInDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -88,25 +88,20 @@ namespace Badminton.Web.Controllers
 
             try
             {
-                var booking = new Booking
+                var checkInModel = new CheckIn
                 {
-                    UserId = bookingDTO.UserId,
-                    SubCourtId = bookingDTO.SubCourtId,
-                    TimeSlotId = bookingDTO.TimeSlotId,
-                    ScheduleId = bookingDTO.ScheduleId,
-                    BookingDate = DateTime.Parse(bookingDTO.BookingDate),
-                    Status = (int)BookingStatus.Pending,
-                    BookingType = (int)BookingType.Daily,
-                    PaymentId = bookingDTO.PaymentId
+                    SubCourtId = checkInDTO.SubCourtId,
+                    BookingId= checkInDTO.BookingId,
+                    CheckInTime= DateTime.Parse(checkInDTO.CheckInTime),
+                    CheckInStatus = false,
+                    UserId = checkInDTO.UserId
                 };
 
-
-                await _bookingRepo.CreateAsync(booking);
-                
+                await _checkInRepository.CreateAsync(checkInModel);
                 return Ok(new ApiResponse
                 {
                     Success = true,
-                    Data = _mapper.Map<BookingDTO>(booking)
+                    Data = _mapper.Map<CheckInDTO>(checkInModel)
                 });
             }
             catch
@@ -114,8 +109,9 @@ namespace Badminton.Web.Controllers
                 return BadRequest();
             }
         }
-        [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateBooking(int id, [FromBody] UpdateBookingDTO bookingDTO)
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCheckInDTO checkInDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -127,27 +123,24 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            if (bookingDTO == null)
-            {
-                return BadRequest();
-            }
+            var checkIn = await _checkInRepository.UpdateAsync(id, checkInDTO);
 
-            var bookingU = await _bookingRepo.UpdateAsync(id, bookingDTO);
-            if (bookingU == null)
+            if (checkIn == null)
             {
                 return NotFound(new ApiResponse
                 {
                     Success = false,
-                    Message = "Booking not found!"
+                    Message = "CheckIn not found!"
                 });
             }
 
             return Ok(new ApiResponse
             {
                 Success = true,
-                Data = _mapper.Map<BookingDTO>(bookingDTO)
+                Data = _mapper.Map<CheckInDTO>(checkIn)
             });
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
@@ -162,19 +155,22 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var booking = await _bookingRepo.DeleteAsync(id);
+            var checkIn = await _checkInRepository.DeleteAsync(id);
 
-            if (booking == null)
+            if (checkIn == null)
             {
                 return NotFound(new ApiResponse
                 {
                     Success = false,
-                    Message = "Booking does not exist!"
+                    Message = "CheckIn does not exist!"
                 });
             }
 
             return NoContent();
         }
+
+
+
 
 
     }

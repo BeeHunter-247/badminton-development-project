@@ -15,7 +15,5 @@ public partial class TimeSlot
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-    public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
-
     public virtual ICollection<SubCourt> SubCourts { get; set; } = new List<SubCourt>();
 }

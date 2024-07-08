@@ -30,6 +30,4 @@ public partial class User
     public virtual ICollection<Evaluate> Evaluates { get; set; } = new List<Evaluate>();
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
-
-    public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
 }

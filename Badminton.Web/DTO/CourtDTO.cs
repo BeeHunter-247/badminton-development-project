@@ -44,7 +44,7 @@ namespace Badminton.Web.DTO
         public string Announcement { get; set; }
 
         [NotMapped]
-        public IFormFile? formFile { get; set; }
+        public IFormFileCollection? formFiles { get; set; }
     }
 
     public class UpdateCourtDTO
@@ -64,6 +64,6 @@ namespace Badminton.Web.DTO
         public string Announcement { get; set; }
 
         [NotMapped]
-        public IFormFile? formFile { get; set; }
+        public IFormFileCollection? formFiles { get; set; }
     }
 }

@@ -10,7 +10,6 @@ namespace Badminton.Web.Repository
         {
             _env = env;
         }
-
         public Tuple<int, string> SaveImage(IFormFile imageFile)
         {
             try

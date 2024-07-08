@@ -86,13 +86,19 @@ namespace Badminton.Web.Controllers
 
             try
             {
+                if (!DateOnly.TryParse(bookingDTO.ScheduleDate, out var parseScheduleDate))
+                {
+                    ModelState.AddModelError("BookingDate", "Invalid BookingDate format. Please use yyyy-MM-dd.");
+                    return BadRequest(ModelState);
+                }
                 var booking = new Booking
                 {
                     UserId = bookingDTO.UserId,
                     SubCourtId = bookingDTO.SubCourtId,
                     TimeSlotId = bookingDTO.TimeSlotId,
-                    ScheduleId = bookingDTO.ScheduleId,
                     BookingDate = DateTime.Parse(bookingDTO.BookingDate),
+                    ScheduleDate = parseScheduleDate, 
+                    Amount = bookingDTO.Amount,
                     Status = (int)BookingStatus.Pending,
                     BookingType = (int)BookingType.Daily,
                     PaymentId = bookingDTO.PaymentId
@@ -126,12 +132,8 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            if (bookingDTO == null)
-            {
-                return BadRequest();
-            }
-
             var bookingU = await _bookingRepo.UpdateAsync(id, bookingDTO);
+
             if (bookingU == null)
             {
                 return NotFound(new ApiResponse
@@ -144,7 +146,7 @@ namespace Badminton.Web.Controllers
             return Ok(new ApiResponse
             {
                 Success = true,
-                Data = _mapper.Map<BookingDTO>(bookingDTO)
+                Data = _mapper.Map<BookingDTO>(bookingU)
             });
         }
 

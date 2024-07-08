@@ -50,9 +50,10 @@ namespace Badminton.Web.Repository
             }
 
             
-            existingBooking.BookingDate = DateTime.Parse(bookingDTO.BookingDate);
-            existingBooking.Status = (int)bookingDTO.Status;
-            existingBooking.CancellationReason = bookingDTO.CancellationReason;
+            existingBooking.ScheduleDate = DateOnly.Parse(bookingDTO.ScheduleDate);
+            existingBooking.SubCourtId = bookingDTO.SubCourtId;
+            existingBooking.TimeSlotId = bookingDTO.TimeSlotId;
+            existingBooking.Amount= bookingDTO.Amount;
             await _context.SaveChangesAsync();
 
             return existingBooking;

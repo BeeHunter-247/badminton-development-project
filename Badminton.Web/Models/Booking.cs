@@ -15,11 +15,13 @@ public partial class Booking
 
     public int TimeSlotId { get; set; }
 
-    public int ScheduleId { get; set; }
-
     public DateTime BookingDate { get; set; }
 
+    public DateOnly ScheduleDate { get; set; }
+
     public int BookingType { get; set; }
+
+    public decimal? Amount { get; set; }
 
     public int Status { get; set; }
 
@@ -30,8 +32,6 @@ public partial class Booking
     public virtual ICollection<CheckIn> CheckIns { get; set; } = new List<CheckIn>();
 
     public virtual Payment Payment { get; set; }
-
-    public virtual Schedule Schedule { get; set; }
 
     public virtual SubCourt SubCourt { get; set; }
 

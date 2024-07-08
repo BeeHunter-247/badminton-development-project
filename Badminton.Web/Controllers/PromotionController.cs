@@ -73,7 +73,7 @@ namespace Badminton.Web.Controllers
             });
         }
 
-        [HttpGet("{code}")]
+        [HttpGet("{code}/alpha")]
         public async Task<IActionResult> GetByCode([FromRoute] string code)
         {
             if (!ModelState.IsValid)
@@ -86,22 +86,33 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var promotion = await _promotionRepo.GetByCodeAsync(code);
+            if (!int.TryParse(code, out _)) // check chuoi
+            {
+                var promotion = await _promotionRepo.GetByCodeAsync(code);
 
-            if (promotion == null)
+                if (promotion == null)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Promotion not found!"
+                    });
+                }
+
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Data = _mapper.Map<PromotionDTO>(promotion)
+                });
+            }
+            else
             {
                 return Ok(new ApiResponse
                 {
                     Success = false,
-                    Message = "Promotion not found!"
+                    Message = "Invalid promotion code format"
                 });
             }
-
-            return Ok(new ApiResponse
-            {
-                Success = true,
-                Data = _mapper.Map<PromotionDTO>(promotion)
-            });
         }
 
         [HttpDelete]

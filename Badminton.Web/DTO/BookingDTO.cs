@@ -7,27 +7,23 @@ namespace Badminton.Web.DTO
     public class BookingDTO
     {
         public int BookingId { get; set; }
-
         public int UserId { get; set; }
-
-        public int SubCourtId { get; set; }
-
-        public int TimeSlotId { get; set; }
-
-        public int ScheduleId { get; set; }
 
         [DataType(DataType.DateTime)]
         public DateTime BookingDate { get; set; }
 
-        [Required]
-        [Range(0, 2)]
-        public BookingType BookingType { get; set; }
+        [DataType(DataType.Date)]
+        public DateOnly ScheduleDate { get; set; }
 
-        public BookingStatus Status { get; set; }
+        public int BookingType { get; set; }
+        public decimal? Amount { get; set; }
+        public int Status { get; set; }
 
-        public string? CancellationReason { get; set; }
-
+        public string CancellationReason { get; set; }
         public int PaymentId { get; set; }
+        public int SubCourtId { get; set; }
+        public int TimeSlotId { get; set; }
+
     }
 
     public class CreateBookingDTO
@@ -47,18 +43,37 @@ namespace Badminton.Web.DTO
         [Required(ErrorMessage = "BookingDate is required")]
         
         [DataType(DataType.DateTime)]
-        public string BookingDate { get; set; }
+        public string? BookingDate { get; set; }
+
+        [DataType(DataType.Date)]
+        public string? ScheduleDate { get; set; }
+
+        public decimal Amount { get; set; }
 
         public int PaymentId { get; set; }
     }
 
     public class UpdateBookingDTO
     {
-        [DataType(DataType.DateTime)]
-        public string BookingDate { get; set; } 
-        public BookingStatus Status { get; set; } 
+        [Required]
+        [DataType(DataType.Date)]
+        public string ScheduleDate { get; set; }
+
+        [Required(ErrorMessage = "SubCourtId is required")]
+        public int SubCourtId { get; set; }
+
+        [Required(ErrorMessage = "TimeSlotId is required")]
+        public int TimeSlotId { get; set; }
+
+        public decimal Amount { get; set; }
+    }
+
+    public class CancelBookingDTO
+    {
+        [Required(ErrorMessage = "BookingId is required")]
+        public int BookingId { get; set; }
 
         [StringLength(255, ErrorMessage = "CancellationReason cannot exceed 255 characters")]
-        public string? CancellationReason { get; set; } 
+        public string? CancellationReason { get; set; }
     }
 }

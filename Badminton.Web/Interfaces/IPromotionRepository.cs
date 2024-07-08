@@ -7,6 +7,7 @@ namespace Badminton.Web.Interfaces
     {
         Task<List<Promotion>> GetAllAsync();
         Task<Promotion?> GetByIdAsync(int id);
+        Task<Promotion> GetByCodeAsync(string Code);
         Task<Promotion> CreateAsync(Promotion promotionModel);
         Task<Promotion?> UpdateAsync(int id, UpdatePromotionDTO promotionDTO);
         Task<Promotion?> DeleteAsync(int id);

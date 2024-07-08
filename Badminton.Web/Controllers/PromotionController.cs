@@ -73,6 +73,48 @@ namespace Badminton.Web.Controllers
             });
         }
 
+        [HttpGet("{code}/alpha")]
+        public async Task<IActionResult> GetByCode([FromRoute] string code)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            if (!int.TryParse(code, out _)) // check chuoi
+            {
+                var promotion = await _promotionRepo.GetByCodeAsync(code);
+
+                if (promotion == null)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Promotion not found!"
+                    });
+                }
+
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Data = _mapper.Map<PromotionDTO>(promotion)
+                });
+            }
+            else
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid promotion code format"
+                });
+            }
+        }
+
         [HttpDelete]
         [Route("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)

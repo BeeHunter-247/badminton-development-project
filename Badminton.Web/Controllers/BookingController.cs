@@ -13,13 +13,11 @@ namespace Badminton.Web.Controllers
     {
         private readonly IBookingRepository _bookingRepo;
         private readonly IMapper _mapper;
-        private readonly CourtSyncContext _context;
 
-        public BookingController(IBookingRepository bookingRepo, IMapper mapper, CourtSyncContext context)
+        public BookingController(IBookingRepository bookingRepo, IMapper mapper)
         {
             _bookingRepo = bookingRepo;
             _mapper = mapper;
-            _context = context;
         }
 
         [HttpGet]
@@ -114,6 +112,7 @@ namespace Badminton.Web.Controllers
                 return BadRequest();
             }
         }
+
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateBooking(int id, [FromBody] UpdateBookingDTO bookingDTO)
         {

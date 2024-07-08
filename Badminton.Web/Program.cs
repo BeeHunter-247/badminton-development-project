@@ -111,6 +111,7 @@ namespace Badminton.Web
             builder.Services.AddScoped<IFileRepository, FileRepository>();
             builder.Services.AddScoped<ICheckInRepository, CheckInRepository>();
 
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline
@@ -124,12 +125,17 @@ namespace Badminton.Web
 
             app.UseHttpsRedirection();
 
-            //app.UseStaticFiles(new StaticFileOptions
-            //{
-            //    FileProvider = new PhysicalFileProvider(
-            //        Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
-            //    RequestPath = "/Uploads"
-            //});
+            var uploadsPath = Path.Combine(builder.Environment.ContentRootPath, "Uploads");
+            if (!Directory.Exists(uploadsPath))
+            {
+                Directory.CreateDirectory(uploadsPath);
+            }
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
+                RequestPath = "/Uploads"
+            });
 
             app.UseAuthentication();
 

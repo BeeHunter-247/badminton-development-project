@@ -105,6 +105,8 @@ namespace Badminton.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] CreateCourtDTO courtDTO)
         {
+            var images = new List<string>();
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(new ApiResponse
@@ -115,44 +117,69 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            if(courtDTO.formFile != null)
+            /*if(courtDTO.formfile != null) 
             {
-                var fileResult = _fileRepo.SaveImage(courtDTO.formFile);
-                if(fileResult.Item1 == 1)
+                var fileResult = _fileRepo.SaveImage(court);
+                if (fileResult.Item1 == 1)
                 {
                     courtDTO.Image = fileResult.Item2;
                 }
+            }
+            */
 
-                var courtModel = _mapper.Map<Court>(courtDTO);
-                var success = await _courtRepo.CreateAsync(courtModel);
-                if(success != null)
+            foreach (var file in courtDTO.formFiles)
+            {
+                var fileResult = _fileRepo.SaveImage(file);
+                if (fileResult.Item1 == 1)
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        StatusCode = 1,
-                        Message = "Added successfully",
-                        Data = _mapper.Map<CourtDTO>(courtModel)
-                    });
+                    images.Add(courtDTO.Image = fileResult.Item2);
                 }
-                else
-                {
-                    return BadRequest(new ApiResponse
-                    {
-                        Success= false,
-                        StatusCode = 0,
-                        Message = "Error on adding Court"
-                    });   
-                }
+
+                courtDTO.Image = string.Join(", ", images);
             }
 
-            return Ok();
+            var courtModel = _mapper.Map<Court>(courtDTO);
+
+           /* var courtModel = new Court
+            {
+                CourtName = courtDTO.CourtName,
+                CourtManagerId = courtDTO.CourtManagerId,
+                Location = courtDTO.Location,
+                Phone = courtDTO.Phone,
+                OpeningHours = courtDTO.OpeningHours,
+                Image = string.Join(", ", images),
+                Announcement = courtDTO.Announcement,
+            };
+           */
+
+            var success = await _courtRepo.CreateAsync(courtModel);
+            if (success != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    StatusCode = 1,
+                    Message = "Added successfully",
+                    Data = _mapper.Map<CourtDTO>(courtModel)
+                });
+            }
+            else
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    StatusCode = 0,
+                    Message = "Error on adding Court"
+                });
+            }
         }
 
         [HttpPut]
         [Route("{id:int}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromForm] UpdateCourtDTO courtDTO)
         {
+            var images = new List<string>();
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(new ApiResponse
@@ -163,13 +190,15 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            if(courtDTO.formFile != null)
+            foreach (var file in courtDTO.formFiles)
             {
-                var fileResult = _fileRepo.SaveImage(courtDTO.formFile);
+                var fileResult = _fileRepo.SaveImage(file);
                 if (fileResult.Item1 == 1)
                 {
-                    courtDTO.Image = fileResult.Item2;
+                    images.Add(courtDTO.Image = fileResult.Item2);
                 }
+
+                courtDTO.Image = string.Join(", ", images);
             }
 
             var courtModel = await _courtRepo.UpdateAsync(id, courtDTO);

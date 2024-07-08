@@ -43,6 +43,11 @@ namespace Badminton.Web.Repository
             return await _context.Promotions.FirstOrDefaultAsync(p => p.PromotionId == id);
         }
 
+        public async Task<Promotion?> GetByCodeAsync(string code)
+        {
+            return await _context.Promotions.FirstOrDefaultAsync(pc => pc.PromotionCode == code);
+        }
+
         public async Task<Promotion?> UpdateAsync(int id, UpdatePromotionDTO promotionDTO)
         {
             var existingPromotion = await _context.Promotions.FirstOrDefaultAsync(p => p.PromotionId == id);

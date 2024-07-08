@@ -10,9 +10,8 @@ namespace Badminton.Web.Mappers
         public MappingProfile()
         {
             CreateMap<Booking, BookingDTO>().ReverseMap();
-            CreateMap<UpdateBookingDTO, BookingDTO>().ReverseMap();
-            CreateMap<Schedule, ScheduleDTO>().ReverseMap();
-            CreateMap<CreateScheduleDTO, Schedule>().ReverseMap();
+            CreateMap<CreateBookingDTO, Booking>().ReverseMap();
+            CreateMap<UpdateBookingDTO, Booking>().ReverseMap();
             CreateMap<Court, CourtDTO>().ReverseMap();
             CreateMap<CreateCourtDTO, Court>().ReverseMap();
             CreateMap<UpdateCourtDTO, Court>().ReverseMap();

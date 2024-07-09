@@ -23,7 +23,5 @@ public partial class SubCourt
 
     public virtual Court Court { get; set; }
 
-    public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
-
     public virtual TimeSlot TimeSlot { get; set; }
 }

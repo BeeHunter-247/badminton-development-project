@@ -61,9 +61,10 @@ namespace Badminton.Web.Controllers
             var sCourt = await _sCourtRepo.GetByIdAsync(id);
             if(sCourt == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success= false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "SubCourt not found!"
                 });
             }
@@ -92,9 +93,10 @@ namespace Badminton.Web.Controllers
             var sCourt = await _sCourtRepo.UpdateAsync(id, updateDTO);
             if( sCourt == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "SubCourt not found!"
                 });
             }
@@ -120,9 +122,10 @@ namespace Badminton.Web.Controllers
             }
 
             if(!await _courtRepo.CourtExist(courtId)) {
-                return BadRequest(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode= StatusCodes.Status400BadRequest,
                     Message = "Court does not exist!"
                 });
             }
@@ -154,9 +157,10 @@ namespace Badminton.Web.Controllers
             var sCourtModel = await _sCourtRepo.DeleteAsync(id);
             if(sCourtModel == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "SubCourt does not exist!"
                 });
             }

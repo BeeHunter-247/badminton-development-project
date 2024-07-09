@@ -8,21 +8,21 @@ namespace Badminton.Web.DTO
     {
         public int BookingId { get; set; }
         public int UserId { get; set; }
+        public int SubCourtId { get; set; }
 
         [DataType(DataType.DateTime)]
-        public DateTime BookingDate { get; set; }
+        public DateTime? CreateDate { get; set; }
 
         [DataType(DataType.Date)]
-        public DateOnly ScheduleDate { get; set; }
-
+        public DateOnly BookingDate { get; set; }
+        public int TimeSlotId { get; set; }
         public int BookingType { get; set; }
         public decimal? Amount { get; set; }
         public int Status { get; set; }
-
-        public string CancellationReason { get; set; }
+        public string? CancellationReason { get; set; }
         public int PaymentId { get; set; }
-        public int SubCourtId { get; set; }
-        public int TimeSlotId { get; set; }
+        
+        
 
     }
 
@@ -33,22 +33,21 @@ namespace Badminton.Web.DTO
 
         [Required(ErrorMessage = "SubCourtId is required")]
         public int SubCourtId { get; set; }
+        
+        //[Required(ErrorMessage = "CreateDate is required")]
+
+        [DataType(DataType.DateTime)]
+        public string? CreateDate { get; set; }
+
+        [Required(ErrorMessage = "BookingDate is required")]
+
+        [DataType(DataType.Date)]
+        public string? BookingDate { get; set; }
 
         [Required(ErrorMessage = "TimeSlotId is required")]
         public int TimeSlotId { get; set; }
 
-        [Required(ErrorMessage = "ScheduleId is required")]
-        public int ScheduleId { get; set; }
-
-        [Required(ErrorMessage = "BookingDate is required")]
-        
-        [DataType(DataType.DateTime)]
-        public string? BookingDate { get; set; }
-
-        [DataType(DataType.Date)]
-        public string? ScheduleDate { get; set; }
-
-        public decimal Amount { get; set; }
+        public decimal? Amount { get; set; }
 
         public int PaymentId { get; set; }
     }
@@ -57,7 +56,7 @@ namespace Badminton.Web.DTO
     {
         [Required]
         [DataType(DataType.Date)]
-        public string ScheduleDate { get; set; }
+        public string BookingDate { get; set; }
 
         [Required(ErrorMessage = "SubCourtId is required")]
         public int SubCourtId { get; set; }

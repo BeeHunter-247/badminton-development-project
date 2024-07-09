@@ -50,7 +50,7 @@ namespace Badminton.Web.Repository
             }
 
             
-            existingBooking.ScheduleDate = DateOnly.Parse(bookingDTO.ScheduleDate);
+            existingBooking.BookingDate = DateOnly.Parse(bookingDTO.BookingDate);
             existingBooking.SubCourtId = bookingDTO.SubCourtId;
             existingBooking.TimeSlotId = bookingDTO.TimeSlotId;
             existingBooking.Amount= bookingDTO.Amount;
@@ -104,7 +104,7 @@ namespace Badminton.Web.Repository
         {
             return await _context.Bookings.AnyAsync(b => b.BookingId == id);
         }
-        public async Task<bool> IsTimeSlotAvailableAsync(int subCourtId, int timeSlotId, DateTime bookingDate)
+        public async Task<bool> IsTimeSlotAvailableAsync(int subCourtId, int timeSlotId, DateOnly bookingDate)
         {
             return !await _context.Bookings.AnyAsync(b =>
                 b.SubCourtId == subCourtId &&

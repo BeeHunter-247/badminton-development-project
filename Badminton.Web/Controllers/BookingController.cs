@@ -57,9 +57,10 @@ namespace Badminton.Web.Controllers
             var booking = await _bookingRepo.GetById(id);
             if (booking == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "Booking not found!"
                 });
             }
@@ -86,18 +87,20 @@ namespace Badminton.Web.Controllers
 
             try
             {
-                if (!DateOnly.TryParse(bookingDTO.ScheduleDate, out var parseScheduleDate))
+
+                if (!DateOnly.TryParse(bookingDTO.BookingDate, out var parseBookingDate))
                 {
                     ModelState.AddModelError("BookingDate", "Invalid BookingDate format. Please use yyyy-MM-dd.");
                     return BadRequest(ModelState);
                 }
                 var booking = new Booking
+
                 {
                     UserId = bookingDTO.UserId,
                     SubCourtId = bookingDTO.SubCourtId,
                     TimeSlotId = bookingDTO.TimeSlotId,
-                    BookingDate = DateTime.Parse(bookingDTO.BookingDate),
-                    ScheduleDate = parseScheduleDate, 
+                    CreateDate = DateTime.Parse(bookingDTO.CreateDate),
+                    BookingDate = parseBookingDate, 
                     Amount = bookingDTO.Amount,
                     Status = (int)BookingStatus.Pending,
                     BookingType = (int)BookingType.Daily,
@@ -110,6 +113,7 @@ namespace Badminton.Web.Controllers
                 return Ok(new ApiResponse
                 {
                     Success = true,
+                    StatusCode = StatusCodes.Status201Created,
                     Data = _mapper.Map<BookingDTO>(booking)
                 });
             }
@@ -136,9 +140,10 @@ namespace Badminton.Web.Controllers
 
             if (bookingU == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "Booking not found!"
                 });
             }
@@ -167,9 +172,10 @@ namespace Badminton.Web.Controllers
 
             if (booking == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "Booking does not exist!"
                 });
             }

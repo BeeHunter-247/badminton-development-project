@@ -13,11 +13,11 @@ public partial class Booking
 
     public int SubCourtId { get; set; }
 
+    public DateTime CreateDate { get; set; }
+
+    public DateOnly BookingDate { get; set; }
+
     public int TimeSlotId { get; set; }
-
-    public DateTime BookingDate { get; set; }
-
-    public DateOnly ScheduleDate { get; set; }
 
     public int BookingType { get; set; }
 

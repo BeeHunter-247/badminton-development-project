@@ -59,9 +59,10 @@ namespace Badminton.Web.Controllers
 
             if (checkIn == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "Promotion not found!"
                 });
             }
@@ -127,9 +128,10 @@ namespace Badminton.Web.Controllers
 
             if (checkIn == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "CheckIn not found!"
                 });
             }
@@ -159,9 +161,10 @@ namespace Badminton.Web.Controllers
 
             if (checkIn == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "CheckIn does not exist!"
                 });
             }

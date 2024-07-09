@@ -60,9 +60,10 @@ namespace Badminton.Web.Controllers
             var evaluate = await _evaluateRepo.GetByIdAsync(id);
             if(evaluate == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success= false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "Evaluate not found!"
                 });
             }
@@ -89,9 +90,10 @@ namespace Badminton.Web.Controllers
 
             if(!await _courtRepo.CourtExist(courtId))
             {
-                return BadRequest(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status400BadRequest,
                     Message = "Court does not exist!"
                 });
             }
@@ -125,9 +127,10 @@ namespace Badminton.Web.Controllers
             var evaluate = await _evaluateRepo.UpdateAsync(id, updateDTO);
             if(evaluate == null) 
             { 
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "Evaluate not found!"
                 });
             }
@@ -157,9 +160,10 @@ namespace Badminton.Web.Controllers
 
             if(evaluateModel == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "Evaluate does not exist!"
                 });
             }

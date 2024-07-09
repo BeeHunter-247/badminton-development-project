@@ -61,9 +61,10 @@ namespace Badminton.Web.Controllers
             var court = await _courtRepo.GetByIdAsync(id);
             if (court == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "Court not found!"
                 });
             }
@@ -92,9 +93,10 @@ namespace Badminton.Web.Controllers
             var courtModel = await _courtRepo.DeleteAsync(id);
             if (courtModel == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "Court does not exist!"
                 });
             }
@@ -204,10 +206,10 @@ namespace Badminton.Web.Controllers
             var courtModel = await _courtRepo.UpdateAsync(id, courtDTO);
             if (courtModel == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
-                    StatusCode = 0,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "Court not found!"
                 });
             }

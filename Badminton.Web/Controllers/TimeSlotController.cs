@@ -58,9 +58,10 @@ namespace Badminton.Web.Controllers
             var timeSlot = await _timeSlotRepo.GetByIdAsync(id);
             if(timeSlot == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "TimeSlot not found!"
                 });
             }
@@ -89,9 +90,10 @@ namespace Badminton.Web.Controllers
             var timeSlot = await _timeSlotRepo.UpdateAsync(id, timeSlotDTO);
             if(timeSlot == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "TimeSlot not found!"
                 });
             }
@@ -156,9 +158,10 @@ namespace Badminton.Web.Controllers
             var timeSlotModel = await _timeSlotRepo.DeleteAsync(id);
             if(timeSlotModel == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "TimeSlot does not exist!"
                 });
             }

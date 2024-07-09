@@ -59,9 +59,10 @@ namespace Badminton.Web.Controllers
 
             if(promotion == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "Promotion not found!"
                 });
             }
@@ -95,6 +96,7 @@ namespace Badminton.Web.Controllers
                     return Ok(new ApiResponse
                     {
                         Success = false,
+                        StatusCode = StatusCodes.Status404NotFound,
                         Message = "Promotion not found!"
                     });
                 }
@@ -133,9 +135,10 @@ namespace Badminton.Web.Controllers
 
             if( promotion == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "Promotion does not exist!"
                 });
             }
@@ -198,9 +201,10 @@ namespace Badminton.Web.Controllers
 
             if(promotion == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success= false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "Promotion not found!"
                 });  
             }

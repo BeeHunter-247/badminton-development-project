@@ -1,7 +1,10 @@
+using Badminton.Web.DTO.Payment.Request;
+using Badminton.Web.DTO.Payment.Response;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Mappers;
 using Badminton.Web.Models;
 using Badminton.Web.Repository;
+using Badminton.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -109,6 +112,10 @@ namespace Badminton.Web
             builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
             builder.Services.AddScoped<IFileRepository, FileRepository>();
             builder.Services.AddScoped<ICheckInRepository, CheckInRepository>();
+            builder.Services.AddScoped<VnPayService>();
+            builder.Services.AddScoped<VnpayPayResponse>();
+            builder.Services.AddScoped<VnpayPayRequest>();
+            builder.Services.AddHttpContextAccessor();
 
 
             var app = builder.Build();

@@ -1,16 +1,21 @@
-using Badminton.Web.DTO.Payment.Request;
+﻿using Badminton.Web.DTO.Payment.Request;
 using Badminton.Web.DTO.Payment.Response;
 using Badminton.Web.Interfaces;
-using Badminton.Web.Mappers;
 using Badminton.Web.Models;
 using Badminton.Web.Repository;
 using Badminton.Web.Services;
+using Badminton.Web.Services.OTP;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
+using System;
+using System.IO;
 using System.Text;
 
 namespace Badminton.Web
@@ -22,7 +27,6 @@ namespace Badminton.Web
             var builder = WebApplication.CreateBuilder(args);
 
             // JWT Configuration
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("AppSettings"));
             var secretKey = builder.Configuration["AppSettings:SecretKey"];
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
@@ -89,14 +93,11 @@ namespace Badminton.Web
             });
 
             // Add services to the container
-
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddControllers().AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            });
+            builder.Services.AddControllers()
+               .AddNewtonsoftJson(options =>
+               {
+                   options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+               });
 
             builder.Services.AddDbContext<CourtSyncContext>(options =>
             {
@@ -104,6 +105,11 @@ namespace Badminton.Web
             });
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            // Register Redis ConnectionMultiplexer as a Singleton
+
+            // Add repositories and services
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IBookingRepository, BookingRepository>();
             builder.Services.AddScoped<ICourtRepository, CourtRepository>();
             builder.Services.AddScoped<IEvaluateRepository, EvaluateRepository>();
@@ -112,39 +118,38 @@ namespace Badminton.Web
             builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
             builder.Services.AddScoped<IFileRepository, FileRepository>();
             builder.Services.AddScoped<ICheckInRepository, CheckInRepository>();
-            builder.Services.AddScoped<VnPayService>();
-            builder.Services.AddScoped<VnpayPayResponse>();
-            builder.Services.AddScoped<VnpayPayRequest>();
-            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<IEmailService, EmailService>(sp => new EmailService(
+                smtpServer: "smtp.gmail.com",
+                smtpPort: 587,
+                smtpUsername: "courtb454@gmail.com",
+                smtpPassword: "nurs kcxs wnuh qvlp"
+            ));
 
+            // Other service registrations
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline
-            //if (app.Environment.IsDevelopment())
-            //{
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            //}
+            // Configure middleware, static files, authentication, authorization, etc.
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseCors("corspolicy");
 
             app.UseHttpsRedirection();
 
-            var uploadsPath = Path.Combine(builder.Environment.ContentRootPath, "Uploads");
+            var uploadsPath = Path.Combine(app.Environment.ContentRootPath, "Uploads");
             if (!Directory.Exists(uploadsPath))
             {
                 Directory.CreateDirectory(uploadsPath);
             }
+
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
+                FileProvider = new PhysicalFileProvider(uploadsPath),
                 RequestPath = "/Uploads"
             });
 
             app.UseAuthentication();
-
             app.UseAuthorization();
 
             app.MapControllers();

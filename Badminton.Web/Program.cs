@@ -122,7 +122,7 @@ namespace Badminton.Web
             builder.Services.AddScoped<VnpayService>();
             builder.Services.AddScoped<VnpayPayResponse>();
             builder.Services.AddScoped<VnpayPayRequest>();
-
+            builder.Services.Configure<VnpayConfig>(builder.Configuration.GetSection("Vnpay"));
             // Add IHttpContextAccessor
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<IEmailService, EmailService>(sp => new EmailService(

@@ -20,10 +20,6 @@ namespace Badminton.Web.DTO
         public decimal? Amount { get; set; }
         public int Status { get; set; }
         public string? CancellationReason { get; set; }
-        public int PaymentId { get; set; }
-        
-        
-
     }
 
     public class CreateBookingDTO
@@ -48,8 +44,6 @@ namespace Badminton.Web.DTO
         public int TimeSlotId { get; set; }
 
         public decimal? Amount { get; set; }
-
-        public int PaymentId { get; set; }
     }
 
     public class UpdateBookingDTO
@@ -69,10 +63,7 @@ namespace Badminton.Web.DTO
 
     public class CancelBookingDTO
     {
-        [Required(ErrorMessage = "BookingId is required")]
-        public int BookingId { get; set; }
-
         [StringLength(255, ErrorMessage = "CancellationReason cannot exceed 255 characters")]
-        public string? CancellationReason { get; set; }
+        public string CancellationReason { get; set; }
     }
 }

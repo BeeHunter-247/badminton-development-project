@@ -21,6 +21,12 @@ public partial class User
 
     public int RoleType { get; set; }
 
+    public string Otp { get; set; }
+
+    public DateTime? OtpExpiration { get; set; }
+
+    public int? Verify { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual ICollection<CheckIn> CheckIns { get; set; } = new List<CheckIn>();

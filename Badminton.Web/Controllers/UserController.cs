@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Badminton.Web.DTO;
+using Badminton.Web.DTO.OTP;
 using Badminton.Web.DTO.User;
 using Badminton.Web.Models;
+using Badminton.Web.Services.OTP;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -12,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using BCrypt.Net;
 
 namespace Badminton.Web.Controllers
 {
@@ -22,13 +25,23 @@ namespace Badminton.Web.Controllers
         private readonly CourtSyncContext _context;
         private readonly AppSetting _appSettings;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
+        private readonly Dictionary<string, string> _otpStorage;
+  
 
-        public UserController(CourtSyncContext context, IOptionsMonitor<AppSetting> optionsMonitor, IMapper mapper)
+        public UserController(CourtSyncContext context, IOptionsMonitor<AppSetting> optionsMonitor, IMapper mapper, IEmailService emailService)
         {
             _context = context;
             _appSettings = optionsMonitor.CurrentValue;
             _mapper = mapper;
+            _emailService = emailService;
+            _otpStorage = new Dictionary<string, string>();
+         
         }
+
+        // Controller actions and logic...
+
+
 
         [HttpPost("Login")]
         //User/Admin
@@ -74,6 +87,17 @@ namespace Badminton.Web.Controllers
                 {
                     Success = false,
                     Message = "Invalid Username/Password"
+                });
+            }
+
+            // Check if user's Verify status is 4
+            if (user.Verify != 4)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Account is not verified.Please verified your account"
+                    // Optionally, you can add more details in the response if needed
                 });
             }
 
@@ -126,8 +150,11 @@ namespace Badminton.Web.Controllers
 
 
 
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register(RegisterModel model)
+
+
+
+        [HttpPost("registerwithotp")]
+        public async Task<IActionResult> RegisterWithOtp(SendOtpModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -178,27 +205,103 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Password); //hash pass
+            // Generate random OTP
+            var otp = new Random().Next(100000, 999999).ToString();
+
+            // Hash OTP before saving to database
+            var hashedOtp = BCrypt.Net.BCrypt.HashPassword(otp);
 
             var user = new User
             {
                 UserName = model.Username,
-                Password = hashedPassword,
+                Password = BCrypt.Net.BCrypt.HashPassword(model.Password), // Hashed password
                 FullName = model.FullName,
                 Email = model.Email,
                 Phone = model.Phone,
-                RoleType = 3 // Set RoleType to 3 for User 
+                RoleType = 3, // Set RoleType to 3 for User
+                Otp = hashedOtp, // Save hashed OTP
+                OtpExpiration = DateTime.UtcNow.AddMinutes(10) // Example: OTP expires in 10 minutes
             };
 
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _emailService.SendEmailAsync(model.Email, "Your OTP Code", $"Your OTP code is {otp}");
+                await _context.SaveChangesAsync();
+
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Registration successful. OTP sent successfully."
+                });
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Extract the inner exception details
+                var innerException = dbEx.InnerException != null ? dbEx.InnerException.Message : dbEx.Message;
+                return StatusCode(500, new ApiResponse { Success = false, Message = $"Failed to send OTP: {innerException}" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse { Success = false, Message = $"An unexpected error occurred: {ex.Message}" });
+            }
+        }
+
+
+
+        [HttpPost("verifyotp")]
+        public async Task<IActionResult> VerifyOtp(VerifyOtpModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == model.Email);
+            if (user == null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid Email/OTP"
+                });
+            }
+
+            // Compare hashed OTP input with hashed OTP stored in database and check expiration
+            if (BCrypt.Net.BCrypt.Verify(model.Otp, user.Otp) && user.OtpExpiration > DateTime.UtcNow)
+            {
+                user.Verify = 4;
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
+
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "OTP verified successfully"
+                });
+            }
 
             return Ok(new ApiResponse
             {
-                Success = true,
-                Message = "Registration successful"
+                Success = false,
+                Message = "Invalid OTP or OTP has expired"
             });
         }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -524,4 +627,5 @@ namespace Badminton.Web.Controllers
             return user.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
         }
     }
+
 }

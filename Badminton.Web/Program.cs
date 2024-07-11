@@ -5,6 +5,7 @@ using Badminton.Web.Models;
 using Badminton.Web.Repository;
 using Badminton.Web.Services;
 using Badminton.Web.Services.OTP;
+using Badminton.Web.VnPay.Config;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -118,6 +119,12 @@ namespace Badminton.Web
             builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
             builder.Services.AddScoped<IFileRepository, FileRepository>();
             builder.Services.AddScoped<ICheckInRepository, CheckInRepository>();
+            builder.Services.AddScoped<VnpayService>();
+            builder.Services.AddScoped<VnpayPayResponse>();
+            builder.Services.AddScoped<VnpayPayRequest>();
+
+            // Add IHttpContextAccessor
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<IEmailService, EmailService>(sp => new EmailService(
                 smtpServer: "smtp.gmail.com",
                 smtpPort: 587,

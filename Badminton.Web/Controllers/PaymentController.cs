@@ -11,9 +11,9 @@ namespace Badminton.Web.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly VnPayService _vnpayService;
+        private readonly VnpayService _vnpayService;
 
-        public PaymentController(IHttpContextAccessor httpContextAccessor, VnPayService vnpayService)
+        public PaymentController(IHttpContextAccessor httpContextAccessor, VnpayService vnpayService)
         {
             _httpContextAccessor = httpContextAccessor;
             _vnpayService = vnpayService;

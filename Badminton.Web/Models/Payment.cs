@@ -2,14 +2,11 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 
 namespace Badminton.Web.Models;
 
 public partial class Payment
 {
-
     public int PaymentId { get; set; }
 
     public int UserId { get; set; }
@@ -33,8 +30,6 @@ public partial class Payment
     public int PaymentStatus { get; set; }
 
     public DateTime PaymentDate { get; set; }
-
-    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual Promotion Promotion { get; set; }
 

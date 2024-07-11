@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Badminton.Web.DTO;
+using Badminton.Web.DTO.Payment;
 using Badminton.Web.Models;
 using System.Globalization;
 
@@ -28,7 +29,7 @@ namespace Badminton.Web.Mappers
             CreateMap<CreatePromotionDTO, Promotion>().ReverseMap();
             CreateMap<CheckIn, CheckInDTO>().ReverseMap();
             CreateMap<CreateCheckInDTO, CheckIn>().ReverseMap();
-            
+            CreateMap<Payment, PaymentDTO>().ReverseMap();
         }
     }
 }

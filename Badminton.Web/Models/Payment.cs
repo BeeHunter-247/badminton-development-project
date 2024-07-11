@@ -11,8 +11,6 @@ public partial class Payment
 
     public int UserId { get; set; }
 
-    public decimal Tax { get; set; }
-
     public int? PromotionId { get; set; }
 
     public string PaymentContent { get; set; }
@@ -30,8 +28,6 @@ public partial class Payment
     public int PaymentStatus { get; set; }
 
     public DateTime PaymentDate { get; set; }
-
-    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual Promotion Promotion { get; set; }
 

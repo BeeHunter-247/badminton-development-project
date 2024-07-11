@@ -20,10 +20,6 @@ namespace Badminton.Web.DTO
         public decimal? Amount { get; set; }
         public int Status { get; set; }
         public string? CancellationReason { get; set; }
-        public int PaymentId { get; set; }
-        
-        
-
     }
 
     public class CreateBookingDTO
@@ -48,8 +44,6 @@ namespace Badminton.Web.DTO
         public int TimeSlotId { get; set; }
 
         public decimal? Amount { get; set; }
-
-        public int PaymentId { get; set; }
     }
 
     public class UpdateBookingDTO

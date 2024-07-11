@@ -129,8 +129,7 @@ namespace Badminton.Web.Controllers
                     BookingDate = parseBookingDate, 
                     Amount = bookingDTO.Amount,
                     Status = (int)BookingStatus.Pending,
-                    BookingType = (int)BookingType.Daily,
-                    PaymentId = bookingDTO.PaymentId
+                    BookingType = (int)BookingType.Daily
                 };
 
 

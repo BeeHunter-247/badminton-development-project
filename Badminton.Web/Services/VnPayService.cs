@@ -15,7 +15,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Badminton.Web.Services
 {
-    public class VnPayService
+    public class VnpayService
     {
         private VnpayPayResponse _vnpayPayResponse;
         private readonly VnpayConfig _vnpayConfig;
@@ -24,7 +24,7 @@ namespace Badminton.Web.Services
         private readonly IMapper _mapper;
    
 
-        public VnPayService(VnpayPayResponse vnpayPayResponse, IOptions<VnpayConfig> vnpayConfig, VnpayPayRequest vnpayPayRequest, CourtSyncContext context, IMapper mapper)
+        public VnpayService(VnpayPayResponse vnpayPayResponse, IOptions<VnpayConfig> vnpayConfig, VnpayPayRequest vnpayPayRequest, CourtSyncContext context, IMapper mapper)
         {
             _vnpayPayResponse = vnpayPayResponse;
             _vnpayConfig = vnpayConfig.Value;

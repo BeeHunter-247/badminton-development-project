@@ -27,11 +27,7 @@ public partial class Booking
 
     public string CancellationReason { get; set; }
 
-    public int PaymentId { get; set; }
-
     public virtual ICollection<CheckIn> CheckIns { get; set; } = new List<CheckIn>();
-
-    public virtual Payment Payment { get; set; }
 
     public virtual SubCourt SubCourt { get; set; }
 

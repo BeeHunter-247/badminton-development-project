@@ -31,8 +31,6 @@ public partial class Payment
 
     public DateTime PaymentDate { get; set; }
 
-    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
-
     public virtual Promotion Promotion { get; set; }
 
     public virtual User User { get; set; }

@@ -11,8 +11,6 @@ public partial class Payment
 
     public int UserId { get; set; }
 
-    public decimal Tax { get; set; }
-
     public int? PromotionId { get; set; }
 
     public string PaymentContent { get; set; }

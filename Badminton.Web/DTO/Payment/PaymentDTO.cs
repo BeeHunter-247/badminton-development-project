@@ -11,8 +11,6 @@ namespace Badminton.Web.DTO.Payment
 
         public int UserId { get; set; } // ID of the user making the payment
 
-        public decimal Tax { get; set; } // Tax applied to the payment
-
         public int? PromotionId { get; set; } // Optional ID of the promotion applied
 
         public decimal TotalPrice { get; set; } // Total amount to be paid

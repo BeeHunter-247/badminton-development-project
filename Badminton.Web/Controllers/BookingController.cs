@@ -129,7 +129,7 @@ namespace Badminton.Web.Controllers
                     BookingDate = parseBookingDate, 
                     Amount = bookingDTO.Amount,
                     Status = (int)BookingStatus.Pending,
-                    BookingType = (int)BookingType.Daily
+                    BookingType = (int)BookingType.Daily,
                 };
 
 
@@ -303,10 +303,7 @@ namespace Badminton.Web.Controllers
                     Message = "Booking does not exist!"
                 });
             }
-
             return NoContent();
         }
-
-
     }
 }

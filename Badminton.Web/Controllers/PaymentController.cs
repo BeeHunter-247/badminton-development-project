@@ -19,8 +19,7 @@ namespace Badminton.Web.Controllers
             _vnpayService = vnpayService;
         }
 
-
-        //Create payment
+        // Create payment
         [HttpPost]
         public IActionResult CreatePayment([FromBody] PaymentDTO paymentDtos)
         {
@@ -41,12 +40,12 @@ namespace Badminton.Web.Controllers
             }
             else
             {
-                // Use the local IP address
-                return httpContext?.Connection?.LocalIpAddress?.ToString();
+                // Use the remote IP address
+                return httpContext?.Connection?.RemoteIpAddress?.ToString();
             }
         }
 
-        //Check payment response
+        // Check payment response
         [HttpGet]
         public IActionResult CheckPaymentResponse([FromQuery] VnpayPayResponse vnpayResponse)
         {

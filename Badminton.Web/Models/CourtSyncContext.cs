@@ -35,8 +35,7 @@ public partial class CourtSyncContext : DbContext
     {
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.BookingId).HasName("PK__Booking__73951ACD4D761DF7");
-
+            entity.HasKey(e => e.BookingId).HasName("PK__Booking__73951ACD1E101694");
 
             entity.ToTable("Booking");
 
@@ -68,7 +67,8 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<CheckIn>(entity =>
         {
-            entity.HasKey(e => e.CheckInId).HasName("PK__CheckIn__E64976A449A4B2CD");
+            entity.HasKey(e => e.CheckInId).HasName("PK__CheckIn__E64976A4B03342BC");
+
             entity.ToTable("CheckIn");
 
             entity.Property(e => e.CheckInId).HasColumnName("CheckInID");
@@ -95,7 +95,8 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<Court>(entity =>
         {
-            entity.HasKey(e => e.CourtId).HasName("PK__Court__C3A67CFAB28B53FE");
+            entity.HasKey(e => e.CourtId).HasName("PK__Court__C3A67CFA344715C6");
+
             entity.ToTable("Court");
 
             entity.Property(e => e.CourtId).HasColumnName("CourtID");
@@ -128,7 +129,8 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<Evaluate>(entity =>
         {
-            entity.HasKey(e => e.EvaluateId).HasName("PK__Evaluate__2092E4DAA3E6C599");
+            entity.HasKey(e => e.EvaluateId).HasName("PK__Evaluate__2092E4DA5F6C1B94");
+
             entity.ToTable("Evaluate");
 
             entity.Property(e => e.EvaluateId).HasColumnName("EvaluateID");
@@ -150,7 +152,8 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A58AD365257");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A58E88B0236");
+
             entity.ToTable("Payment");
 
             entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
@@ -164,7 +167,6 @@ public partial class CourtSyncContext : DbContext
             entity.Property(e => e.RefundAmount)
                 .HasDefaultValue(0m)
                 .HasColumnType("decimal(10, 2)");
-            entity.Property(e => e.RequiredAmount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.TotalPrice).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -180,7 +182,8 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<Promotion>(entity =>
         {
-            entity.HasKey(e => e.PromotionId).HasName("PK__Promotio__52C42F2F21A93EB6");
+            entity.HasKey(e => e.PromotionId).HasName("PK__Promotio__52C42F2FECE1F18A");
+
             entity.ToTable("Promotion");
 
             entity.Property(e => e.PromotionId).HasColumnName("PromotionID");
@@ -197,7 +200,8 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<SubCourt>(entity =>
         {
-            entity.HasKey(e => e.SubCourtId).HasName("PK__SubCourt__D8ADDD0C33BBA7D1");
+            entity.HasKey(e => e.SubCourtId).HasName("PK__SubCourt__D8ADDD0CF4827D14");
+
             entity.ToTable("SubCourt");
 
             entity.Property(e => e.SubCourtId).HasColumnName("SubCourtID");
@@ -222,7 +226,8 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<TimeSlot>(entity =>
         {
-            entity.HasKey(e => e.TimeSlotId).HasName("PK__TimeSlot__41CC1F52BB7C6FCC");
+            entity.HasKey(e => e.TimeSlotId).HasName("PK__TimeSlot__41CC1F52A77D689C");
+
             entity.ToTable("TimeSlot");
 
             entity.Property(e => e.TimeSlotId).HasColumnName("TimeSlotID");
@@ -230,13 +235,14 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__User__1788CCACC655B0F2");
+            entity.HasKey(e => e.UserId).HasName("PK__User__1788CCAC3B623306");
 
             entity.ToTable("User");
 
-            entity.HasIndex(e => e.Email, "UQ__User__A9D105341500ABDC").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__User__A9D105342FF14238").IsUnique();
 
-            entity.HasIndex(e => e.UserName, "UQ__User__C9F28456E640A38A").IsUnique();
+            entity.HasIndex(e => e.UserName, "UQ__User__C9F284565A3D30AE").IsUnique();
+
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Email)
                 .IsRequired()

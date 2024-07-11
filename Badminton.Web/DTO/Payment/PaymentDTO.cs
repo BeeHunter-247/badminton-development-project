@@ -15,8 +15,6 @@ namespace Badminton.Web.DTO.Payment
 
         public decimal TotalPrice { get; set; } // Total amount to be paid
 
-        public decimal? RefundAmount { get; set; } // Optional amount to be refunded
-
         public string PaymentMethod { get; set; } = string.Empty; // Payment method used (default empty string)
 
         public int PaymentStatus { get; set; } // Status of the payment (e.g., success, pending, failed)

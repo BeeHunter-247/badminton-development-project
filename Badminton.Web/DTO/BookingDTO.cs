@@ -69,10 +69,7 @@ namespace Badminton.Web.DTO
 
     public class CancelBookingDTO
     {
-        [Required(ErrorMessage = "BookingId is required")]
-        public int BookingId { get; set; }
-
         [StringLength(255, ErrorMessage = "CancellationReason cannot exceed 255 characters")]
-        public string? CancellationReason { get; set; }
+        public string CancellationReason { get; set; }
     }
 }

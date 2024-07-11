@@ -111,5 +111,14 @@ namespace Badminton.Web.Repository
                 b.TimeSlotId == timeSlotId &&
                 b.BookingDate == bookingDate);
         }
+        public async Task<Booking?> GetBookingByUserAndTime(int userId, int subCourtId, DateOnly bookingDate, int timeSlotId)
+        {
+            return await _context.Bookings
+                .FirstOrDefaultAsync(b =>
+                    b.UserId == userId &&
+                    b.SubCourtId == subCourtId &&
+                    b.BookingDate == bookingDate &&
+                    b.TimeSlotId == timeSlotId);
+        }
     }
 }

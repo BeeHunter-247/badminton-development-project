@@ -17,8 +17,6 @@ public partial class Payment
 
     public string PaymentCurrency { get; set; }
 
-    public decimal? RequiredAmount { get; set; }
-
     public decimal TotalPrice { get; set; }
 
     public decimal? RefundAmount { get; set; }

@@ -11,16 +11,15 @@ namespace Badminton.Web.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly VnPayService _vnpayService;
+        private readonly VnpayService _vnpayService;
 
-        public PaymentController(IHttpContextAccessor httpContextAccessor, VnPayService vnpayService)
+        public PaymentController(IHttpContextAccessor httpContextAccessor, VnpayService vnpayService)
         {
             _httpContextAccessor = httpContextAccessor;
             _vnpayService = vnpayService;
         }
 
-
-        //Create payment
+        // Create payment
         [HttpPost]
         public IActionResult CreatePayment([FromBody] PaymentDTO paymentDtos)
         {
@@ -41,12 +40,12 @@ namespace Badminton.Web.Controllers
             }
             else
             {
-                // Use the local IP address
-                return httpContext?.Connection?.LocalIpAddress?.ToString();
+                // Use the remote IP address
+                return httpContext?.Connection?.RemoteIpAddress?.ToString();
             }
         }
 
-        //Check payment response
+        // Check payment response
         [HttpGet]
         public IActionResult CheckPaymentResponse([FromQuery] VnpayPayResponse vnpayResponse)
         {

@@ -15,7 +15,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Badminton.Web.Services
 {
-    public class VnPayService
+    public class VnpayService
     {
         private VnpayPayResponse _vnpayPayResponse;
         private readonly VnpayConfig _vnpayConfig;
@@ -24,7 +24,7 @@ namespace Badminton.Web.Services
         private readonly IMapper _mapper;
    
 
-        public VnPayService(VnpayPayResponse vnpayPayResponse, IOptions<VnpayConfig> vnpayConfig, VnpayPayRequest vnpayPayRequest, CourtSyncContext context, IMapper mapper)
+        public VnpayService(VnpayPayResponse vnpayPayResponse, IOptions<VnpayConfig> vnpayConfig, VnpayPayRequest vnpayPayRequest, CourtSyncContext context, IMapper mapper)
         {
             _vnpayPayResponse = vnpayPayResponse;
             _vnpayConfig = vnpayConfig.Value;
@@ -45,8 +45,12 @@ namespace Badminton.Web.Services
         public string GetLink(string baseUrl, string secretKey)
         {
             MakeRequestData();
+
+            // Sort requestData alphabetically
+            var orderedData = requestData.OrderBy(kv => kv.Key);
+
             StringBuilder data = new StringBuilder();
-            foreach (KeyValuePair<string, string> kv in requestData)
+            foreach (var kv in orderedData)
             {
                 if (!String.IsNullOrEmpty(kv.Value))
                 {
@@ -54,10 +58,22 @@ namespace Badminton.Web.Services
                 }
             }
 
-            string result = baseUrl + "?" + data.ToString();
-            var secureHash = HashHelper.HmacSHA512(secretKey, data.ToString().Remove(data.Length - 1, 1));
-            return result += "vnp_SecureHash=" + secureHash;
+            string queryString = data.ToString().TrimEnd('&'); // Remove the trailing '&' character
+
+            // Calculate secure hash
+            string secureHash = HashHelper.HmacSHA512(secretKey, queryString);
+
+            // Construct the final URL
+            string result = baseUrl + "?" + queryString + "&vnp_SecureHash=" + WebUtility.UrlEncode(secureHash);
+
+            return result;
         }
+
+
+
+
+
+
 
         //Check data if it is not null then add to requestData
         public void MakeRequestData()
@@ -201,7 +217,7 @@ namespace Badminton.Web.Services
 
                     if (payment != null)
                     {
-                        if (payment.TotalPrice == (vnpayPayResponse.vnp_Amount / 100))
+                        if (payment.RequiredAmount == (vnpayPayResponse.vnp_Amount / 100))
                         {
                             if (payment.PaymentStatus == 0) // Sử dụng số nguyên thay vì chuỗi
                             {

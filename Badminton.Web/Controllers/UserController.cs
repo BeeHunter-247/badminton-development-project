@@ -249,7 +249,6 @@ namespace Badminton.Web.Controllers
         }
 
 
-
         [HttpPost("verifyotp")]
         public async Task<IActionResult> VerifyOtp(VerifyOtpModel model)
         {

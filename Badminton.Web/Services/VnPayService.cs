@@ -217,7 +217,7 @@ namespace Badminton.Web.Services
 
                     if (payment != null)
                     {
-                        if (payment.TotalPrice == (vnpayPayResponse.vnp_Amount / 100))
+                        if (payment.RequiredAmount == (vnpayPayResponse.vnp_Amount / 100))
                         {
                             if (payment.PaymentStatus == 0) // Sử dụng số nguyên thay vì chuỗi
                             {

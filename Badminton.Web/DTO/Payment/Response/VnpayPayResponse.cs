@@ -1,11 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using TestVnPay.VnPay.Lib;
+using System.ComponentModel.DataAnnotations;
 
 namespace Badminton.Web.DTO.Payment.Response
 {
@@ -23,8 +17,7 @@ namespace Badminton.Web.DTO.Payment.Response
         public string vnp_SecureHashType { get; set; } = string.Empty;
         public string vnp_SecureHash { get; set; } = string.Empty;
         public int? vnp_Amount { get; set; }
-        public string? vnp_ResponseCode { get; set; }
+        public string vnp_ResponseCode { get; set; } = string.Empty;
         public string vnp_PayDate { get; set; } = string.Empty;
-
     }
 }

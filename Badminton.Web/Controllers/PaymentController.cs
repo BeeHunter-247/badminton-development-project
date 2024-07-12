@@ -53,4 +53,5 @@ namespace Badminton.Web.Controllers
             return Ok(result);
         }
     }
+
 }

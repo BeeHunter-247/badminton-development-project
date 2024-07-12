@@ -220,7 +220,8 @@ namespace Badminton.Web.Controllers
                 Phone = model.Phone,
                 RoleType = 3, // Set RoleType to 3 for User
                 Otp = hashedOtp, // Save hashed OTP
-                OtpExpiration = DateTime.UtcNow.AddMinutes(10) // Example: OTP expires in 10 minutes
+                OtpExpiration = DateTime.UtcNow.AddMinutes(5), // Example: OTP expires in 5 minutes
+                Verify = 0 // Not verified yet
             };
 
             _context.Users.Add(user);

@@ -20,7 +20,7 @@ namespace Badminton.Web.DTO
         public decimal? Amount { get; set; }
         public int Status { get; set; }
         public string? CancellationReason { get; set; }
-        public int PromotionId { get; set; }
+        public string? PromotionCode { get; set; }
     }
 
     public class CreateBookingDTO
@@ -44,7 +44,7 @@ namespace Badminton.Web.DTO
         [Required(ErrorMessage = "TimeSlotId is required")]
         public int TimeSlotId { get; set; }
         public decimal? Amount { get; set; }
-        public int PromotionId { get; set; }
+        public string? PromotionCode { get; set; }
     }
 
     public class UpdateBookingDTO
@@ -59,7 +59,7 @@ namespace Badminton.Web.DTO
         [Required(ErrorMessage = "TimeSlotId is required")]
         public int TimeSlotId { get; set; }
         public decimal Amount { get; set; }
-        public int PromotionId { get; set; }
+        public int? PromotionCode { get; set; }
 
     }
 

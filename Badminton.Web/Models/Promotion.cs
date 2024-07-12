@@ -18,4 +18,6 @@ public partial class Promotion
     public DateOnly StartDate { get; set; }
 
     public DateOnly EndDate { get; set; }
+
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 }

@@ -54,6 +54,7 @@ namespace Badminton.Web.Repository
             existingBooking.SubCourtId = bookingDTO.SubCourtId;
             existingBooking.TimeSlotId = bookingDTO.TimeSlotId;
             existingBooking.Amount= bookingDTO.Amount;
+            existingBooking.PromotionId = bookingDTO.PromotionId;
             await _context.SaveChangesAsync();
 
             return existingBooking;

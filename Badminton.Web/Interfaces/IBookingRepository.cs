@@ -1,4 +1,5 @@
 ﻿using Badminton.Web.DTO;
+using Badminton.Web.Enums;
 using Badminton.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace Badminton.Web.Interfaces
         // Read
         Task<List<Booking>> GetAll();
         Task<Booking?> GetById(int id);
+        Task<Booking?> GetByStatus(BookingStatus status);
 
         // Update
         Task<Booking?> UpdateAsync(int id, UpdateBookingDTO  bookingDTO);

@@ -37,8 +37,14 @@ namespace Badminton.Web.Repository
         }
         public async Task<Booking?> GetById(int id)
         {
-            return await _context.Bookings.FirstOrDefaultAsync(c => c.BookingId == id);
+            return await _context.Bookings.FirstOrDefaultAsync(b => b.BookingId == id);
         }
+
+        public async Task<Booking?> GetByStatus(BookingStatus status)
+        {
+            return await _context.Bookings.FirstOrDefaultAsync(b => (BookingStatus)b.Status == status);
+        }
+
 
         //Update
         public async Task<Booking?> UpdateAsync(int id, UpdateBookingDTO bookingDTO)

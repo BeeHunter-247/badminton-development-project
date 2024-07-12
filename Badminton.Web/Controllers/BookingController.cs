@@ -74,6 +74,37 @@ namespace Badminton.Web.Controllers
             });
         }
 
+        [HttpGet("status/{status}", Name = "GetBookingByStatus")]
+        public async Task<IActionResult> GetByStatusAsync(BookingStatus status)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            var booking = await _bookingRepo.GetByStatus(status);
+            if (booking == null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = "Booking not found!"
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<BookingDTO>(booking)
+            });
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateAsync(CreateBookingDTO bookingDTO)
         {

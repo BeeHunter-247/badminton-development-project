@@ -119,6 +119,7 @@ namespace Badminton.Web
             builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
             builder.Services.AddScoped<IFileRepository, FileRepository>();
             builder.Services.AddScoped<ICheckInRepository, CheckInRepository>();
+            builder.Services.AddHostedService<ExpiredOtpCleanerService>();
             builder.Services.AddScoped<VnpayService>();
             builder.Services.AddScoped<VnpayPayResponse>();
             builder.Services.AddScoped<VnpayPayRequest>();

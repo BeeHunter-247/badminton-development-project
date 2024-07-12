@@ -27,7 +27,11 @@ public partial class Booking
 
     public string CancellationReason { get; set; }
 
+    public int PromotionId { get; set; }
+
     public virtual ICollection<CheckIn> CheckIns { get; set; } = new List<CheckIn>();
+
+    public virtual Promotion Promotion { get; set; }
 
     public virtual SubCourt SubCourt { get; set; }
 

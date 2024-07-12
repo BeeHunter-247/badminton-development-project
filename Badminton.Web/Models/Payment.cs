@@ -11,23 +11,19 @@ public partial class Payment
 
     public int UserId { get; set; }
 
-    public int? PromotionId { get; set; }
-
     public string PaymentContent { get; set; }
 
     public string PaymentCurrency { get; set; }
 
-    public decimal TotalPrice { get; set; }
+    public decimal? RequiredAmount { get; set; }
 
-    public decimal? RefundAmount { get; set; }
+    public decimal TotalPrice { get; set; }
 
     public string PaymentMethod { get; set; }
 
     public int PaymentStatus { get; set; }
 
     public DateTime PaymentDate { get; set; }
-
-    public virtual Promotion Promotion { get; set; }
 
     public virtual User User { get; set; }
 }

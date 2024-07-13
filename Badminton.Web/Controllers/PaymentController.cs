@@ -52,6 +52,7 @@ namespace Badminton.Web.Controllers
             var result = _vnpayService.CheckPaymentResponse(vnpayResponse);
             return Ok(result);
         }
+
     }
 
 }

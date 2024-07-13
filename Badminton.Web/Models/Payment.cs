@@ -7,7 +7,7 @@ namespace Badminton.Web.Models;
 
 public partial class Payment
 {
-    public int PaymentId { get; set; }
+    public Guid PaymentId { get; set; }
 
     public int UserId { get; set; }
 
@@ -21,9 +21,15 @@ public partial class Payment
 
     public string PaymentMethod { get; set; }
 
-    public int PaymentStatus { get; set; }
+    public string PaymentLanguage { get; set; }
+
+    public string PaymentStatus { get; set; }
 
     public DateTime PaymentDate { get; set; }
+
+    public DateTime? ExpireDate { get; set; }
+
+    public string MerchantId { get; set; }
 
     public virtual User User { get; set; }
 }

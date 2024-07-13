@@ -1,4 +1,10 @@
-﻿namespace Badminton.Web.VnPay.Config
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Badminton.Web.VnPay.Config
 {
     public class VnpayConfig
     {

@@ -34,6 +34,22 @@ namespace Badminton.Web.Services
    
         }
 
+        public async Task<bool> TestVNPayConnection()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync("https://sandbox.vnpayment.vn/paymentv2/vpcpay.html");
+                    return response.IsSuccessStatusCode;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
         public SortedList<string, string> responseData
            = new SortedList<string, string>(new VnpayCompare());
 
@@ -156,60 +172,30 @@ namespace Badminton.Web.Services
         //Create payment (save PaymentDtos to Database with Mapper)
         public string CreatePayment(PaymentDTO paymentDtos, string? IpAddress, string? UserId)
         {
-            try
+            var payment = _mapper.Map<Payment>(paymentDtos);
+            payment.PaymentStatus = "0";
+            var resultPayment = _context.Payments.Add(payment);
+            var result = _context.SaveChanges();
+            var paymentUrl = string.Empty;
+            var test = _vnpayConfig;
+            if (result > 0)
             {
-                var payment = _mapper.Map<Payment>(paymentDtos);
-                payment.PaymentStatus = 0; // Initialize payment status as required
 
-                // Add the payment entity to the context
-                var resultPayment = _context.Payments.Add(payment);
-
-                // Save changes to the database
-                var result = _context.SaveChanges();
-
-                if (result > 0)
-                {
-                    // Successfully saved payment, proceed with VNPAY request
-                    _vnpayPayRequest = new VnpayPayRequest(
-                        _vnpayConfig.Version,
-                        _vnpayConfig.TmnCode,
-                        DateTime.Now,
-                        IpAddress ?? "127.0.0.1", // Use provided IP address or fallback
-                        paymentDtos.RequiredAmount ?? 0,
-                        paymentDtos.PaymentCurrency ?? string.Empty,
-                        "other", // Adjust this as per your requirement
-                        paymentDtos.PaymentContent ?? string.Empty,
-                        _vnpayConfig.ReturnUrl,
-                        resultPayment.Entity.PaymentId.ToString() // Use the generated PaymentId
-                    );
-
-                    // Generate the payment URL with secure hash
-                    var paymentUrl = GetLink(_vnpayConfig.PaymentUrl, _vnpayConfig.HashSecret);
-
-                    return paymentUrl; // Return the generated payment URL
-                }
-                else
-                {
-                    return "Lỗi rồi"; // Handle the case where payment save fails
-                }
+                _vnpayPayRequest = new VnpayPayRequest(_vnpayConfig.Version,
+                _vnpayConfig.TmnCode, DateTime.Now, "127.0.0.1" ?? string.Empty, paymentDtos.RequiredAmount ?? 0, paymentDtos.PaymentCurrency ?? string.Empty,
+                                "other", paymentDtos.PaymentContent ?? string.Empty, _vnpayConfig.ReturnUrl, resultPayment.Entity.PaymentId!.ToString() ?? string.Empty);
+                paymentUrl = GetLink(_vnpayConfig.PaymentUrl, _vnpayConfig.HashSecret);
+                return paymentUrl;
             }
-            catch (DbUpdateException ex)
-            {
-                // Log or handle the database update exception
-                var innerException = ex.InnerException;
-                throw new Exception("Đã xảy ra lỗi khi lưu thanh toán. Vui lòng thử lại sau.", ex);
-            }
+            return "Lỗi rồi";
         }
-
-
-
-
 
         //Check payment response from VNPAY
         public string CheckPaymentResponse(VnpayPayResponse vnpayPayResponse)
         {
             if (vnpayPayResponse != null)
             {
+
                 _vnpayPayResponse = vnpayPayResponse;
                 if (IsValidSignature(_vnpayConfig.HashSecret))
                 {
@@ -219,18 +205,18 @@ namespace Badminton.Web.Services
                     {
                         if (payment.RequiredAmount == (vnpayPayResponse.vnp_Amount / 100))
                         {
-                            if (payment.PaymentStatus == 0) // Sử dụng số nguyên thay vì chuỗi
+                            if (payment.PaymentStatus == "0")
                             {
                                 if (vnpayPayResponse.vnp_ResponseCode == "00" && vnpayPayResponse.vnp_TransactionStatus == "00")
                                 {
-                                    payment.PaymentStatus = 1;
+                                    payment.PaymentStatus = "1";
                                     _context.Payments.Update(payment);
                                     var result = _context.SaveChanges();
                                     return "Confirm Success"; // "RspCode":"00"
                                 }
                                 else
                                 {
-                                    payment.PaymentStatus = 2;
+                                    payment.PaymentStatus = "2";
                                     _context.Payments.Update(payment);
                                     var result = _context.SaveChanges();
                                     return "Có lỗi xảy ra trong quá trình xử lý";
@@ -261,7 +247,5 @@ namespace Badminton.Web.Services
                 return "Input data required"; // "RspCode":"99"
             }
         }
-
     }
 }
-

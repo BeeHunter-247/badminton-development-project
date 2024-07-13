@@ -21,6 +21,13 @@ namespace Badminton.Web.Repository
             return sCourtModel;
         }
 
+        public async Task<IEnumerable<SubCourt>> CreateRangeAsync(IEnumerable<SubCourt> sCourtModels)
+        {
+            await _context.SubCourts.AddRangeAsync(sCourtModels);
+            await _context.SaveChangesAsync();
+            return sCourtModels;
+        }
+
         public async Task<SubCourt?> DeleteAsync(int id)
         {
             var sCourtModel = await _context.SubCourts.FirstOrDefaultAsync(s => s.SubCourtId == id);

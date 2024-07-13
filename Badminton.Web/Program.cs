@@ -60,10 +60,13 @@ namespace Badminton.Web
             });
 
             // CORS Configuration
-            builder.Services.AddCors(option =>
-                  option.AddPolicy("CORS", builder =>
-                      builder.AllowAnyMethod().AllowAnyHeader().AllowCredentials().SetIsOriginAllowed((host) => true)));
-
+            builder.Services.AddCors(opts =>
+            {
+                opts.AddPolicy("corspolicy", build =>
+                {
+                    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+                });
+            });
 
             // Swagger Configuration
             builder.Services.AddSwaggerGen(option =>

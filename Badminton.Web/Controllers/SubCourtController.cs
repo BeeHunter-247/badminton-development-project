@@ -130,14 +130,23 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var sCourtModel = _mapper.Map<SubCourt>(createDTO);
-            sCourtModel.CourtId = courtId;
-            await _sCourtRepo.CreateAsync(sCourtModel);
-            return CreatedAtAction(nameof(GetById), new { id = sCourtModel.CourtId }, new ApiResponse
+            var subCourts = new List<SubCourt>();
+
+            for(int timeSlotId = 1; timeSlotId <= 7; timeSlotId++)
+            {
+                var subCourtModel = _mapper.Map<SubCourt>(createDTO);
+                subCourtModel.CourtId = courtId;
+                subCourtModel.TimeSlotId = timeSlotId;
+                subCourts.Add(subCourtModel);
+            }
+
+            await _sCourtRepo.CreateRangeAsync(subCourts);
+            return Ok(new ApiResponse
             {
                 Success = true,
-                Data = _mapper.Map<SubCourtDTO>(sCourtModel)
-            });
+                StatusCode = StatusCodes.Status201Created,
+                Message = "Created SubCourt successfully"
+            }); 
         }
 
         [HttpDelete]

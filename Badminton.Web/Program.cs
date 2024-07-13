@@ -1,11 +1,9 @@
-﻿using Badminton.Web.DTO.Payment.Request;
-using Badminton.Web.DTO.Payment.Response;
+﻿using Badminton.Web.DTO.Payment.Response;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using Badminton.Web.Repository;
 using Badminton.Web.Services;
 using Badminton.Web.Services.OTP;
-using Badminton.Web.VnPay.Config;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -19,9 +17,11 @@ using System;
 using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Badminton.Web.VnPay.Config;
+using Badminton.Web.MoMo.Config;
 using Microsoft.OpenApi.Models;
 using AutoMapper;
+using Badminton.Web.MoMo.Config;
+using TestMoMo.DTOs.Request;
 
 namespace Badminton.Web
 {
@@ -113,8 +113,8 @@ namespace Badminton.Web
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             //Get config vnpay from appsettings.json
-            builder.Services.Configure<VnpayConfig>(
-                builder.Configuration.GetSection(VnpayConfig.ConfigName));
+            builder.Services.Configure<MoMoConfig>(
+                builder.Configuration.GetSection(MoMoConfig.ConfigName));
             // Register Redis ConnectionMultiplexer as a Singleton
 
             // Add repositories and services
@@ -127,11 +127,14 @@ namespace Badminton.Web
             builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
             builder.Services.AddScoped<IFileRepository, FileRepository>();
             builder.Services.AddScoped<ICheckInRepository, CheckInRepository>();
+            builder.Services.AddScoped<MoMoService>();
             builder.Services.AddHostedService<ExpiredOtpCleanerService>();
-            builder.Services.AddScoped<VnpayService>();
-            builder.Services.AddScoped<VnpayPayResponse>();
-            builder.Services.AddScoped<VnpayPayRequest>();
-            builder.Services.Configure<VnpayConfig>(builder.Configuration.GetSection("Vnpay"));
+            builder.Services.AddHttpClient<MoMoService>();
+            builder.Services.AddScoped<MomoPayResponse>();
+            builder.Services.AddScoped<MoMoPayRequest>();
+
+
+            
             // Add IHttpContextAccessor
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<IEmailService, EmailService>(sp => new EmailService(

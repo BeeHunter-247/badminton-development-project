@@ -18,7 +18,7 @@ namespace Badminton.Web.DTO
         public int TimeSlotId { get; set; }
         public int BookingType { get; set; }
         public decimal? Amount { get; set; }
-        public int Status { get; set; }
+        public BookingStatus Status { get; set; }
         public string? CancellationReason { get; set; }
         public string? PromotionCode { get; set; }
     }
@@ -67,5 +67,9 @@ namespace Badminton.Web.DTO
     {
         [StringLength(255, ErrorMessage = "CancellationReason cannot exceed 255 characters")]
         public string CancellationReason { get; set; }
+    }
+    public class UpdateBookingStatusDTO
+    {
+        public BookingStatus Status { get; set; }
     }
 }

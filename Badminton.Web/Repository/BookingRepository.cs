@@ -50,6 +50,12 @@ namespace Badminton.Web.Repository
             return await _context.Bookings.Where(b => (BookingStatus)b.Status == status).ToListAsync();
         }
 
+        public async Task<List<Booking>> GetBookingsByDateAndTimeSlot(DateOnly date, int timeSlotId)
+        {
+            return await _context.Bookings
+                .Where(b => b.BookingDate == date && b.TimeSlotId == timeSlotId)
+                .ToListAsync();
+        }
 
         //Update
         public async Task<Booking?> UpdateAsync(int id, UpdateBookingDTO bookingDTO)
@@ -70,6 +76,21 @@ namespace Badminton.Web.Repository
             return existingBooking;
         }
 
+        public async Task<Booking?> UpdateStatusAsync(int id, UpdateBookingStatusDTO updateDto)
+        {
+            var existingBooking = await _context.Bookings.FindAsync(id);
+            if (existingBooking == null)
+            {
+                return null;
+            }
+            existingBooking.Status = updateDto.Status;
+            await _context.SaveChangesAsync();
+
+            return existingBooking;
+        }
+
+
+
         // cancel
         public async Task CancelBookingAsync (int bookingId, string cancellationReason)
         {
@@ -79,7 +100,7 @@ namespace Badminton.Web.Repository
                 throw new KeyNotFoundException("Booking not found.");
             }
 
-            booking.Status = (int)BookingStatus.Cancelled;
+            booking.Status = BookingStatus.Cancelled;
             booking.CancellationReason = cancellationReason;
 
             try

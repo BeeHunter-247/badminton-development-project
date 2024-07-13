@@ -161,7 +161,8 @@ namespace Badminton.Web.Controllers
                     Amount = bookingDTO.Amount,
                     Status = (int)BookingStatus.Pending,
                     BookingType = (int)BookingType.Daily,
-                   
+                    PromotionCode = string.IsNullOrWhiteSpace(bookingDTO.PromotionCode) ? null : bookingDTO.PromotionCode,
+
                 };
 
 

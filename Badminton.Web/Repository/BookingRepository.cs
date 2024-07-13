@@ -40,9 +40,14 @@ namespace Badminton.Web.Repository
             return await _context.Bookings.FirstOrDefaultAsync(b => b.BookingId == id);
         }
 
-        public async Task<Booking?> GetByStatus(BookingStatus status)
+        public async Task<List<Booking?>> GetByUserId(int id)
         {
-            return await _context.Bookings.FirstOrDefaultAsync(b => (BookingStatus)b.Status == status);
+            return await _context.Bookings.Where(u => u.UserId == id).ToListAsync();
+        }
+
+        public async Task<List<Booking?>> GetByStatus(BookingStatus status)
+        {
+            return await _context.Bookings.Where(b => (BookingStatus)b.Status == status).ToListAsync();
         }
 
 

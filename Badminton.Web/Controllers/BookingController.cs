@@ -74,6 +74,40 @@ namespace Badminton.Web.Controllers
             });
         }
 
+        [HttpGet("userId/{id}", Name = "GetBookingByUserId")]
+        public async Task<IActionResult> GetByUserIdAsync(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            var booking = await _bookingRepo.GetByUserId(id);
+            if (booking == null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = "Booking not found!"
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<List<BookingDTO>>(booking)
+
+
+            });
+         }
+
+
         [HttpGet("status/{status}", Name = "GetBookingByStatus")]
         public async Task<IActionResult> GetByStatusAsync(BookingStatus status)
         {
@@ -101,7 +135,7 @@ namespace Badminton.Web.Controllers
             return Ok(new ApiResponse
             {
                 Success = true,
-                Data = _mapper.Map<BookingDTO>(booking)
+                Data = _mapper.Map<List<BookingDTO>>(booking)
             });
         }
 

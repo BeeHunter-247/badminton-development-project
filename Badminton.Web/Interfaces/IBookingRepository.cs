@@ -15,7 +15,8 @@ namespace Badminton.Web.Interfaces
         // Read
         Task<List<Booking>> GetAll();
         Task<Booking?> GetById(int id);
-        Task<Booking?> GetByStatus(BookingStatus status);
+        Task<List<Booking?>> GetByUserId(int id);
+        Task<List<Booking?>> GetByStatus(BookingStatus status);
 
         // Update
         Task<Booking?> UpdateAsync(int id, UpdateBookingDTO  bookingDTO);

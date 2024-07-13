@@ -3,7 +3,7 @@
     public class PaymentReturnDTO
 
     {
-        public int? PaymentId { get; set; }
+        public int? Id { get; set; }
         /// <summary>
         /// 00: Success
         /// 99: Unknown

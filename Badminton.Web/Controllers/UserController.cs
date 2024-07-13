@@ -550,38 +550,6 @@ namespace Badminton.Web.Controllers
 
 
 
-        [HttpDelete("DeleteUser/{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
-        {
-            if (!IsAdmin(User))
-            {
-                return Unauthorized(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Unauthorized"
-                });
-            }
-
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound(new ApiResponse
-                {
-                    Success = false,
-                    Message = "User not found"
-                });
-            }
-
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return Ok(new ApiResponse
-            {
-                Success = true,
-                Message = "User deleted successfully"
-            });
-        }
-
 
         [HttpPut("EditRole")]
         [Authorize]
@@ -648,6 +616,7 @@ namespace Badminton.Web.Controllers
                 Message = "User role updated successfully"
             });
         }
+
 
 
 

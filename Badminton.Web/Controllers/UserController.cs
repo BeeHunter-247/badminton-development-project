@@ -26,8 +26,8 @@ namespace Badminton.Web.Controllers
         private readonly AppSetting _appSettings;
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
-        private readonly Dictionary<string, string> _otpStorage;
-  
+        
+
 
         public UserController(CourtSyncContext context, IOptionsMonitor<AppSetting> optionsMonitor, IMapper mapper, IEmailService emailService)
         {
@@ -35,8 +35,8 @@ namespace Badminton.Web.Controllers
             _appSettings = optionsMonitor.CurrentValue;
             _mapper = mapper;
             _emailService = emailService;
-            _otpStorage = new Dictionary<string, string>();
-         
+
+
         }
 
         // Controller actions and logic...
@@ -548,6 +548,8 @@ namespace Badminton.Web.Controllers
         }
 
 
+
+
         [HttpDelete("DeleteUser/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
@@ -580,6 +582,76 @@ namespace Badminton.Web.Controllers
             });
         }
 
+
+        [HttpPut("EditRole")]
+        [Authorize]
+        public async Task<IActionResult> EditRole(EditRoleModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data"
+                });
+            }
+
+            // Check if the user is an admin
+            if (!IsAdmin(User))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Access denied. Admins only."
+                });
+            }
+
+            // Check if RoleType is within the valid range
+            if (model.RoleType < 0 || model.RoleType > 3)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid role type"
+                });
+            }
+
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == model.UserName);
+            if (user == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "User not found"
+                });
+            }
+
+            // Get the role name from roleType
+            var roleName = GetUserRole(model.RoleType);
+            if (string.IsNullOrEmpty(roleName))
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid role type"
+                });
+            }
+
+            user.RoleType = model.RoleType;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "User role updated successfully"
+            });
+        }
+
+
+
+
         private string GenerateToken(User user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -602,6 +674,10 @@ namespace Badminton.Web.Controllers
 
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
             return jwtTokenHandler.WriteToken(token);
+        
+        
+        
+        
         }
 
 

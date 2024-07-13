@@ -44,7 +44,7 @@ namespace Badminton.Web.DTO
         [Required(ErrorMessage = "TimeSlotId is required")]
         public int TimeSlotId { get; set; }
         public decimal? Amount { get; set; }
-        public string? PromotionCode { get; set; }
+        public string? PromotionCode { get; set; } = string.Empty;
     }
 
     public class UpdateBookingDTO

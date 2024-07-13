@@ -18,6 +18,10 @@ using StackExchange.Redis;
 using System;
 using System.IO;
 using System.Text;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Badminton.Web.VnPay.Config;
+using Microsoft.OpenApi.Models;
+using AutoMapper;
 
 namespace Badminton.Web
 {
@@ -56,13 +60,10 @@ namespace Badminton.Web
             });
 
             // CORS Configuration
-            builder.Services.AddCors(opts =>
-            {
-                opts.AddPolicy("corspolicy", build =>
-                {
-                    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
-                });
-            });
+            builder.Services.AddCors(option =>
+                  option.AddPolicy("CORS", builder =>
+                      builder.AllowAnyMethod().AllowAnyHeader().AllowCredentials().SetIsOriginAllowed((host) => true)));
+
 
             // Swagger Configuration
             builder.Services.AddSwaggerGen(option =>
@@ -94,6 +95,11 @@ namespace Badminton.Web
             });
 
             // Add services to the container
+            builder.Services.AddHttpsRedirection(options =>
+            {
+                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+                options.HttpsPort = 443; // Cổng HTTPS của SmarterASP.NET
+            });
             builder.Services.AddControllers()
                .AddNewtonsoftJson(options =>
                {
@@ -106,7 +112,9 @@ namespace Badminton.Web
             });
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+            //Get config vnpay from appsettings.json
+            builder.Services.Configure<VnpayConfig>(
+                builder.Configuration.GetSection(VnpayConfig.ConfigName));
             // Register Redis ConnectionMultiplexer as a Singleton
 
             // Add repositories and services

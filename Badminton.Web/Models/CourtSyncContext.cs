@@ -35,7 +35,7 @@ public partial class CourtSyncContext : DbContext
     {
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.BookingId).HasName("PK__Booking__73951ACD6B2445B8");
+            entity.HasKey(e => e.BookingId).HasName("PK__Booking__73951ACD326C1CB4");
 
             entity.ToTable("Booking");
 
@@ -52,27 +52,27 @@ public partial class CourtSyncContext : DbContext
 
             entity.HasOne(d => d.PromotionCodeNavigation).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.PromotionCode)
-                .HasConstraintName("FK__Booking__Promoti__4E88ABD4");
+                .HasConstraintName("FK__Booking__Promoti__628FA481");
 
             entity.HasOne(d => d.SubCourt).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.SubCourtId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Booking__SubCour__4CA06362");
+                .HasConstraintName("FK__Booking__SubCour__60A75C0F");
 
             entity.HasOne(d => d.TimeSlot).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.TimeSlotId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Booking__TimeSlo__4D94879B");
+                .HasConstraintName("FK__Booking__TimeSlo__619B8048");
 
             entity.HasOne(d => d.User).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Booking__UserID__4BAC3F29");
+                .HasConstraintName("FK__Booking__UserID__5FB337D6");
         });
 
         modelBuilder.Entity<CheckIn>(entity =>
         {
-            entity.HasKey(e => e.CheckInId).HasName("PK__CheckIn__E64976A450919125");
+            entity.HasKey(e => e.CheckInId).HasName("PK__CheckIn__E64976A46154146E");
 
             entity.ToTable("CheckIn");
 
@@ -85,22 +85,22 @@ public partial class CourtSyncContext : DbContext
             entity.HasOne(d => d.Booking).WithMany(p => p.CheckIns)
                 .HasForeignKey(d => d.BookingId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CheckIn__Booking__52593CB8");
+                .HasConstraintName("FK__CheckIn__Booking__66603565");
 
             entity.HasOne(d => d.SubCourt).WithMany(p => p.CheckIns)
                 .HasForeignKey(d => d.SubCourtId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CheckIn__SubCour__5165187F");
+                .HasConstraintName("FK__CheckIn__SubCour__656C112C");
 
             entity.HasOne(d => d.User).WithMany(p => p.CheckIns)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CheckIn__UserID__534D60F1");
+                .HasConstraintName("FK__CheckIn__UserID__6754599E");
         });
 
         modelBuilder.Entity<Court>(entity =>
         {
-            entity.HasKey(e => e.CourtId).HasName("PK__Court__C3A67CFA813E7B4C");
+            entity.HasKey(e => e.CourtId).HasName("PK__Court__C3A67CFA12913BD0");
 
             entity.ToTable("Court");
 
@@ -126,12 +126,12 @@ public partial class CourtSyncContext : DbContext
             entity.HasOne(d => d.Owner).WithMany(p => p.Courts)
                 .HasForeignKey(d => d.OwnerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Court__OwnerID__3B75D760");
+                .HasConstraintName("FK__Court__OwnerID__4F7CD00D");
         });
 
         modelBuilder.Entity<Evaluate>(entity =>
         {
-            entity.HasKey(e => e.EvaluateId).HasName("PK__Evaluate__2092E4DA644B0814");
+            entity.HasKey(e => e.EvaluateId).HasName("PK__Evaluate__2092E4DA3D4AF0E9");
 
             entity.ToTable("Evaluate");
 
@@ -143,17 +143,17 @@ public partial class CourtSyncContext : DbContext
             entity.HasOne(d => d.Court).WithMany(p => p.Evaluates)
                 .HasForeignKey(d => d.CourtId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Evaluate__CourtI__571DF1D5");
+                .HasConstraintName("FK__Evaluate__CourtI__6B24EA82");
 
             entity.HasOne(d => d.User).WithMany(p => p.Evaluates)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Evaluate__UserID__5629CD9C");
+                .HasConstraintName("FK__Evaluate__UserID__6A30C649");
         });
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A584C4AB81D");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A58D4456E27");
 
             entity.ToTable("Payment");
 
@@ -175,12 +175,12 @@ public partial class CourtSyncContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Payment__UserID__48CFD27E");
+                .HasConstraintName("FK__Payment__UserID__5CD6CB2B");
         });
 
         modelBuilder.Entity<Promotion>(entity =>
         {
-            entity.HasKey(e => e.PromotionCode).HasName("PK__Promotio__A617E4B710146535");
+            entity.HasKey(e => e.PromotionCode).HasName("PK__Promotio__A617E4B7C0F85FAE");
 
             entity.ToTable("Promotion");
 
@@ -198,12 +198,12 @@ public partial class CourtSyncContext : DbContext
 
             entity.HasOne(d => d.Court).WithMany(p => p.Promotions)
                 .HasForeignKey(d => d.CourtId)
-                .HasConstraintName("FK__Promotion__Court__44FF419A");
+                .HasConstraintName("FK__Promotion__Court__59063A47");
         });
 
         modelBuilder.Entity<SubCourt>(entity =>
         {
-            entity.HasKey(e => e.SubCourtId).HasName("PK__SubCourt__D8ADDD0C68B9F080");
+            entity.HasKey(e => e.SubCourtId).HasName("PK__SubCourt__D8ADDD0C556EFB81");
 
             entity.ToTable("SubCourt");
 
@@ -218,17 +218,17 @@ public partial class CourtSyncContext : DbContext
             entity.HasOne(d => d.Court).WithMany(p => p.SubCourts)
                 .HasForeignKey(d => d.CourtId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SubCourt__CourtI__403A8C7D");
+                .HasConstraintName("FK__SubCourt__CourtI__5441852A");
 
             entity.HasOne(d => d.TimeSlot).WithMany(p => p.SubCourts)
                 .HasForeignKey(d => d.TimeSlotId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SubCourt__TimeSl__412EB0B6");
+                .HasConstraintName("FK__SubCourt__TimeSl__5535A963");
         });
 
         modelBuilder.Entity<TimeSlot>(entity =>
         {
-            entity.HasKey(e => e.TimeSlotId).HasName("PK__TimeSlot__41CC1F526115CC42");
+            entity.HasKey(e => e.TimeSlotId).HasName("PK__TimeSlot__41CC1F52A33EAF4B");
 
             entity.ToTable("TimeSlot");
 
@@ -237,13 +237,13 @@ public partial class CourtSyncContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__User__1788CCAC556AFE6B");
+            entity.HasKey(e => e.UserId).HasName("PK__User__1788CCACBD0566C4");
 
             entity.ToTable("User");
 
-            entity.HasIndex(e => e.Email, "UQ__User__A9D1053441FC654A").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__User__A9D10534C7A4B7EF").IsUnique();
 
-            entity.HasIndex(e => e.UserName, "UQ__User__C9F284563BC514A6").IsUnique();
+            entity.HasIndex(e => e.UserName, "UQ__User__C9F28456C0B3EC2F").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Email)
@@ -267,6 +267,7 @@ public partial class CourtSyncContext : DbContext
                 .IsRequired()
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.UserStatus).HasDefaultValue(0);
             entity.Property(e => e.Verify).HasDefaultValue(0);
         });
 

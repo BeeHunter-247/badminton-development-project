@@ -27,6 +27,8 @@ public partial class User
 
     public int? Verify { get; set; }
 
+    public int? UserStatus { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual ICollection<CheckIn> CheckIns { get; set; } = new List<CheckIn>();

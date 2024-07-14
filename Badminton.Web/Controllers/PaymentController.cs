@@ -1,6 +1,6 @@
-﻿using Badminton.Web.DTO.Payment.Response;
-using Badminton.Web.DTO.Payment;
+﻿using Badminton.Web.DTO.Payment;
 using Badminton.Web.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -10,49 +10,23 @@ namespace Badminton.Web.Controllers
     [ApiController]
     public class PaymentController : ControllerBase
     {
+        private readonly MomoService _momoService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly VnpayService _vnpayService;
 
-        public PaymentController(IHttpContextAccessor httpContextAccessor, VnpayService vnpayService)
+        public PaymentController(IHttpContextAccessor httpContextAccessor, MomoService momoService)
         {
+
+            _momoService = momoService;
             _httpContextAccessor = httpContextAccessor;
-            _vnpayService = vnpayService;
         }
 
-        // Create payment
+        //Create payment
         [HttpPost]
         public IActionResult CreatePayment([FromBody] PaymentDTO paymentDtos)
         {
             string? userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            string? ipAddress = GetClientIpAddress(_httpContextAccessor.HttpContext);
-            var result = _vnpayService.CreatePayment(paymentDtos, userId, ipAddress);
+            var result = _momoService.CreatePayment(paymentDtos, userId);
             return Ok(result);
         }
-
-        private string? GetClientIpAddress(HttpContext httpContext)
-        {
-            // Check for proxy headers
-            string? ipAddress = httpContext?.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-            if (!string.IsNullOrEmpty(ipAddress))
-            {
-                // Use the IP address from the proxy header
-                return ipAddress;
-            }
-            else
-            {
-                // Use the remote IP address
-                return httpContext?.Connection?.RemoteIpAddress?.ToString();
-            }
-        }
-
-        // Check payment response
-        [HttpGet]
-        public IActionResult CheckPaymentResponse([FromQuery] VnpayPayResponse vnpayResponse)
-        {
-            var result = _vnpayService.CheckPaymentResponse(vnpayResponse);
-            return Ok(result);
-        }
-
     }
-
 }

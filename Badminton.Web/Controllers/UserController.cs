@@ -351,7 +351,7 @@ namespace Badminton.Web.Controllers
             });
         }
 
-
+        
         [HttpGet("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -618,6 +618,71 @@ namespace Badminton.Web.Controllers
         }
 
 
+        [HttpPut("EditRole")]
+        [Authorize]
+        public async Task<IActionResult> EditRole(EditRoleModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data"
+                });
+            }
+
+            // Check if the user is an admin
+            if (!IsAdmin(User))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Access denied. Admins only."
+                });
+            }
+
+            // Check if RoleType is within the valid range
+            if (model.RoleType < 0 || model.RoleType > 3)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid role type"
+                });
+            }
+
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == model.UserName);
+            if (user == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "User not found"
+                });
+            }
+
+            // Get the role name from roleType
+            var roleName = GetUserRole(model.RoleType);
+            if (string.IsNullOrEmpty(roleName))
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid role type"
+                });
+            }
+
+            user.RoleType = model.RoleType;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "User role updated successfully"
+            });
+        }
 
 
 

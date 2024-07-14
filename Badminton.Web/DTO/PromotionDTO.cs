@@ -40,6 +40,8 @@ namespace Badminton.Web.DTO
     {
         public string PromotionCode { get; set; }
 
+        public int? CourtId { get; set; }
+
         public string Description { get; set; }
 
         public decimal Percentage { get; set; }
@@ -51,5 +53,6 @@ namespace Badminton.Web.DTO
         [Required]
         [DataType(DataType.Date)]
         public string EndDate { get; set; }
+
     }
 }

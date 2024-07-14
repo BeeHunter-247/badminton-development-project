@@ -92,7 +92,7 @@ namespace Badminton.Web.Repository
 
 
         // cancel
-        public async Task CancelBookingAsync (int bookingId, string cancellationReason)
+        public async Task CancelBookingAsync (int bookingId)
         {
             var booking = await _context.Bookings.FindAsync(bookingId);
             if (booking == null)
@@ -101,7 +101,6 @@ namespace Badminton.Web.Repository
             }
 
             booking.Status = (int)BookingStatus.Cancelled;
-            booking.CancellationReason = cancellationReason;
 
             try
             {
@@ -112,6 +111,7 @@ namespace Badminton.Web.Repository
                 throw new Exception("An error occurred while cancelling the booking.", ex);
             }
         }
+
 
         // Delete
         public async Task<Booking?> DeleteAsync(int id)

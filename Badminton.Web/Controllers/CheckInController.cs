@@ -93,7 +93,7 @@ namespace Badminton.Web.Controllers
                 {
                     SubCourtId = checkInDTO.SubCourtId,
                     BookingId= checkInDTO.BookingId,
-                    CheckInTime= DateTime.Parse(checkInDTO.CheckInTime),
+                    CheckInTime= DateTime.Now,
                     CheckInStatus = false,
                     UserId = checkInDTO.UserId
                 };

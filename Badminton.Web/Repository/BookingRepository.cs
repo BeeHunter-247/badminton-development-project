@@ -83,7 +83,7 @@ namespace Badminton.Web.Repository
             {
                 return null;
             }
-            existingBooking.Status = updateDto.Status;
+            existingBooking.Status = (int)updateDto.Status;
             await _context.SaveChangesAsync();
 
             return existingBooking;
@@ -100,7 +100,7 @@ namespace Badminton.Web.Repository
                 throw new KeyNotFoundException("Booking not found.");
             }
 
-            booking.Status = BookingStatus.Cancelled;
+            booking.Status = (int)BookingStatus.Cancelled;
             booking.CancellationReason = cancellationReason;
 
             try

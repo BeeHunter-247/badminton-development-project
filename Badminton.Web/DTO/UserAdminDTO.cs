@@ -8,5 +8,6 @@
         public string Email { get; set; }
         public string Phone { get; set; }
         public string RoleType { get; set; } // Change from int to string
+        public string UserStatus { get; set; }
     }
 }

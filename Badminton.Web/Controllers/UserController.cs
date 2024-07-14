@@ -660,7 +660,7 @@ namespace Badminton.Web.Controllers
                 case 0:
                     return "Administrator";
                 case 1:
-                    return "Manager";
+                    return "Owner";
                 case 2:
                     return "Staff";
                 case 3:

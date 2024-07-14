@@ -3,6 +3,7 @@ using Badminton.Web.DTO;
 using Badminton.Web.Enums;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
+using Badminton.Web.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Badminton.Web.Controllers
@@ -12,14 +13,12 @@ namespace Badminton.Web.Controllers
     public class BookingController : ControllerBase
     {
         private readonly IBookingRepository _bookingRepo;
-        private readonly ISubCourtRepository _subCourtRepo;
         private readonly IMapper _mapper;
 
-        public BookingController(IBookingRepository bookingRepo, IMapper mapper, ISubCourtRepository subCourtRepo)
+        public BookingController(IBookingRepository bookingRepo, IMapper mapper)
         {
             _bookingRepo = bookingRepo;
             _mapper = mapper;
-            _subCourtRepo = subCourtRepo;
         }
 
         [HttpGet]
@@ -71,6 +70,108 @@ namespace Badminton.Web.Controllers
             {
                 Success = true,
                 Data = _mapper.Map<BookingDTO>(booking)
+            });
+        }
+
+        [HttpGet("userId/{id}", Name = "GetBookingByUserId")]
+        public async Task<IActionResult> GetByUserIdAsync(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            var booking = await _bookingRepo.GetByUserId(id);
+            if (booking == null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = "Booking not found!"
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<List<BookingDTO>>(booking)
+
+
+            });
+         }
+
+        [HttpGet("byDateAndTimeSlot")]
+        public async Task<IActionResult> GetBookingsByDateAndTimeSlot( string date, [FromQuery] int timeSlotId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            if (!DateOnly.TryParseExact(date, "yyyy-MM-dd", out var parsedDate))
+            {
+                return BadRequest("Invalid date format. Please use yyyy-MM-dd.");
+            }
+
+            var bookings = await _bookingRepo.GetBookingsByDateAndTimeSlot(parsedDate, timeSlotId);
+
+            if (bookings.Count == 0)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = "No bookings found for the specified date and time slot."
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<List<BookingDTO>>(bookings) 
+            });
+        }
+
+
+        [HttpGet("status/{status}", Name = "GetBookingByStatus")]
+        public async Task<IActionResult> GetByStatusAsync(BookingStatus status)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            var booking = await _bookingRepo.GetByStatus(status);
+            if (booking == null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = "Booking not found!"
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<List<BookingDTO>>(booking)
             });
         }
 
@@ -130,6 +231,7 @@ namespace Badminton.Web.Controllers
                     Amount = bookingDTO.Amount,
                     Status = (int)BookingStatus.Pending,
                     BookingType = (int)BookingType.Daily,
+                    PromotionCode = (string.IsNullOrWhiteSpace(bookingDTO.PromotionCode) || bookingDTO.PromotionCode.Equals("string")) ? null : bookingDTO.PromotionCode,
                 };
 
 
@@ -231,8 +333,43 @@ namespace Badminton.Web.Controllers
             });
         }
 
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> UpdateStatusBooking(int id, [FromForm] UpdateBookingStatusDTO updateDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            var existingBooking = await _bookingRepo.GetById(id);
+            if (existingBooking == null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = "Booking not found!"
+                });
+            }
+
+
+            var bookingU = await _bookingRepo.UpdateStatusAsync(id, updateDto);
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<BookingDTO>(bookingU)
+            });
+        }
+
+
         [HttpPut("{id}/cancel")]
-        public async Task<IActionResult> CancelBooking(int id, [FromBody] CancelBookingDTO cancelDTO)
+        public async Task<IActionResult> CancelBooking(int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ApiResponse
@@ -266,7 +403,7 @@ namespace Badminton.Web.Controllers
                     });
                 }
 
-                await _bookingRepo.CancelBookingAsync(id, cancelDTO.CancellationReason);
+                await _bookingRepo.CancelBookingAsync(id);
                 return Ok(new ApiResponse
                 {
                     Success = true,

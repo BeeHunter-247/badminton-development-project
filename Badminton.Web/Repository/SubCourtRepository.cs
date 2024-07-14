@@ -14,11 +14,23 @@ namespace Badminton.Web.Repository
             _context = context;
         }
 
+        public async Task<bool> CheckBookingExist(int subCourtId)
+        {
+            return await _context.Bookings.AnyAsync(b => b.SubCourtId == subCourtId);
+        }
+
         public async Task<SubCourt> CreateAsync(SubCourt sCourtModel)
         {
             await _context.SubCourts.AddAsync(sCourtModel);
             await _context.SaveChangesAsync();
             return sCourtModel;
+        }
+
+        public async Task<IEnumerable<SubCourt>> CreateRangeAsync(IEnumerable<SubCourt> sCourtModels)
+        {
+            await _context.SubCourts.AddRangeAsync(sCourtModels);
+            await _context.SaveChangesAsync();
+            return sCourtModels;
         }
 
         public async Task<SubCourt?> DeleteAsync(int id)

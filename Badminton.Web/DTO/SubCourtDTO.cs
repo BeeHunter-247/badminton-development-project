@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Badminton.Web.DTO
 {
@@ -23,6 +24,7 @@ namespace Badminton.Web.DTO
         [Range(1, 200)]
         public decimal PricePerHour { get; set; }
 
+        [JsonIgnore]
         public int TimeSlotId { get; set; }
     }
 

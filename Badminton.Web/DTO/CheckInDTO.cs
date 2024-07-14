@@ -28,14 +28,15 @@ namespace Badminton.Web.DTO
         public int BookingId { get; set; }
 
         [DataType(DataType.DateTime)]
-        public string CheckInTime { get; set; }
-
+        public string CheckInTime { get; set; } = string.Empty;
         public int UserId { get; set; }
     }
 
     public class UpdateCheckInDTO
     {
         public bool CheckInStatus { get; set; }
+        [DataType(DataType.DateTime)]
+        public DateTime CheckInTime { get; set; } = DateTime.Now;
 
     }
 }

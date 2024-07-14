@@ -1,4 +1,5 @@
 ﻿using Badminton.Web.DTO;
+using Badminton.Web.Enums;
 using Badminton.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,16 @@ namespace Badminton.Web.Interfaces
         // Read
         Task<List<Booking>> GetAll();
         Task<Booking?> GetById(int id);
+        Task<List<Booking?>> GetByUserId(int id);
+        Task<List<Booking?>> GetByStatus(BookingStatus status);
+        Task<List<Booking>> GetBookingsByDateAndTimeSlot(DateOnly date, int timeSlotId);
 
         // Update
         Task<Booking?> UpdateAsync(int id, UpdateBookingDTO  bookingDTO);
-        
+        Task<Booking?> UpdateStatusAsync(int id, UpdateBookingStatusDTO updateDto);
+
         // cancel
-        Task CancelBookingAsync(int bookingId, string cancellationReason);
+        Task CancelBookingAsync(int bookingId);
 
         // Delete
         Task<Booking?> DeleteAsync(int id);

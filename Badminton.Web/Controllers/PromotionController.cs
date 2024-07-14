@@ -164,6 +164,7 @@ namespace Badminton.Web.Controllers
                 var promotionModel = new Promotion
                 {
                     PromotionCode = promotionDTO.PromotionCode,
+                    CourtId = promotionDTO.CourtId,
                     Description = promotionDTO.Description,
                     Percentage = promotionDTO.Percentage,
                     StartDate = DateOnly.Parse(promotionDTO.StartDate),

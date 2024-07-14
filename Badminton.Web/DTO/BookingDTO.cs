@@ -18,8 +18,9 @@ namespace Badminton.Web.DTO
         public int TimeSlotId { get; set; }
         public int BookingType { get; set; }
         public decimal? Amount { get; set; }
-        public int Status { get; set; }
+        public BookingStatus Status { get; set; }
         public string? CancellationReason { get; set; }
+        public string? PromotionCode { get; set; }
     }
 
     public class CreateBookingDTO
@@ -42,8 +43,8 @@ namespace Badminton.Web.DTO
 
         [Required(ErrorMessage = "TimeSlotId is required")]
         public int TimeSlotId { get; set; }
-
         public decimal? Amount { get; set; }
+        public string? PromotionCode { get; set; } = string.Empty;
     }
 
     public class UpdateBookingDTO
@@ -57,13 +58,19 @@ namespace Badminton.Web.DTO
 
         [Required(ErrorMessage = "TimeSlotId is required")]
         public int TimeSlotId { get; set; }
-
         public decimal Amount { get; set; }
+        public int? PromotionCode { get; set; }
+
     }
 
-    public class CancelBookingDTO
+   /* public class CancelBookingDTO
     {
         [StringLength(255, ErrorMessage = "CancellationReason cannot exceed 255 characters")]
-        public string CancellationReason { get; set; }
+        public string? CancellationReason { get; set; }
+       
+    }*/
+    public class UpdateBookingStatusDTO
+    {
+        public BookingStatus Status { get; set; }
     }
 }

@@ -1,19 +1,13 @@
 ﻿using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using Badminton.Web.Repository;
-using Badminton.Web.Services;
 using Badminton.Web.Services.OTP;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using StackExchange.Redis;
-using System;
-using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.HttpsPolicy;
 using AutoMapper;
@@ -28,16 +22,11 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Net.Http;
-
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
 using System;
 using System.IO;
 using Microsoft.Extensions.Options;
-
-
-
 
 namespace Badminton.Web
 {
@@ -76,10 +65,13 @@ namespace Badminton.Web
             });
 
             // CORS Configuration
-            builder.Services.AddCors(option =>
-                  option.AddPolicy("CORS", builder =>
-                      builder.AllowAnyMethod().AllowAnyHeader().AllowCredentials().SetIsOriginAllowed((host) => true)));
-
+            builder.Services.AddCors(opts =>
+            {
+                opts.AddPolicy("corspolicy", build =>
+                {
+                    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+                });
+            });
 
             // Swagger Configuration
             builder.Services.AddSwaggerGen(option =>
@@ -128,8 +120,6 @@ namespace Badminton.Web
             });
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            
-            // Register Redis ConnectionMultiplexer as a Singleton
 
             // Add repositories and services
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -169,6 +159,8 @@ namespace Badminton.Web
             });
 
             builder.Services.AddScoped<MomoService>();
+            builder.Services.AddHostedService<ExpiredOtpCleanerService>();
+
 
 
             // Add IHttpContextAccessor

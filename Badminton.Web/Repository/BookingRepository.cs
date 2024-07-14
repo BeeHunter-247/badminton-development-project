@@ -37,7 +37,24 @@ namespace Badminton.Web.Repository
         }
         public async Task<Booking?> GetById(int id)
         {
-            return await _context.Bookings.FirstOrDefaultAsync(c => c.BookingId == id);
+            return await _context.Bookings.FirstOrDefaultAsync(b => b.BookingId == id);
+        }
+
+        public async Task<List<Booking?>> GetByUserId(int id)
+        {
+            return await _context.Bookings.Where(u => u.UserId == id).ToListAsync();
+        }
+
+        public async Task<List<Booking?>> GetByStatus(BookingStatus status)
+        {
+            return await _context.Bookings.Where(b => (BookingStatus)b.Status == status).ToListAsync();
+        }
+
+        public async Task<List<Booking>> GetBookingsByDateAndTimeSlot(DateOnly date, int timeSlotId)
+        {
+            return await _context.Bookings
+                .Where(b => b.BookingDate == date && b.TimeSlotId == timeSlotId)
+                .ToListAsync();
         }
 
         //Update
@@ -59,8 +76,21 @@ namespace Badminton.Web.Repository
             return existingBooking;
         }
 
+        public async Task<Booking?> UpdateStatusAsync(int id, UpdateBookingStatusDTO updateDto)
+        {
+            var existingBooking = await _context.Bookings.FindAsync(id);
+            if (existingBooking == null)
+            {
+                return null;
+            }
+            existingBooking.Status = (int)updateDto.Status;
+            await _context.SaveChangesAsync();
+
+            return existingBooking;
+        }
+
         // cancel
-        public async Task CancelBookingAsync (int bookingId, string cancellationReason)
+        public async Task CancelBookingAsync (int bookingId)
         {
             var booking = await _context.Bookings.FindAsync(bookingId);
             if (booking == null)
@@ -69,7 +99,6 @@ namespace Badminton.Web.Repository
             }
 
             booking.Status = (int)BookingStatus.Cancelled;
-            booking.CancellationReason = cancellationReason;
 
             try
             {
@@ -80,6 +109,7 @@ namespace Badminton.Web.Repository
                 throw new Exception("An error occurred while cancelling the booking.", ex);
             }
         }
+
 
         // Delete
         public async Task<Booking?> DeleteAsync(int id)

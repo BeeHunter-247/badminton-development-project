@@ -9,7 +9,7 @@ namespace Badminton.Web.DTO
 
         public string CourtName { get; set; }
 
-        public int CourtManagerId { get; set; }
+        public int OwnerId { get; set; }
 
         public string Location { get; set; }
 
@@ -29,7 +29,7 @@ namespace Badminton.Web.DTO
     {
         public string CourtName { get; set; }
 
-        public int CourtManagerId { get; set; }
+        public int OwnerId { get; set; }
 
         public string Location { get; set; }
 

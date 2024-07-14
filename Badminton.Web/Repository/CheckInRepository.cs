@@ -41,7 +41,7 @@ namespace Badminton.Web.Repository
             }
 
             existingCheckIn.CheckInStatus = checkInDTO.CheckInStatus;
-            
+            existingCheckIn.CheckInTime = checkInDTO.CheckInTime;
 
             await _context.SaveChangesAsync();
             return existingCheckIn;

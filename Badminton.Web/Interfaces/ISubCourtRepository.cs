@@ -12,5 +12,6 @@ namespace Badminton.Web.Interfaces
         Task<SubCourt> CreateAsync(SubCourt sCourtModel);
         Task<SubCourt?> DeleteAsync(int id);
         Task<IEnumerable<SubCourt>> CreateRangeAsync(IEnumerable<SubCourt> sCourtModels);
+        Task<bool> CheckBookingExist(int subCourtId);
     }
 }

@@ -89,8 +89,6 @@ namespace Badminton.Web.Repository
             return existingBooking;
         }
 
-
-
         // cancel
         public async Task CancelBookingAsync (int bookingId, string cancellationReason)
         {

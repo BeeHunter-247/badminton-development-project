@@ -150,8 +150,8 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpDelete]
-        [Route("{id:int}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        [Route("CheckBookingExistAndDelete{subCourtId:int}")]
+        public async Task<IActionResult> CheckBookingAndDeleteSubCourt([FromRoute] int subCourtId)
         {
             if(!ModelState.IsValid)
             {
@@ -163,18 +163,25 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var sCourtModel = await _sCourtRepo.DeleteAsync(id);
-            if(sCourtModel == null)
+            var existBooking = await _sCourtRepo.CheckBookingExist(subCourtId);
+            if(!existBooking)
             {
+                await _sCourtRepo.DeleteAsync(subCourtId);
+
                 return Ok(new ApiResponse
                 {
-                    Success = false,
-                    StatusCode = StatusCodes.Status404NotFound,
-                    Message = "SubCourt does not exist!"
+                    Success = true,
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Sân đã được xóa thành công."
                 });
             }
 
-            return NoContent();
+            return Ok(new ApiResponse
+            {
+                Success = false,
+                StatusCode = StatusCodes.Status409Conflict,
+                Message = "Sân đang được đặt không thể xóa!"
+            });
         }
     }
 }

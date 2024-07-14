@@ -735,10 +735,10 @@ namespace Badminton.Web.Controllers
             }
         }
         private bool IsAdmin(ClaimsPrincipal user)
-        {
-            // Cho phép cả role là "Administrator" và "Owner" đều được xem là Admin
-            return user.Claims.Any(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator" || c.Value == "Owner"));
-        }
+{
+    // Cho phép cả role là "Administrator" và "Owner" đều được xem là Admin
+    return user.Claims.Any(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator" || c.Value == "Owner"));
+}
 
     }
 

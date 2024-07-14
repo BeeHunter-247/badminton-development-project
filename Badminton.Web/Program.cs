@@ -1,5 +1,4 @@
-﻿using Badminton.Web.DTO.Payment.Response;
-using Badminton.Web.Interfaces;
+﻿using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using Badminton.Web.Repository;
 using Badminton.Web.Services;
@@ -17,11 +16,28 @@ using System;
 using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Badminton.Web.MoMo.Config;
-using Microsoft.OpenApi.Models;
 using AutoMapper;
-using Badminton.Web.MoMo.Config;
-using TestMoMo.DTOs.Request;
+using Badminton.Web.Momo.Config;
+using Badminton.Web.DTO.Payment.Responese;
+using Badminton.Web.DTO.Payment.Request;
+using System.Net.Http;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.IO;
+using System.Net.Http;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+using System;
+using System.IO;
+using Microsoft.Extensions.Options;
+
+
+
 
 namespace Badminton.Web
 {
@@ -112,9 +128,7 @@ namespace Badminton.Web
             });
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            //Get config vnpay from appsettings.json
-            builder.Services.Configure<MoMoConfig>(
-                builder.Configuration.GetSection(MoMoConfig.ConfigName));
+            
             // Register Redis ConnectionMultiplexer as a Singleton
 
             // Add repositories and services
@@ -127,14 +141,36 @@ namespace Badminton.Web
             builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
             builder.Services.AddScoped<IFileRepository, FileRepository>();
             builder.Services.AddScoped<ICheckInRepository, CheckInRepository>();
-            builder.Services.AddScoped<MoMoService>();
             builder.Services.AddHostedService<ExpiredOtpCleanerService>();
-            builder.Services.AddHttpClient<MoMoService>();
-            builder.Services.AddScoped<MomoPayResponse>();
-            builder.Services.AddScoped<MoMoPayRequest>();
+            builder.Services.AddHttpClient();
+
+            // Cấu hình MomoConfig từ appsettings.json
+            builder.Services.Configure<MomoConfig>(
+                builder.Configuration.GetSection(MomoConfig.ConfigName));
+
+            // Đăng ký các dịch vụ
+            builder.Services.AddScoped<MomoOneTimePaymentCreateLinkResponse>();
+            builder.Services.AddScoped<MomoOneTimePaymentRequest>(sp =>
+            {
+                // Cung cấp các đối số cần thiết cho constructor của MomoOneTimePaymentRequest
+                var config = sp.GetRequiredService<IOptions<MomoConfig>>().Value;
+                return new MomoOneTimePaymentRequest(
+                    config.PartnerCode,
+                    "", // requestId sẽ được đặt sau
+                    0,  // amount sẽ được đặt sau
+                    "", // orderId sẽ được đặt sau
+                    "", // orderInfo sẽ được đặt sau
+                    config.ReturnUrl,
+                    config.IpnUrl,
+                    "captureWallet",
+                    "", // extraData sẽ được đặt sau
+                    "vi" // language
+                );
+            });
+
+            builder.Services.AddScoped<MomoService>();
 
 
-            
             // Add IHttpContextAccessor
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<IEmailService, EmailService>(sp => new EmailService(

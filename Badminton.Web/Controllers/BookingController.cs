@@ -369,7 +369,7 @@ namespace Badminton.Web.Controllers
 
 
         [HttpPut("{id}/cancel")]
-        public async Task<IActionResult> CancelBooking(int id, [FromBody] CancelBookingDTO cancelDTO)
+        public async Task<IActionResult> CancelBooking(int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ApiResponse
@@ -403,7 +403,7 @@ namespace Badminton.Web.Controllers
                     });
                 }
 
-                await _bookingRepo.CancelBookingAsync(id, cancelDTO.CancellationReason);
+                await _bookingRepo.CancelBookingAsync(id);
                 return Ok(new ApiResponse
                 {
                     Success = true,

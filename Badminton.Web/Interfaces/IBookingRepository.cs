@@ -24,7 +24,7 @@ namespace Badminton.Web.Interfaces
         Task<Booking?> UpdateStatusAsync(int id, UpdateBookingStatusDTO updateDto);
 
         // cancel
-        Task CancelBookingAsync(int bookingId, string cancellationReason);
+        Task CancelBookingAsync(int bookingId);
 
         // Delete
         Task<Booking?> DeleteAsync(int id);

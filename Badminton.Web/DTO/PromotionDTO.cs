@@ -15,6 +15,8 @@ namespace Badminton.Web.DTO
         public DateOnly StartDate { get; set; }
 
         public DateOnly EndDate { get; set; }
+
+        public int? CourtId { get; set; }
     }
 
     public class UpdatePromotionDTO

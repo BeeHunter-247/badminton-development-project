@@ -11,7 +11,7 @@ public partial class Court
 
     public string CourtName { get; set; }
 
-    public int CourtManagerId { get; set; }
+    public int OwnerId { get; set; }
 
     public string Location { get; set; }
 
@@ -23,9 +23,13 @@ public partial class Court
 
     public string Announcement { get; set; }
 
-    public virtual User CourtManager { get; set; }
+    public int? PromotionId { get; set; }
 
     public virtual ICollection<Evaluate> Evaluates { get; set; } = new List<Evaluate>();
+
+    public virtual User Owner { get; set; }
+
+    public virtual ICollection<Promotion> Promotions { get; set; } = new List<Promotion>();
 
     public virtual ICollection<SubCourt> SubCourts { get; set; } = new List<SubCourt>();
 }

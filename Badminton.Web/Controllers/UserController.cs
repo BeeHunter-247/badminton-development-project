@@ -44,7 +44,7 @@ namespace Badminton.Web.Controllers
 
 
         [HttpPost("Login")]
-        //User/Admin
+        // User/Admin
         public async Task<IActionResult> Validate(LoginModel model)
         {
             if (!ModelState.IsValid)
@@ -96,7 +96,18 @@ namespace Badminton.Web.Controllers
                 return Ok(new ApiResponse
                 {
                     Success = false,
-                    Message = "Account is not verified.Please verified your account"
+                    Message = "Account is not verified. Please verify your account"
+                    // Optionally, you can add more details in the response if needed
+                });
+            }
+
+            // Check if user's UserStatus is 1 (bị ban)
+            if (user.UserStatus == 1)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Account is locked. Please contact support for assistance."
                     // Optionally, you can add more details in the response if needed
                 });
             }
@@ -551,9 +562,9 @@ namespace Badminton.Web.Controllers
 
 
 
-        [HttpPut("EditRole")]
+        [HttpPut("EditUserStatus")]
         [Authorize]
-        public async Task<IActionResult> EditRole(EditRoleModel model)
+        public async Task<IActionResult> EditUserStatus(EditUserStatusModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -574,13 +585,13 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            // Check if RoleType is within the valid range
-            if (model.RoleType < 0 || model.RoleType > 3)
+            // Check if UserStatus is within the valid range
+            if (model.UserStatus < 0 || model.UserStatus > 1)
             {
                 return BadRequest(new ApiResponse
                 {
                     Success = false,
-                    Message = "Invalid role type"
+                    Message = "Invalid UserStatus"
                 });
             }
 
@@ -594,18 +605,7 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            // Get the role name from roleType
-            var roleName = GetUserRole(model.RoleType);
-            if (string.IsNullOrEmpty(roleName))
-            {
-                return BadRequest(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Invalid role type"
-                });
-            }
-
-            user.RoleType = model.RoleType;
+            user.UserStatus = model.UserStatus;
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
@@ -613,9 +613,10 @@ namespace Badminton.Web.Controllers
             return Ok(new ApiResponse
             {
                 Success = true,
-                Message = "User role updated successfully"
+                Message = "User status updated successfully"
             });
         }
+
 
 
 

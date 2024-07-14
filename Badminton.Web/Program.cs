@@ -1,32 +1,19 @@
-﻿using Badminton.Web.Interfaces;
+﻿using Badminton.Web.DTO.Payment.Request;
+using Badminton.Web.DTO.Payment.Responese;
+using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
+using Badminton.Web.Momo.Config;
 using Badminton.Web.Repository;
+using Badminton.Web.Services;
 using Badminton.Web.Services.OTP;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using Microsoft.AspNetCore.HttpsPolicy;
-using AutoMapper;
-using Badminton.Web.Momo.Config;
-using Badminton.Web.DTO.Payment.Responese;
-using Badminton.Web.DTO.Payment.Request;
-using System.Net.Http;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.IO;
-using System.Net.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.IO;
-using Microsoft.Extensions.Options;
 
 namespace Badminton.Web
 {
@@ -108,6 +95,7 @@ namespace Badminton.Web
                 options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
                 options.HttpsPort = 443; // Cổng HTTPS của SmarterASP.NET
             });
+
             builder.Services.AddControllers()
                .AddNewtonsoftJson(options =>
                {
@@ -161,8 +149,6 @@ namespace Badminton.Web
             builder.Services.AddScoped<MomoService>();
             builder.Services.AddHostedService<ExpiredOtpCleanerService>();
 
-
-
             // Add IHttpContextAccessor
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<IEmailService, EmailService>(sp => new EmailService(
@@ -197,6 +183,7 @@ namespace Badminton.Web
             });
 
             app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.MapControllers();

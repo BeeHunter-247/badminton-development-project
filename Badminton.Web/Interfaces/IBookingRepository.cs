@@ -1,9 +1,6 @@
 ﻿using Badminton.Web.DTO;
 using Badminton.Web.Enums;
 using Badminton.Web.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Badminton.Web.Interfaces
 {

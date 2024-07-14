@@ -4,7 +4,6 @@ using Badminton.Web.DTO.Payment;
 
 //using Badminton.Web.DTO.Payment;
 using Badminton.Web.Models;
-using System.Globalization;
 
 namespace Badminton.Web.Mappers
 {

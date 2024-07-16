@@ -1,4 +1,5 @@
 ﻿using Badminton.Web.DTO;
+using Badminton.Web.Helpers;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using Microsoft.EntityFrameworkCore;
@@ -34,9 +35,14 @@ namespace Badminton.Web.Repository
             return evaluateModel; 
         }
 
-        public async Task<List<Evaluate>> GetAllAsync()
+        public async Task<List<Evaluate>> GetAllAsync(QueryEvaluate query)
         {
-            return await _context.Evaluates.ToListAsync();
+            var queryObject = _context.Evaluates.AsQueryable();
+
+            #region Pagination
+            var skipNumber = (query.pageNumber - 1) * query.pageSize;
+            #endregion
+            return await queryObject.Skip(skipNumber).Take(query.pageSize).ToListAsync();
         }
 
         public async Task<Evaluate> GetByIdAsync(int id)

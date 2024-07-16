@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Badminton.Web.DTO;
+using Badminton.Web.Helpers;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryEvaluate query)
         {
             if (!ModelState.IsValid)
             {
@@ -34,7 +35,7 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var evaluates = await _evaluateRepo.GetAllAsync();
+            var evaluates = await _evaluateRepo.GetAllAsync(query);
             var evaluateDTO = _mapper.Map<List<EvaluateDTO>>(evaluates);
             return Ok(new ApiResponse
             {

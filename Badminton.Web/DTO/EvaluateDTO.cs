@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Badminton.Web.DTO
 {
@@ -14,6 +15,9 @@ namespace Badminton.Web.DTO
 
         public DateTime EvaluateDate { get; set; } = DateTime.Now;
 
+        public string CreatedBy { get; set; }
+
+
         public int UserId { get; set; }
 
     }
@@ -28,7 +32,11 @@ namespace Badminton.Web.DTO
 
         public DateTime EvaluateDate { get; set; } = DateTime.Now;
 
+        [JsonIgnore]
+        public string? CreatedBy { get; set; }
+
         public int UserId { get; set; }
+
     }
 
     public class UpdateEvaluateDTO

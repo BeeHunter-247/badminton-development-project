@@ -24,5 +24,10 @@ namespace Badminton.Web.Repository
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
         }
+
+        public async Task<User> GetUserByIdAsync(int id)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
+        }
     }
 }

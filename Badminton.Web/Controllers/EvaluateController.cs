@@ -14,12 +14,15 @@ namespace Badminton.Web.Controllers
         private readonly IEvaluateRepository _evaluateRepo;
         private readonly ICourtRepository _courtRepo;
         private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepo;
 
-        public EvaluateController(IEvaluateRepository evaluateRepo, ICourtRepository courtRepo, IMapper mapper)
+        public EvaluateController(IEvaluateRepository evaluateRepo, ICourtRepository courtRepo,
+            IMapper mapper, IUserRepository userRepo)
         {
             _evaluateRepo = evaluateRepo;
             _courtRepo = courtRepo;
             _mapper = mapper;
+            _userRepo = userRepo;
         }
 
         [HttpGet]
@@ -99,10 +102,22 @@ namespace Badminton.Web.Controllers
                 });
             }
 
+            var user = _userRepo.GetUserByIdAsync(evaluateDTO.UserId);
+            if(user == null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = "User does not exist!"
+                });
+            }
+
             var evaluateModel = _mapper.Map<Evaluate>(evaluateDTO);
             evaluateModel.CourtId = courtId;
             DateTime currentTime = DateTime.Now;
             evaluateModel.EvaluateDate = currentTime;
+            evaluateModel.CreatedBy = user.Result.FullName;
             await _evaluateRepo.CreateAsync(evaluateModel);
             return CreatedAtAction(nameof(GetById), new {id = evaluateModel.EvaluateId}, new ApiResponse
             {

@@ -19,6 +19,8 @@ public partial class Evaluate
 
     public DateTime EvaluateDate { get; set; }
 
+    public string CreatedBy { get; set; }
+
     public virtual Court Court { get; set; }
 
     public virtual User User { get; set; }

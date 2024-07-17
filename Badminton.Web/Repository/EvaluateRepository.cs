@@ -37,7 +37,7 @@ namespace Badminton.Web.Repository
 
         public async Task<List<Evaluate>> GetAllAsync(QueryEvaluate query)
         {
-            var queryObject = _context.Evaluates.AsQueryable();
+            var queryObject = _context.Evaluates.Include(u => u.User).AsQueryable();
 
             #region Pagination
             var skipNumber = (query.pageNumber - 1) * query.pageSize;
@@ -47,7 +47,7 @@ namespace Badminton.Web.Repository
 
         public async Task<Evaluate> GetByIdAsync(int id)
         {
-            return await _context.Evaluates.FirstOrDefaultAsync(e => e.EvaluateId == id);
+            return await _context.Evaluates.Include(u => u.User).FirstOrDefaultAsync(e => e.EvaluateId == id);
         }
 
         public async Task<Evaluate?> UpdateAsync(int id, UpdateEvaluateDTO evaluateDTO)

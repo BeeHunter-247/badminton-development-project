@@ -102,7 +102,7 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var user = _userRepo.GetUserByIdAsync(evaluateDTO.UserId);
+            var user = await _userRepo.GetUserByIdAsync(evaluateDTO.UserId);
             if(user == null)
             {
                 return Ok(new ApiResponse
@@ -117,7 +117,7 @@ namespace Badminton.Web.Controllers
             evaluateModel.CourtId = courtId;
             DateTime currentTime = DateTime.Now;
             evaluateModel.EvaluateDate = currentTime;
-            evaluateModel.CreatedBy = user.Result.FullName;
+            evaluateModel.CreatedBy = user.FullName;
             await _evaluateRepo.CreateAsync(evaluateModel);
             return CreatedAtAction(nameof(GetById), new {id = evaluateModel.EvaluateId}, new ApiResponse
             {

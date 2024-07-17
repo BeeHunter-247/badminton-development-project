@@ -14,12 +14,15 @@ namespace Badminton.Web.Controllers
         private readonly ICourtRepository _courtRepo;
         private readonly IMapper _mapper;
         private readonly IFileRepository _fileRepo;
+        private readonly ISubCourtRepository _subCourtRepo;
 
-        public CourtController(ICourtRepository courtRepo, IMapper mapper, IFileRepository fileRepo)
+        public CourtController(ICourtRepository courtRepo, IMapper mapper,
+            IFileRepository fileRepo, ISubCourtRepository subCourtRepo)
         {
             _courtRepo = courtRepo;
             _mapper = mapper;
             _fileRepo = fileRepo;
+            _subCourtRepo = subCourtRepo;
         }
 
         [HttpGet]
@@ -87,6 +90,20 @@ namespace Badminton.Web.Controllers
                     Success = false,
                     Message = "Invalid data",
                     Data = ModelState
+                });
+            }
+
+            var subCourts = await _subCourtRepo.GetByCourtIdAsync(id);
+
+            var anySubCourtBooked = subCourts.Any(sc => _subCourtRepo.AnySubCourtBooked(sc.SubCourtId));
+
+            if(anySubCourtBooked)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    StatusCode= StatusCodes.Status400BadRequest,
+                    Message = "Cannot delete court because one or more subcourts are booked!"
                 });
             }
 

@@ -26,17 +26,46 @@ namespace Badminton.Web.Repository
             return courtModel;
         }
 
+        //public async Task<Court?> DeleteAsync(int id)
+        //{
+        //    var courtModel = await _context.Courts.FirstOrDefaultAsync(c => c.CourtId == id);
+        //    if(courtModel == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    _context.Courts.Remove(courtModel);
+        //    await _context.SaveChangesAsync();
+        //    return courtModel;
+        //}
+
         public async Task<Court?> DeleteAsync(int id)
         {
-            var courtModel = await _context.Courts.FirstOrDefaultAsync(c => c.CourtId == id);
-            if(courtModel == null)
+
+            var evaluations = _context.Evaluates.Where(e => e.CourtId == id);
+            if (evaluations.Any())
             {
-                return null;
+                _context.Evaluates.RemoveRange(evaluations);
             }
 
-            _context.Courts.Remove(courtModel);
-            await _context.SaveChangesAsync();
-            return courtModel;
+            var promotions = _context.Promotions.Where(p => p.CourtId == id);
+
+            if(promotions.Any())
+            {
+                _context.Promotions.RemoveRange(promotions);
+            }
+
+            var subCourts = _context.SubCourts.Where(s => s.CourtId == id);
+            _context.SubCourts.RemoveRange(subCourts);
+
+            var court = await _context.Courts.FindAsync(id);
+            if(court != null)
+            {
+                _context.Courts.Remove(court);
+                await _context.SaveChangesAsync();
+                return court;
+            }
+            return null;
         }
 
         public async Task<List<Court>> GetAllAsync(QueryCourt query)

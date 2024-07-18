@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 
 
-namespace Badminton.Web.DTO.Payment.Request
+namespace Badminton.Web.DTO.Payment.Momo.Request
 {
     public class MomoOneTimePaymentRequest
     {
@@ -39,6 +39,6 @@ namespace Badminton.Web.DTO.Payment.Request
         public string lang { get; set; } = string.Empty;
         public string signature { get; set; } = string.Empty;
 
-       
+
     }
 }

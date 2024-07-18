@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
-using Badminton.Web.DTO.Payment.Request;
-using Badminton.Web.DTO.Payment.Responese;
 using Badminton.Web.Models;
-using Badminton.Web.Momo.Config;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
@@ -10,8 +7,10 @@ using Newtonsoft.Json;
 using System.Text;
 using Badminton.Web.Helpers;
 using Badminton.Web.DTO.Payment;
-using Badminton.Web.Momo.Base;
 using System.Net.Http;
+using Badminton.Web.Services.Momo.Config;
+using Badminton.Web.DTO.Payment.Momo.Request;
+using Badminton.Web.DTO.Payment.Momo.Responese;
 
 
 namespace Badminton.Web.Services

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Badminton.Web.DTO.Payment.Request
+namespace Badminton.Web.DTO.Payment.Momo.Request
 {
     [BindProperties]
     public class MomoOneTimePaymentResultRequest

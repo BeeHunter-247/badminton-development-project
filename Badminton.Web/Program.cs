@@ -1,11 +1,14 @@
-﻿using Badminton.Web.DTO.Payment.Request;
-using Badminton.Web.DTO.Payment.Responese;
+﻿using Badminton.Web.DTO.Payment.Momo.Request;
+using Badminton.Web.DTO.Payment.Momo.Responese;
+using Badminton.Web.DTO.Payment.Vnpay.Request;
+using Badminton.Web.DTO.Payment.Vnpay.Response;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
-using Badminton.Web.Momo.Config;
 using Badminton.Web.Repository;
 using Badminton.Web.Services;
+using Badminton.Web.Services.Momo.Config;
 using Badminton.Web.Services.OTP;
+using Badminton.Web.Services.Vnpay.Config;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -122,6 +125,7 @@ namespace Badminton.Web
             builder.Services.AddHostedService<ExpiredOtpCleanerService>();
             builder.Services.AddHttpClient();
 
+            //MOMO
             // Cấu hình MomoConfig từ appsettings.json
             builder.Services.Configure<MomoConfig>(
                 builder.Configuration.GetSection(MomoConfig.ConfigName));
@@ -147,6 +151,22 @@ namespace Badminton.Web
             });
 
             builder.Services.AddScoped<MomoService>();
+            //////////////////////////////////////////////////////////////
+
+
+            //Vnpay
+            builder.Services.AddScoped<VnpayService>();
+            builder.Services.AddScoped<VnpayPayResponse>();
+            builder.Services.AddScoped<VnpayPayRequest>();
+            //Get config vnpay from appsettings.json
+            builder.Services.Configure<VnpayConfig>(
+                builder.Configuration.GetSection(VnpayConfig.ConfigName));
+            ////////////////////////////////////////////////////////////////////////
+
+
+
+
+            //OTP veriy neu khong thi se bi xoa khoi database
             builder.Services.AddHostedService<ExpiredOtpCleanerService>();
 
             // Add IHttpContextAccessor

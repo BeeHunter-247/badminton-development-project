@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Badminton.Web.DTO.Payment.Responese
+namespace Badminton.Web.DTO.Payment.Momo.Responese
 {
     public class MomoOneTimePaymentCreateLinkResponse
     {

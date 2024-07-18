@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Badminton.Web.Momo.Config
+namespace Badminton.Web.Services.Momo.Config
 {
     public class MomoConfig
     {

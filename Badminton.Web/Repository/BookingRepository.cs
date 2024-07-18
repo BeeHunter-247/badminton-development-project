@@ -111,6 +111,47 @@ namespace Badminton.Web.Repository
             }
         }
 
+        //CheckIn
+        public async Task CheckInBookingAsync(int bookingId)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking == null)
+            {
+                throw new KeyNotFoundException("Booking not found.");
+            }
+
+            booking.Status = (int)BookingStatus.CheckIn;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while cancelling the booking.", ex);
+            }
+        }
+
+        //Confirm
+        public async Task ConfirmBookingAsync(int bookingId)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking == null)
+            {
+                throw new KeyNotFoundException("Booking not found.");
+            }
+
+            booking.Status = (int)BookingStatus.Confirmed;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while cancelling the booking.", ex);
+            }
+        }
 
         // Delete
         public async Task<Booking?> DeleteAsync(int id)
@@ -134,6 +175,13 @@ namespace Badminton.Web.Repository
         public async Task<bool> BookingExists(int id)
         {
             return await _context.Bookings.AnyAsync(b => b.BookingId == id);
+        }
+        public async Task<bool> IsTimeSlotAvailableAsync(int subCourtId, int timeSlotId, DateOnly bookingDate)
+        {
+            return !await _context.Bookings.AnyAsync(b =>
+                b.SubCourtId == subCourtId &&
+                b.TimeSlotId == timeSlotId &&
+                b.BookingDate == bookingDate);
         }
         public async Task<Booking?> GetBookingByUserAndTime(int userId, int subCourtId, DateOnly bookingDate, int timeSlotId)
         {

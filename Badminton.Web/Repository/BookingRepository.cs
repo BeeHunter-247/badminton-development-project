@@ -18,17 +18,18 @@ namespace Badminton.Web.Repository
         }
 
         // create
-        public async Task<Booking> CreateAsync(Booking bookingModel)
+        public async Task CreateAsync(List<Booking> bookings)
         {
-            if (bookingModel == null)
+            if (bookings == null)
             {
-                throw new ArgumentNullException(nameof(bookingModel));
+                throw new ArgumentNullException(nameof(bookings));
             }
 
-            _context.Bookings.Add(bookingModel);
+            await _context.Bookings.AddRangeAsync(bookings);
             await _context.SaveChangesAsync();
-            return bookingModel;
+           
         }
+
 
         //read
         public async Task<List<Booking>> GetAll()
@@ -134,13 +135,6 @@ namespace Badminton.Web.Repository
         {
             return await _context.Bookings.AnyAsync(b => b.BookingId == id);
         }
-        public async Task<bool> IsTimeSlotAvailableAsync(int subCourtId, int timeSlotId, DateOnly bookingDate)
-        {
-            return !await _context.Bookings.AnyAsync(b =>
-                b.SubCourtId == subCourtId &&
-                b.TimeSlotId == timeSlotId &&
-                b.BookingDate == bookingDate);
-        }
         public async Task<Booking?> GetBookingByUserAndTime(int userId, int subCourtId, DateOnly bookingDate, int timeSlotId)
         {
             return await _context.Bookings
@@ -149,6 +143,15 @@ namespace Badminton.Web.Repository
                     b.SubCourtId == subCourtId &&
                     b.BookingDate == bookingDate &&
                     b.TimeSlotId == timeSlotId);
+        }
+
+        public async Task<bool> IsIgnoringCancelledAsync(int subCourtId, int timeSlotId, DateOnly bookingDate)
+        {
+            var bookings = await _context.Bookings
+                .Where(b => b.SubCourtId == subCourtId && b.TimeSlotId == timeSlotId && b.BookingDate == bookingDate && b.Status != (int)BookingStatus.Cancelled)
+                .ToListAsync();
+
+            return !bookings.Any();
         }
     }
 }

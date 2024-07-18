@@ -7,8 +7,7 @@ namespace Badminton.Web.Interfaces
     public interface IBookingRepository
     {
         // Create
-        Task<Booking> CreateAsync(Booking bookingModel);
-        
+        Task CreateAsync(List<Booking> bookings);
         // Read
         Task<List<Booking>> GetAll();
         Task<Booking?> GetById(int id);
@@ -31,5 +30,6 @@ namespace Badminton.Web.Interfaces
         Task<bool> BookingExistsAsync(int id);
         Task<bool> IsTimeSlotAvailableAsync(int subCourtId, int timeSlotId, DateOnly bookingDate);
         Task<Booking?> GetBookingByUserAndTime(int userId, int subCourtId, DateOnly bookingDate, int timeSlotId);
+        Task<bool> IsIgnoringCancelledAsync(int subCourtId, int timeSlotId, DateOnly bookingDate);
     }
 }

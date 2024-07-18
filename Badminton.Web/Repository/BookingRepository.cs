@@ -18,16 +18,16 @@ namespace Badminton.Web.Repository
         }
 
         // create
-        public async Task CreateAsync(List<Booking> bookings)
+        public async Task<Booking> CreateAsync(Booking bookingModel)
         {
-            if (bookings == null)
+            if (bookingModel == null)
             {
-                throw new ArgumentNullException(nameof(bookings));
+                throw new ArgumentNullException(nameof(bookingModel));
             }
 
-            await _context.Bookings.AddRangeAsync(bookings);
+            _context.Bookings.Add(bookingModel);
             await _context.SaveChangesAsync();
-           
+            return bookingModel;
         }
 
 

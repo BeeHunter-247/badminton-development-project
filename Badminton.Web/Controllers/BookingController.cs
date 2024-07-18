@@ -175,7 +175,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(List<CreateBookingDTO> bookingDTOs)
+        public async Task<IActionResult> CreateAsync(CreateBookingDTO bookingDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -186,38 +186,36 @@ namespace Badminton.Web.Controllers
                     Data = ModelState
                 });
             }
-            var bookings = new List<Booking>();
 
-            foreach (var bookingDTO in bookingDTOs)
+            try
             {
                 if (!DateOnly.TryParse(bookingDTO.BookingDate, out var parseBookingDate))
                 {
-                    ModelState.AddModelError("BookingDate", $"Invalid BookingDate format for UserId {bookingDTO.UserId}. Please use yyyy-MM-dd.");
-                    continue;
+                    ModelState.AddModelError("BookingDate", "Invalid BookingDate format. Please use yyyy-MM-dd.");
+                    return BadRequest(ModelState);
                 }
-
 
                 // check booking trùng lặp
                 var existingBooking = await _bookingRepo.GetBookingByUserAndTime(bookingDTO.UserId, bookingDTO.SubCourtId, parseBookingDate, bookingDTO.TimeSlotId);
-                if (existingBooking != null && existingBooking.Status != (int)BookingStatus.Cancelled)
+                if (existingBooking != null)
                 {
                     return Ok(new ApiResponse
                     {
                         Success = false,
                         StatusCode = StatusCodes.Status409Conflict,
-                        Message = $"UserId {bookingDTO.UserId} already has a booking for SubCourt {bookingDTO.SubCourtId} on {bookingDTO.BookingDate} at timeslot {bookingDTO.TimeSlotId}."
+                        Message = "The user already has a booking for this sub-court, date and time."
                     });
                 }
 
                 // check SubCourt khả dụng ko
-                var isTimeSlotAvailable = await _bookingRepo.IsIgnoringCancelledAsync(bookingDTO.SubCourtId, bookingDTO.TimeSlotId, parseBookingDate);
+                var isTimeSlotAvailable = await _bookingRepo.IsTimeSlotAvailableAsync(bookingDTO.SubCourtId, bookingDTO.TimeSlotId, parseBookingDate);
                 if (!isTimeSlotAvailable)
                 {
                     return Ok(new ApiResponse
                     {
                         Success = false,
                         StatusCode = StatusCodes.Status409Conflict,
-                        Message = $"SubCourt {bookingDTO.SubCourtId} is unavailable on {bookingDTO.BookingDate} at timeslot {bookingDTO.TimeSlotId}."
+                        Message = "SubCourt is unavailable on the specified date and time."
                     });
                 }
 
@@ -236,33 +234,21 @@ namespace Badminton.Web.Controllers
                 };
 
 
-                bookings.Add(booking);
-            }
+                await _bookingRepo.CreateAsync(booking);
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new ApiResponse
+                return Ok(new ApiResponse
                 {
-                    Success = false,
-                    Message = "Some bookings had errors",
-                    Data = ModelState.ToDictionary(
-                        key => key.Key,
-                        value => value.Value.Errors.Select(error => error.ErrorMessage).ToArray()
-                    )
+                    Success = true,
+                    StatusCode = StatusCodes.Status201Created,
+                    Data = _mapper.Map<BookingDTO>(booking)
                 });
             }
-
-            await _bookingRepo.CreateAsync(bookings);
-
-            var bookingDTOsResult = _mapper.Map<List<BookingDTO>>(bookings);
-
-            return Ok(new ApiResponse
+            catch
             {
-                Success = true,
-                StatusCode = StatusCodes.Status201Created,
-                Data = bookingDTOsResult
-            });
+                return BadRequest();
+            }
         }
+
 
 
         [HttpPut("{id:int}")]
@@ -349,7 +335,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpPut("{id}/status")]
-        public async Task<IActionResult> UpdateStatusBooking(int id, [FromForm] UpdateBookingStatusDTO updateDto)
+        public async Task<IActionResult> UpdateStatusBooking(int id, [FromBody] UpdateBookingStatusDTO updateDto)
         {
             if (!ModelState.IsValid)
             {

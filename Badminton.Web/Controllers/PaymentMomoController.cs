@@ -8,12 +8,12 @@ namespace Badminton.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PaymentController : ControllerBase
+    public class PaymentMomoController : ControllerBase
     {
         private readonly MomoService _momoService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PaymentController(IHttpContextAccessor httpContextAccessor, MomoService momoService)
+        public PaymentMomoController(IHttpContextAccessor httpContextAccessor, MomoService momoService)
         {
 
             _momoService = momoService;

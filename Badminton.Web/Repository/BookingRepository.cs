@@ -18,17 +18,18 @@ namespace Badminton.Web.Repository
         }
 
         // create
-        public async Task<Booking> CreateAsync(Booking bookingModel)
+        public async Task CreateAsync(List<Booking> bookings)
         {
-            if (bookingModel == null)
+            if (bookings == null)
             {
-                throw new ArgumentNullException(nameof(bookingModel));
+                throw new ArgumentNullException(nameof(bookings));
             }
 
-            _context.Bookings.Add(bookingModel);
+            await _context.Bookings.AddRangeAsync(bookings);
             await _context.SaveChangesAsync();
-            return bookingModel;
+           
         }
+
 
         //read
         public async Task<List<Booking>> GetAll()
@@ -110,6 +111,47 @@ namespace Badminton.Web.Repository
             }
         }
 
+        //CheckIn
+        public async Task CheckInBookingAsync(int bookingId)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking == null)
+            {
+                throw new KeyNotFoundException("Booking not found.");
+            }
+
+            booking.Status = (int)BookingStatus.CheckIn;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while cancelling the booking.", ex);
+            }
+        }
+
+        //Confirm
+        public async Task ConfirmBookingAsync(int bookingId)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking == null)
+            {
+                throw new KeyNotFoundException("Booking not found.");
+            }
+
+            booking.Status = (int)BookingStatus.Confirmed;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while cancelling the booking.", ex);
+            }
+        }
 
         // Delete
         public async Task<Booking?> DeleteAsync(int id)
@@ -149,6 +191,15 @@ namespace Badminton.Web.Repository
                     b.SubCourtId == subCourtId &&
                     b.BookingDate == bookingDate &&
                     b.TimeSlotId == timeSlotId);
+        }
+
+        public async Task<bool> IsIgnoringCancelledAsync(int subCourtId, int timeSlotId, DateOnly bookingDate)
+        {
+            var bookings = await _context.Bookings
+                .Where(b => b.SubCourtId == subCourtId && b.TimeSlotId == timeSlotId && b.BookingDate == bookingDate && b.Status != (int)BookingStatus.Cancelled)
+                .ToListAsync();
+
+            return !bookings.Any();
         }
     }
 }

@@ -103,10 +103,10 @@ namespace Badminton.Web.Controllers
 
 
             });
-         }
+        }
 
         [HttpGet("byDateAndTimeSlot")]
-        public async Task<IActionResult> GetBookingsByDateAndTimeSlot( string date, [FromQuery] int timeSlotId)
+        public async Task<IActionResult> GetBookingsByDateAndTimeSlot(string date, [FromQuery] int timeSlotId)
         {
             if (!ModelState.IsValid)
             {
@@ -138,7 +138,7 @@ namespace Badminton.Web.Controllers
             return Ok(new ApiResponse
             {
                 Success = true,
-                Data = _mapper.Map<List<BookingDTO>>(bookings) 
+                Data = _mapper.Map<List<BookingDTO>>(bookings)
             });
         }
 
@@ -175,7 +175,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(CreateBookingDTO bookingDTO)
+        public async Task<IActionResult> CreateAsync(List<CreateBookingDTO> bookingDTOs)
         {
             if (!ModelState.IsValid)
             {
@@ -186,39 +186,41 @@ namespace Badminton.Web.Controllers
                     Data = ModelState
                 });
             }
+            var bookings = new List<Booking>();
 
-            try
+            foreach (var bookingDTO in bookingDTOs)
             {
                 if (!DateOnly.TryParse(bookingDTO.BookingDate, out var parseBookingDate))
                 {
-                    ModelState.AddModelError("BookingDate", "Invalid BookingDate format. Please use yyyy-MM-dd.");
-                    return BadRequest(ModelState);
+                    ModelState.AddModelError("BookingDate", $"Invalid BookingDate format for UserId {bookingDTO.UserId}. Please use yyyy-MM-dd.");
+                    continue;
                 }
+
 
                 // check booking trùng lặp
                 var existingBooking = await _bookingRepo.GetBookingByUserAndTime(bookingDTO.UserId, bookingDTO.SubCourtId, parseBookingDate, bookingDTO.TimeSlotId);
-                if (existingBooking != null)
+                if (existingBooking != null && existingBooking.Status != (int)BookingStatus.Cancelled)
                 {
                     return Ok(new ApiResponse
                     {
                         Success = false,
                         StatusCode = StatusCodes.Status409Conflict,
-                        Message = "The user already has a booking for this sub-court, date and time."
+                        Message = $"UserId {bookingDTO.UserId} already has a booking for SubCourt {bookingDTO.SubCourtId} on {bookingDTO.BookingDate} at timeslot {bookingDTO.TimeSlotId}."
                     });
                 }
 
                 // check SubCourt khả dụng ko
-                var isTimeSlotAvailable = await _bookingRepo.IsTimeSlotAvailableAsync(bookingDTO.SubCourtId, bookingDTO.TimeSlotId, parseBookingDate);
+                var isTimeSlotAvailable = await _bookingRepo.IsIgnoringCancelledAsync(bookingDTO.SubCourtId, bookingDTO.TimeSlotId, parseBookingDate);
                 if (!isTimeSlotAvailable)
                 {
                     return Ok(new ApiResponse
                     {
                         Success = false,
                         StatusCode = StatusCodes.Status409Conflict,
-                        Message = "SubCourt is unavailable on the specified date and time."
+                        Message = $"SubCourt {bookingDTO.SubCourtId} is unavailable on {bookingDTO.BookingDate} at timeslot {bookingDTO.TimeSlotId}."
                     });
                 }
-                
+
                 var booking = new Booking
 
                 {
@@ -226,7 +228,7 @@ namespace Badminton.Web.Controllers
                     SubCourtId = bookingDTO.SubCourtId,
                     TimeSlotId = bookingDTO.TimeSlotId,
                     CreateDate = DateTime.Parse(bookingDTO.CreateDate),
-                    BookingDate = parseBookingDate, 
+                    BookingDate = parseBookingDate,
                     Amount = bookingDTO.Amount,
                     Status = (int)BookingStatus.Pending,
                     BookingType = (int)BookingType.Daily,
@@ -234,20 +236,34 @@ namespace Badminton.Web.Controllers
                 };
 
 
-                await _bookingRepo.CreateAsync(booking);
-                
-                return Ok(new ApiResponse
+                bookings.Add(booking);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
                 {
-                    Success = true,
-                    StatusCode = StatusCodes.Status201Created,
-                    Data = _mapper.Map<BookingDTO>(booking)
+                    Success = false,
+                    Message = "Some bookings had errors",
+                    Data = ModelState.ToDictionary(
+                        key => key.Key,
+                        value => value.Value.Errors.Select(error => error.ErrorMessage).ToArray()
+                    )
                 });
             }
-            catch
+
+            await _bookingRepo.CreateAsync(bookings);
+
+            var bookingDTOsResult = _mapper.Map<List<BookingDTO>>(bookings);
+
+            return Ok(new ApiResponse
             {
-                return BadRequest();
-            }
+                Success = true,
+                StatusCode = StatusCodes.Status201Created,
+                Data = bookingDTOsResult
+            });
         }
+
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateBooking(int id, [FromBody] UpdateBookingDTO bookingDTO)
@@ -284,7 +300,7 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            
+
             if (!DateOnly.TryParse(bookingDTO.BookingDate, out var parseBookingDate))
             {
                 return Ok(new ApiResponse
@@ -407,6 +423,102 @@ namespace Badminton.Web.Controllers
                 {
                     Success = true,
                     Message = "Booking canceled successfully."
+                });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new ApiResponse { Success = false, Message = ex.Message });
+            }
+        }
+
+        [HttpPut("{id}/checkIn")]
+        public async Task<IActionResult> CheckInBooking(int id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+
+            try
+            {
+                var existingBooking = await _bookingRepo.GetById(id);
+                if (existingBooking == null)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        StatusCode = StatusCodes.Status404NotFound,
+                        Message = "Booking not found!"
+                    });
+                }
+
+                // check Confirm
+                if (existingBooking.Status != (int)BookingStatus.Confirmed)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        StatusCode = StatusCodes.Status409Conflict,
+                        Message = "Only Confirmed bookings can be CheckIn."
+                    });
+                }
+
+                await _bookingRepo.CheckInBookingAsync(id);
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Booking CheckIn successfully."
+                });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new ApiResponse { Success = false, Message = ex.Message });
+            }
+        }
+
+        [HttpPut("{id}/confirm")]
+        public async Task<IActionResult> ConfirmBooking(int id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+
+            try
+            {
+                var existingBooking = await _bookingRepo.GetById(id);
+                if (existingBooking == null)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        StatusCode = StatusCodes.Status404NotFound,
+                        Message = "Booking not found!"
+                    });
+                }
+
+                // check Pending
+                if (existingBooking.Status != (int)BookingStatus.Pending)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        StatusCode = StatusCodes.Status409Conflict,
+                        Message = "Only Pending bookings can be Confirm."
+                    });
+                }
+
+                await _bookingRepo.ConfirmBookingAsync(id);
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Booking Confirm successfully."
                 });
             }
             catch (KeyNotFoundException ex)

@@ -28,9 +28,7 @@ namespace Badminton.Web.DTO.OTP
         [Required]
         [PhoneNumber]
         public string Phone { get; set; }
-
-       
-
+        public string Otp { get; set; }
         public DateTime OtpExpiration { get; set; }
     }
 }

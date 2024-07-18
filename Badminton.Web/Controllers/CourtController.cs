@@ -146,30 +146,43 @@ namespace Badminton.Web.Controllers
             }
             */
 
-            foreach (var file in courtDTO.formFiles)
+            if(courtDTO.formFiles != null)
             {
-                var fileResult = _fileRepo.SaveImage(file);
-                if (fileResult.Item1 == 1)
+                foreach (var file in courtDTO.formFiles)
                 {
-                    images.Add(courtDTO.Image = fileResult.Item2);
+                    var fileResult = _fileRepo.SaveImage(file);
+                    if (fileResult.Item1 == 1)
+                    {
+                        images.Add(courtDTO.Image = fileResult.Item2);
+                    }
+
+                    courtDTO.Image = string.Join(", ", images);
                 }
-
-                courtDTO.Image = string.Join(", ", images);
             }
-
+            
             var courtModel = _mapper.Map<Court>(courtDTO);
 
-           /* var courtModel = new Court
+            /* var courtModel = new Court
+             {
+                 CourtName = courtDTO.CourtName,
+                 CourtManagerId = courtDTO.CourtManagerId,
+                 Location = courtDTO.Location,
+                 Phone = courtDTO.Phone,
+                 OpeningHours = courtDTO.OpeningHours,
+                 Image = string.Join(", ", images),
+                 Announcement = courtDTO.Announcement,
+             };
+            */
+
+            if(await _courtRepo.CourtNameExist(courtDTO.CourtName))
             {
-                CourtName = courtDTO.CourtName,
-                CourtManagerId = courtDTO.CourtManagerId,
-                Location = courtDTO.Location,
-                Phone = courtDTO.Phone,
-                OpeningHours = courtDTO.OpeningHours,
-                Image = string.Join(", ", images),
-                Announcement = courtDTO.Announcement,
-            };
-           */
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = "CourtName already exist!"
+                });
+            }
 
             var success = await _courtRepo.CreateAsync(courtModel);
             if (success != null)

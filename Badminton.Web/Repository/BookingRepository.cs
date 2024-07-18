@@ -29,6 +29,13 @@ namespace Badminton.Web.Repository
             await _context.SaveChangesAsync();
             return bookingModel;
         }
+        //
+        public async Task CreateMultipleAsync(List<Booking> bookings)
+        {
+            await _context.Bookings.AddRangeAsync(bookings);
+            await _context.SaveChangesAsync();
+        }
+
 
         //read
         public async Task<List<Booking>> GetAll()
@@ -76,18 +83,9 @@ namespace Badminton.Web.Repository
             return existingBooking;
         }
 
-        public async Task<Booking?> UpdateStatusAsync(int id, UpdateBookingStatusDTO updateDto)
-        {
-            var existingBooking = await _context.Bookings.FindAsync(id);
-            if (existingBooking == null)
-            {
-                return null;
-            }
-            existingBooking.Status = (int)updateDto.Status;
-            await _context.SaveChangesAsync();
 
-            return existingBooking;
-        }
+
+
 
         // cancel
         public async Task CancelBookingAsync (int bookingId)
@@ -150,5 +148,24 @@ namespace Badminton.Web.Repository
                     b.BookingDate == bookingDate &&
                     b.TimeSlotId == timeSlotId);
         }
+
+        public async Task<Booking?> UpdateStatusAsync(int id, UpdateBookingStatusRequestDTO updateDto)
+        {
+            var booking = await _context.Bookings.FindAsync(id);
+
+            if (booking == null)
+                return null; // or throw an exception if necessary
+
+            // Chuyển đổi từ enum BookingStatus sang kiểu int
+            booking.Status = (int)updateDto.Status;
+
+            _context.Bookings.Update(booking);
+            await _context.SaveChangesAsync();
+
+            return booking;
+        }
+
+
+
     }
 }

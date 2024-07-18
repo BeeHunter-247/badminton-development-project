@@ -19,6 +19,11 @@ namespace Badminton.Web.Repository
             return await _context.Courts.AnyAsync(c => c.CourtId == id);
         }
 
+        public async Task<bool> CourtNameExist(string name)
+        {
+            return await _context.Courts.AnyAsync(c => c.CourtName.ToLower() == name.ToLower());
+        }
+
         public async Task<Court> CreateAsync(Court courtModel)
         {
             await _context.AddAsync(courtModel);

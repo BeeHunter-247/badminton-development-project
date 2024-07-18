@@ -14,6 +14,11 @@ namespace Badminton.Web.Repository
             _context = context;
         }
 
+        public bool AnySubCourtBooked(int subCourtId)
+        {
+            return _context.Bookings.Any(b => b.SubCourtId == subCourtId);
+        }
+
         public async Task<bool> CheckBookingExist(int subCourtId)
         {
             return await _context.Bookings.AnyAsync(b => b.SubCourtId == subCourtId);
@@ -67,7 +72,16 @@ namespace Badminton.Web.Repository
             }
             #endregion
 
-            return await queryObject.ToListAsync();
+            #region Pagination
+            var skipNumber = (query.pageNumber - 1) * query.pageSize;
+            #endregion
+
+            return await queryObject.Skip(skipNumber).Take(query.pageSize).ToListAsync();
+        }
+
+        public async Task<IEnumerable<SubCourt>> GetByCourtIdAsync(int courtId)
+        {
+            return await _context.SubCourts.Where(c => c.CourtId == courtId).ToListAsync();
         }
 
         public async Task<SubCourt?> GetByIdAsync(int id)

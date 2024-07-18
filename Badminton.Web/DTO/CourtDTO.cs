@@ -22,6 +22,7 @@ namespace Badminton.Web.DTO
         public string Announcement { get; set; }
 
         public List<EvaluateDTO> Evaluates { get; set; }
+
         public List<SubCourtDTO> SubCourts { get; set; }
     }
 
@@ -34,7 +35,7 @@ namespace Badminton.Web.DTO
         public string Location { get; set; }
 
         [Required]
-        [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
+        [RegularExpression(@"^0\d{9}$", ErrorMessage = "Phone number must be exactly 10 digits starting with 0.")]
         public string Phone { get; set; }
 
         public string OpeningHours { get; set; }
@@ -54,7 +55,7 @@ namespace Badminton.Web.DTO
         public string Location { get; set; }
 
         [Required]
-        [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
+        [RegularExpression(@"^0\d{9}$", ErrorMessage = "Phone number must be exactly 10 digits starting with 0.")]
         public string Phone { get; set; }
 
         public string OpeningHours { get; set; }

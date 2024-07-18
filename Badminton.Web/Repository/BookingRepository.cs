@@ -37,6 +37,7 @@ namespace Badminton.Web.Repository
         }
 
 
+
         //read
         public async Task<List<Booking>> GetAll()
         {
@@ -108,6 +109,47 @@ namespace Badminton.Web.Repository
             }
         }
 
+        //CheckIn
+        public async Task CheckInBookingAsync(int bookingId)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking == null)
+            {
+                throw new KeyNotFoundException("Booking not found.");
+            }
+
+            booking.Status = (int)BookingStatus.CheckIn;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while cancelling the booking.", ex);
+            }
+        }
+
+        //Confirm
+        public async Task ConfirmBookingAsync(int bookingId)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking == null)
+            {
+                throw new KeyNotFoundException("Booking not found.");
+            }
+
+            booking.Status = (int)BookingStatus.Confirmed;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while cancelling the booking.", ex);
+            }
+        }
 
         // Delete
         public async Task<Booking?> DeleteAsync(int id)
@@ -164,8 +206,5 @@ namespace Badminton.Web.Repository
 
             return booking;
         }
-
-
-
     }
 }

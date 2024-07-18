@@ -12,5 +12,6 @@ namespace Badminton.Web.Interfaces
         Task<Court?> DeleteAsync(int id);
         Task<Court?> UpdateAsync(int id, UpdateCourtDTO courtDTO);
         Task<bool> CourtExist(int id);
+        Task<bool> CourtNameExist(string name);
     }
 }

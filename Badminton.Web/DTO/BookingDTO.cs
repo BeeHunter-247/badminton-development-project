@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Badminton.Web.Enums;
+﻿using Badminton.Web.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Badminton.Web.DTO
 {

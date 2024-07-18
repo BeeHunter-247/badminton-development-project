@@ -14,12 +14,15 @@ namespace Badminton.Web.Controllers
         private readonly ICourtRepository _courtRepo;
         private readonly IMapper _mapper;
         private readonly IFileRepository _fileRepo;
+        private readonly ISubCourtRepository _subCourtRepo;
 
-        public CourtController(ICourtRepository courtRepo, IMapper mapper, IFileRepository fileRepo)
+        public CourtController(ICourtRepository courtRepo, IMapper mapper,
+            IFileRepository fileRepo, ISubCourtRepository subCourtRepo)
         {
             _courtRepo = courtRepo;
             _mapper = mapper;
             _fileRepo = fileRepo;
+            _subCourtRepo = subCourtRepo;
         }
 
         [HttpGet]
@@ -90,6 +93,20 @@ namespace Badminton.Web.Controllers
                 });
             }
 
+            var subCourts = await _subCourtRepo.GetByCourtIdAsync(id);
+
+            var anySubCourtBooked = subCourts.Any(sc => _subCourtRepo.AnySubCourtBooked(sc.SubCourtId));
+
+            if(anySubCourtBooked)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    StatusCode= StatusCodes.Status400BadRequest,
+                    Message = "Cannot delete court because one or more subcourts are booked!"
+                });
+            }
+
             var courtModel = await _courtRepo.DeleteAsync(id);
             if (courtModel == null)
             {
@@ -129,30 +146,43 @@ namespace Badminton.Web.Controllers
             }
             */
 
-            foreach (var file in courtDTO.formFiles)
+            if(courtDTO.formFiles != null)
             {
-                var fileResult = _fileRepo.SaveImage(file);
-                if (fileResult.Item1 == 1)
+                foreach (var file in courtDTO.formFiles)
                 {
-                    images.Add(courtDTO.Image = fileResult.Item2);
+                    var fileResult = _fileRepo.SaveImage(file);
+                    if (fileResult.Item1 == 1)
+                    {
+                        images.Add(courtDTO.Image = fileResult.Item2);
+                    }
+
+                    courtDTO.Image = string.Join(", ", images);
                 }
-
-                courtDTO.Image = string.Join(", ", images);
             }
-
+            
             var courtModel = _mapper.Map<Court>(courtDTO);
 
-           /* var courtModel = new Court
+            /* var courtModel = new Court
+             {
+                 CourtName = courtDTO.CourtName,
+                 CourtManagerId = courtDTO.CourtManagerId,
+                 Location = courtDTO.Location,
+                 Phone = courtDTO.Phone,
+                 OpeningHours = courtDTO.OpeningHours,
+                 Image = string.Join(", ", images),
+                 Announcement = courtDTO.Announcement,
+             };
+            */
+
+            if(await _courtRepo.CourtNameExist(courtDTO.CourtName))
             {
-                CourtName = courtDTO.CourtName,
-                CourtManagerId = courtDTO.CourtManagerId,
-                Location = courtDTO.Location,
-                Phone = courtDTO.Phone,
-                OpeningHours = courtDTO.OpeningHours,
-                Image = string.Join(", ", images),
-                Announcement = courtDTO.Announcement,
-            };
-           */
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = "CourtName already exist!"
+                });
+            }
 
             var success = await _courtRepo.CreateAsync(courtModel);
             if (success != null)

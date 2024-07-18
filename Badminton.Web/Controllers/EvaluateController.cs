@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Badminton.Web.DTO;
+using Badminton.Web.Helpers;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,16 +14,19 @@ namespace Badminton.Web.Controllers
         private readonly IEvaluateRepository _evaluateRepo;
         private readonly ICourtRepository _courtRepo;
         private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepo;
 
-        public EvaluateController(IEvaluateRepository evaluateRepo, ICourtRepository courtRepo, IMapper mapper)
+        public EvaluateController(IEvaluateRepository evaluateRepo, ICourtRepository courtRepo,
+            IMapper mapper, IUserRepository userRepo)
         {
             _evaluateRepo = evaluateRepo;
             _courtRepo = courtRepo;
             _mapper = mapper;
+            _userRepo = userRepo;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryEvaluate query)
         {
             if (!ModelState.IsValid)
             {
@@ -34,7 +38,7 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var evaluates = await _evaluateRepo.GetAllAsync();
+            var evaluates = await _evaluateRepo.GetAllAsync(query);
             var evaluateDTO = _mapper.Map<List<EvaluateDTO>>(evaluates);
             return Ok(new ApiResponse
             {
@@ -98,10 +102,22 @@ namespace Badminton.Web.Controllers
                 });
             }
 
+            var user = await _userRepo.GetUserByIdAsync(evaluateDTO.UserId);
+            if(user == null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = "User does not exist!"
+                });
+            }
+
             var evaluateModel = _mapper.Map<Evaluate>(evaluateDTO);
             evaluateModel.CourtId = courtId;
             DateTime currentTime = DateTime.Now;
             evaluateModel.EvaluateDate = currentTime;
+            evaluateModel.CreatedBy = user.FullName;
             await _evaluateRepo.CreateAsync(evaluateModel);
             return CreatedAtAction(nameof(GetById), new {id = evaluateModel.EvaluateId}, new ApiResponse
             {

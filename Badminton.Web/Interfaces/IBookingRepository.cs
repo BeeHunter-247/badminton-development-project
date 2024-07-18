@@ -7,7 +7,7 @@ namespace Badminton.Web.Interfaces
     public interface IBookingRepository
     {
         // Create
-        Task CreateAsync(List<Booking> bookings);
+        Task<Booking> CreateAsync(Booking bookingModel);
         // Read
         Task<List<Booking>> GetAll();
         Task<Booking?> GetById(int id);

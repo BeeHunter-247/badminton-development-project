@@ -349,7 +349,7 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpPut("{id}/status")]
-        public async Task<IActionResult> UpdateStatusBooking(int id, [FromForm] UpdateBookingStatusDTO updateDto)
+        public async Task<IActionResult> UpdateStatusBooking(int id, [FromBody] UpdateBookingStatusDTO updateDto)
         {
             if (!ModelState.IsValid)
             {

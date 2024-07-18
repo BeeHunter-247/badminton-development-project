@@ -14,10 +14,10 @@ namespace Badminton.Web.Interfaces
         Task<List<Booking?>> GetByUserId(int id);
         Task<List<Booking?>> GetByStatus(BookingStatus status);
         Task<List<Booking>> GetBookingsByDateAndTimeSlot(DateOnly date, int timeSlotId);
-
+        Task CreateMultipleAsync(List<Booking> bookings);
         // Update
         Task<Booking?> UpdateAsync(int id, UpdateBookingDTO  bookingDTO);
-        Task<Booking?> UpdateStatusAsync(int id, UpdateBookingStatusDTO updateDto);
+        Task<Booking?> UpdateStatusAsync(int id, UpdateBookingStatusRequestDTO updateDto);
 
         // cancel
         Task CancelBookingAsync(int bookingId);

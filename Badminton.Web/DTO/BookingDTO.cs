@@ -63,14 +63,19 @@ namespace Badminton.Web.DTO
 
     }
 
-   /* public class CancelBookingDTO
+    /* public class CancelBookingDTO
+     {
+         [StringLength(255, ErrorMessage = "CancellationReason cannot exceed 255 characters")]
+         public string? CancellationReason { get; set; }
+
+     }*/
+
+    public class UpdateBookingStatusRequestDTO
     {
-        [StringLength(255, ErrorMessage = "CancellationReason cannot exceed 255 characters")]
-        public string? CancellationReason { get; set; }
-       
-    }*/
-    public class UpdateBookingStatusDTO
-    {
+        [Range(0, 3, ErrorMessage = "Status must be between 0 and 3.")]
         public BookingStatus Status { get; set; }
     }
+
+
+
 }

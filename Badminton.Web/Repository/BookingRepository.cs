@@ -206,5 +206,10 @@ namespace Badminton.Web.Repository
 
             return booking;
         }
+
+        public Task<bool> IsIgnoringCancelledAsync(int subCourtId, int timeSlotId, DateOnly bookingDate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

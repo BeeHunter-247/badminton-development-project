@@ -29,7 +29,11 @@ public partial class User
 
     public int? UserStatus { get; set; }
 
-    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+    public decimal? AccountBalance { get; set; }
+
+    public virtual ICollection<Booking> BookingOwners { get; set; } = new List<Booking>();
+
+    public virtual ICollection<Booking> BookingUsers { get; set; } = new List<Booking>();
 
     public virtual ICollection<CheckIn> CheckIns { get; set; } = new List<CheckIn>();
 

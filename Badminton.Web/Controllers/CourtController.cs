@@ -222,16 +222,20 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            foreach (var file in courtDTO.formFiles)
+            if(courtDTO.formFiles != null)
             {
-                var fileResult = _fileRepo.SaveImage(file);
-                if (fileResult.Item1 == 1)
+                foreach (var file in courtDTO.formFiles)
                 {
-                    images.Add(courtDTO.Image = fileResult.Item2);
-                }
+                    var fileResult = _fileRepo.SaveImage(file);
+                    if (fileResult.Item1 == 1)
+                    {
+                        images.Add(courtDTO.Image = fileResult.Item2);
+                    }
 
-                courtDTO.Image = string.Join(", ", images);
+                    courtDTO.Image = string.Join(", ", images);
+                }
             }
+           
 
             var courtModel = await _courtRepo.UpdateAsync(id, courtDTO);
             if (courtModel == null)

@@ -11,6 +11,8 @@ public partial class Booking
 
     public int UserId { get; set; }
 
+    public int OwnerId { get; set; }
+
     public int SubCourtId { get; set; }
 
     public DateTime CreateDate { get; set; }
@@ -30,6 +32,8 @@ public partial class Booking
     public string PromotionCode { get; set; }
 
     public virtual ICollection<CheckIn> CheckIns { get; set; } = new List<CheckIn>();
+
+    public virtual User Owner { get; set; }
 
     public virtual Promotion PromotionCodeNavigation { get; set; }
 

@@ -207,9 +207,13 @@ namespace Badminton.Web.Repository
             return booking;
         }
 
-        public Task<bool> IsIgnoringCancelledAsync(int subCourtId, int timeSlotId, DateOnly bookingDate)
+        public async Task<bool> IsIgnoringCancelledAsync(int subCourtId, int timeSlotId, DateOnly bookingDate)
         {
-            throw new NotImplementedException();
+            var bookings = await _context.Bookings
+                .Where(b => b.SubCourtId == subCourtId && b.TimeSlotId == timeSlotId && b.BookingDate == bookingDate && b.Status != (int)BookingStatus.Cancelled)
+                .ToListAsync();
+
+            return !bookings.Any();
         }
     }
 }

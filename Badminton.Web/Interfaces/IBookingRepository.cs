@@ -24,6 +24,7 @@ namespace Badminton.Web.Interfaces
 
         // cancel
         Task CancelBookingAsync(int bookingId);
+        Task Cancel(int bookingId);
 
         //CheckIn
         Task CheckInBookingAsync(int bookingId);

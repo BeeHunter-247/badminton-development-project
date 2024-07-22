@@ -352,7 +352,7 @@ namespace Badminton.Web.Controllers
 
                 // Check if the user already has a booking for the same sub-court, date, and time
                 var existingBooking = await _bookingRepo.GetBookingByUserAndTime(bookingDTO.UserId, bookingDTO.SubCourtId, parseBookingDate, bookingDTO.TimeSlotId);
-                if (existingBooking != null && existingBooking.Status != (int)BookingStatus.Cancelled)
+                if (existingBooking != null)
                 {
                     return Ok(new ApiResponse
                     {
@@ -362,13 +362,8 @@ namespace Badminton.Web.Controllers
                     });
                 }
 
-
                 // Check if the SubCourt is available
                 var isTimeSlotAvailable = await _bookingRepo.IsTimeSlotAvailableAsync(bookingDTO.SubCourtId, bookingDTO.TimeSlotId, parseBookingDate);
-
-                // check SubCourt khả dụng ko
-                var isTimeSlotAvailable = await _bookingRepo.IsIgnoringCancelledAsync(bookingDTO.SubCourtId, bookingDTO.TimeSlotId, parseBookingDate);
-
                 if (!isTimeSlotAvailable)
                 {
                     return Ok(new ApiResponse
@@ -475,7 +470,6 @@ namespace Badminton.Web.Controllers
                     Data = _mapper.Map<BookingDTO>(booking)
                 });
             }
-
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse
@@ -588,14 +582,6 @@ namespace Badminton.Web.Controllers
         //        });
         //    }
         //}
-
-=======
-            catch
-            {
-                return BadRequest();
-            }
-        }
-
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateBooking(int id, [FromBody] UpdateBookingDTO bookingDTO)

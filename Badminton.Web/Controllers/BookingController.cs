@@ -220,17 +220,6 @@ namespace Badminton.Web.Controllers
             return Ok(summary);
         }
 
-
-
-
-
-
-
-
-
-
-
-
         [HttpGet("amount/{userId}")]
         public async Task<IActionResult> GetTotalAmountByUserId(int userId)
         {
@@ -352,7 +341,7 @@ namespace Badminton.Web.Controllers
 
                 // Check if the user already has a booking for the same sub-court, date, and time
                 var existingBooking = await _bookingRepo.GetBookingByUserAndTime(bookingDTO.UserId, bookingDTO.SubCourtId, parseBookingDate, bookingDTO.TimeSlotId);
-                if (existingBooking != null && existingBooking.Status != (int)BookingStatus.Cancelled)
+                if (existingBooking != null)
                 {
                     return Ok(new ApiResponse
                     {
@@ -362,13 +351,8 @@ namespace Badminton.Web.Controllers
                     });
                 }
 
-
                 // Check if the SubCourt is available
                 var isTimeSlotAvailable = await _bookingRepo.IsTimeSlotAvailableAsync(bookingDTO.SubCourtId, bookingDTO.TimeSlotId, parseBookingDate);
-
-                // check SubCourt khả dụng ko
-                var isTimeSlotAvailable = await _bookingRepo.IsIgnoringCancelledAsync(bookingDTO.SubCourtId, bookingDTO.TimeSlotId, parseBookingDate);
-
                 if (!isTimeSlotAvailable)
                 {
                     return Ok(new ApiResponse
@@ -475,7 +459,6 @@ namespace Badminton.Web.Controllers
                     Data = _mapper.Map<BookingDTO>(booking)
                 });
             }
-
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse
@@ -485,11 +468,6 @@ namespace Badminton.Web.Controllers
                 });
             }
         }
-
-
-
-
-
 
         //[HttpPost("create-multiple")]
         //public async Task<IActionResult> CreateMultipleBookingsAsync(CreateMultipleBookingDTO bookingDTO)
@@ -588,14 +566,6 @@ namespace Badminton.Web.Controllers
         //        });
         //    }
         //}
-
-=======
-            catch
-            {
-                return BadRequest();
-            }
-        }
-
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateBooking(int id, [FromBody] UpdateBookingDTO bookingDTO)
@@ -791,6 +761,7 @@ namespace Badminton.Web.Controllers
         //        return NotFound(new ApiResponse { Success = false, Message = ex.Message });
         //    }
         //}
+
         [HttpPut("{id}/cancel")]
         public async Task<IActionResult> CancelBooking(int id)
         {
@@ -868,9 +839,6 @@ namespace Badminton.Web.Controllers
                 });
             }
         }
-
-
-
 
         [HttpPut("{id}/checkIn")]
         public async Task<IActionResult> CheckInBooking(int id)

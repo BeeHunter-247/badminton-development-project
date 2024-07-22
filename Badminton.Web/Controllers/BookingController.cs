@@ -650,7 +650,7 @@ namespace Badminton.Web.Controllers
             }
         }
 
-        [HttpPut("{id}/cancel before payment")]
+        [HttpPut("{id}/cancelBeforePayment")]
         public async Task<IActionResult> CancelBeforeBooking(int id)
         {
             if (!ModelState.IsValid)
@@ -698,7 +698,7 @@ namespace Badminton.Web.Controllers
             }
         }
 
-        [HttpPut("{id}/cancel after payment")]
+        [HttpPut("{id}/cancelAfterPayment")]
         public async Task<IActionResult> CancelAfterBooking(int id)
         {
             if (!ModelState.IsValid)

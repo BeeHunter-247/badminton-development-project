@@ -195,7 +195,25 @@ namespace Badminton.Web.Repository
                 throw new Exception("An error occurred while cancelling the booking.", ex);
             }
         }
+        public async Task Cancel(int bookingId)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking == null)
+            {
+                throw new KeyNotFoundException("Booking not found.");
+            }
 
+            booking.Status = (int)BookingStatus.Cancelled;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while cancelling the booking.", ex);
+            }
+        }
         //Confirm
         public async Task ConfirmBookingAsync(int bookingId)
         {

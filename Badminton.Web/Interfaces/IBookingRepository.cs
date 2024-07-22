@@ -40,5 +40,6 @@ namespace Badminton.Web.Interfaces
         Task<bool> IsTimeSlotAvailableAsync(int subCourtId, int timeSlotId, DateOnly bookingDate);
         Task<Booking?> GetBookingByUserAndTime(int userId, int subCourtId, DateOnly bookingDate, int timeSlotId);
         Task<bool> IsIgnoringCancelledAsync(int subCourtId, int timeSlotId, DateOnly bookingDate);
+        Task<decimal> GetCancelBookingPercentageAsync();
     }
 }

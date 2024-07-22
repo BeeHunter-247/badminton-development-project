@@ -312,7 +312,28 @@ namespace Badminton.Web.Controllers
 
 
 
+        [HttpGet("GetTop5PeopleUseMostAmount")]
+        public async Task<IActionResult> GetTop5PeopleUseMostAmount()
+        {
+            var topUsers = await _context.Bookings
+                .GroupBy(b => new { b.UserId, b.User.UserName, b.User.Email })
+                .Select(g => new TopUserDTO
+                {
+                    UserId = g.Key.UserId,
+                    UserName = g.Key.UserName,
+                    Email = g.Key.Email,
+                    TotalAmount = g.Sum(b => b.Amount ?? 0)
+                })
+                .OrderByDescending(u => u.TotalAmount)
+                .Take(5)
+                .ToListAsync();
 
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = topUsers
+            });
+        }
 
 
 

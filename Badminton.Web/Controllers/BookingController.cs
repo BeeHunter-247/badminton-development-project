@@ -727,8 +727,8 @@ namespace Badminton.Web.Controllers
 
 
 
-        [HttpPut("{id}/cancelChangeStatus")]
-        public async Task<IActionResult> CancelBooking(int id)
+        [HttpPut("{id}/cancelAfterPayment")]
+        public async Task<IActionResult> CancelAfterBooking(int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ApiResponse
@@ -751,27 +751,46 @@ namespace Badminton.Web.Controllers
                     });
                 }
 
-                // check Pending
-                if (existingBooking.Status != (int)BookingStatus.Pending)
+                // Get the user and owner details
+                var user = await _userRepo.GetUserByIdAsync(existingBooking.UserId);
+                var subCourt = await _subCourtRepo.GetByIdAsync(existingBooking.SubCourtId);
+                var court = await _courtRepo.GetByIdAsync(subCourt.CourtId);
+                var owner = await _userRepo.GetUserByIdAsync(court.OwnerId);
+
+                if (user == null || owner == null)
                 {
-                    return Ok(new ApiResponse
+                    return NotFound(new ApiResponse
                     {
                         Success = false,
-                        StatusCode = StatusCodes.Status409Conflict,
-                        Message = "Only pending bookings can be cancel."
+                        Message = "User or owner not found"
                     });
                 }
 
-                await _bookingRepo.CancelBookingAsync(id);
+                // Update the account balances
+                user.AccountBalance += existingBooking.Amount;
+                owner.AccountBalance -= existingBooking.Amount;
+
+                // Save the updated user and owner details
+                await _userRepo.UpdateAsync(user);
+                await _userRepo.UpdateAsync(owner);
+
+                // Cancel the booking
+                existingBooking.Status = (int)BookingStatus.Cancelled;
+                await _bookingRepo.UpdateAsync1(existingBooking);
+
                 return Ok(new ApiResponse
                 {
                     Success = true,
                     Message = "Booking canceled successfully."
                 });
             }
-            catch (KeyNotFoundException ex)
+            catch (Exception ex)
             {
-                return NotFound(new ApiResponse { Success = false, Message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse
+                {
+                    Success = false,
+                    Message = $"An error occurred while canceling the booking: {ex.Message}"
+                });
             }
         }
 

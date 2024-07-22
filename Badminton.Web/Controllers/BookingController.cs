@@ -649,8 +649,86 @@ namespace Badminton.Web.Controllers
             }
         }
 
-        [HttpPut("{id}/cancel before payment")]
+        [HttpPut("{id}/cancelChangeStatusandRefundMoney")]
         public async Task<IActionResult> CancelBeforeBooking(int id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+
+            try
+            {
+                var existingBooking = await _bookingRepo.GetById(id);
+                if (existingBooking == null)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        StatusCode = StatusCodes.Status404NotFound,
+                        Message = "Booking not found!"
+                    });
+                }
+
+                // Check Pending status
+                if (existingBooking.Status == (int)BookingStatus.Pending)
+                {
+                    await _bookingRepo.CancelBookingAsync(id);
+                    return Ok(new ApiResponse
+                    {
+                        Success = true,
+                        Message = "Booking canceled successfully."
+                    });
+                }
+
+                // Check if status is 3 and if CreatedDate is within 2 days
+                if (existingBooking.Status == 3)
+                {
+                    var daysDifference = (DateTime.Now - existingBooking.CreateDate).TotalDays;
+                    if (daysDifference <= 2)
+                    {
+                        existingBooking.Status = 0; // Change status to 0
+                                                    // Perform refund logic here if needed
+
+                        await _bookingRepo.UpdateAsync1(existingBooking);
+
+                        return Ok(new ApiResponse
+                        {
+                            Success = true,
+                            Message = "Booking canceled successfully."
+                        });
+                    }
+                    else
+                    {
+                        return Ok(new ApiResponse
+                        {
+                            Success = false,
+                            StatusCode = StatusCodes.Status409Conflict,
+                            Message = "Booking cannot be canceled after 2 days."
+                        });
+                    }
+                }
+
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    StatusCode = StatusCodes.Status409Conflict,
+                    Message = "Only pending or specific bookings can be canceled."
+                });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new ApiResponse { Success = false, Message = ex.Message });
+            }
+        }
+
+
+
+        [HttpPut("{id}/cancelChangeStatus")]
+        public async Task<IActionResult> CancelBooking(int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ApiResponse
@@ -694,84 +772,6 @@ namespace Badminton.Web.Controllers
             catch (KeyNotFoundException ex)
             {
                 return NotFound(new ApiResponse { Success = false, Message = ex.Message });
-            }
-        }
-
-        [HttpPut("{id}/cancel after payment")]
-        public async Task<IActionResult> CancelAfterBooking(int id)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Invalid data",
-                    Data = ModelState
-                });
-
-            try
-            {
-                var existingBooking = await _bookingRepo.GetById(id);
-                if (existingBooking == null)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        StatusCode = StatusCodes.Status404NotFound,
-                        Message = "Booking not found!"
-                    });
-                }
-
-                // Check if the booking status is pending
-                if (existingBooking.Status != (int)BookingStatus.Pending)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        StatusCode = StatusCodes.Status409Conflict,
-                        Message = "Only pending bookings can be canceled."
-                    });
-                }
-
-                // Get the user and owner details
-                var user = await _userRepo.GetUserByIdAsync(existingBooking.UserId);
-                var subCourt = await _subCourtRepo.GetByIdAsync(existingBooking.SubCourtId);
-                var court = await _courtRepo.GetByIdAsync(subCourt.CourtId);
-                var owner = await _userRepo.GetUserByIdAsync(court.OwnerId);
-
-                if (user == null || owner == null)
-                {
-                    return NotFound(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "User or owner not found"
-                    });
-                }
-
-                // Update the account balances
-                user.AccountBalance += existingBooking.Amount;
-                owner.AccountBalance -= existingBooking.Amount;
-
-                // Save the updated user and owner details
-                await _userRepo.UpdateAsync(user);
-                await _userRepo.UpdateAsync(owner);
-
-                // Cancel the booking
-                existingBooking.Status = (int)BookingStatus.Cancelled;
-                await _bookingRepo.UpdateAsync1(existingBooking);
-
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Booking canceled successfully."
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse
-                {
-                    Success = false,
-                    Message = $"An error occurred while canceling the booking: {ex.Message}"
-                });
             }
         }
 

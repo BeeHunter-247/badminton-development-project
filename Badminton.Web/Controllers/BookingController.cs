@@ -4,6 +4,7 @@ using Badminton.Web.Enums;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Badminton.Web.Controllers
 {
@@ -16,14 +17,16 @@ namespace Badminton.Web.Controllers
         private readonly IUserRepository _userRepo;
         private readonly ISubCourtRepository _subCourtRepo;
         private readonly IMapper _mapper;
+        private readonly CourtSyncContext _context;
 
-        public BookingController(IBookingRepository bookingRepo, IMapper mapper, ISubCourtRepository subCourtRepository, ICourtRepository courtRepository, IUserRepository userRepository)
+        public BookingController(IBookingRepository bookingRepo, IMapper mapper, ISubCourtRepository subCourtRepository, ICourtRepository courtRepository, IUserRepository userRepository, CourtSyncContext context)
         {
             _bookingRepo = bookingRepo;
             _mapper = mapper;
             _courtRepo = courtRepository;
             _userRepo = userRepository;
             _subCourtRepo = subCourtRepository;
+            _context = context;
         }
 
         [HttpGet]
@@ -178,6 +181,76 @@ namespace Badminton.Web.Controllers
                 Success = true,
                 Data = _mapper.Map<List<BookingDTO>>(booking)
             });
+        }
+        [HttpGet("summary")]
+        public async Task<IActionResult> GetBookingSummary([FromQuery] int year, [FromQuery] int month, [FromQuery] int day)
+        {
+            if (year <= 0 || month <= 0 || month > 12 || day <= 0 || day > 31)
+            {
+                return BadRequest(new { message = "Invalid date parameters." });
+            }
+
+            // Tạo đối tượng DateTime cho ngày yêu cầu
+            DateTime requestedDate = new DateTime(year, month, day);
+
+            // Ngày đầu tiên của tháng và ngày yêu cầu
+            DateTime firstDayOfMonth = new DateTime(requestedDate.Year, requestedDate.Month, 1);
+            DateTime endDate = requestedDate; // Ngày tìm kiếm
+
+            var validStatuses = new[] { 0, 1, 3 };
+
+            // Lọc các bản ghi có ngày tạo nằm trong tháng và trước hoặc bằng ngày yêu cầu
+            var summary = await _context.Bookings
+                .Where(b => validStatuses.Contains(b.Status) &&
+                            b.CreateDate >= firstDayOfMonth &&
+                            b.CreateDate <= endDate) // Tính tổng doanh thu từ ngày đầu tháng đến ngày yêu cầu
+                .GroupBy(b => 1)
+                .Select(g => new BookingSummaryDto
+                {
+                    TotalAmount = g.Sum(b => b.Amount ?? 0),
+                    TotalBookings = g.Count(),
+                })
+                .FirstOrDefaultAsync();
+
+            if (summary == null)
+            {
+                return NotFound(new { message = "No bookings found for the specified date range." });
+            }
+
+            return Ok(summary);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        [HttpGet("amount/{userId}")]
+        public async Task<IActionResult> GetTotalAmountByUserId(int userId)
+        {
+            if (userId <= 0)
+            {
+                return BadRequest("Invalid user ID.");
+            }
+
+            var validStatuses = new[] { 1, 3, 4 }; // Trạng thái hợp lệ
+
+            var totalAmount = await _context.Bookings
+                .Where(b => b.UserId == userId && validStatuses.Contains(b.Status))
+                .SumAsync(b => b.Amount);
+
+            if (totalAmount == null)
+            {
+                return NotFound("No bookings found for this user.");
+            }
+
+            return Ok(new { UserId = userId, TotalAmount = totalAmount });
         }
 
         //[HttpPost]

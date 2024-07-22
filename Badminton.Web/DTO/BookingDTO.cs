@@ -72,7 +72,7 @@ namespace Badminton.Web.DTO
 
     public class UpdateBookingStatusRequestDTO
     {
-        [Range(0, 3, ErrorMessage = "Status must be between 0 and 3.")]
+        [Range(0, 4, ErrorMessage = "Status must be between 0 and 4.")]
         public BookingStatus Status { get; set; }
     }
 

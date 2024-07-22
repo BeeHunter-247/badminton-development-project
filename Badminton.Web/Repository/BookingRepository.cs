@@ -281,5 +281,16 @@ namespace Badminton.Web.Repository
 
             return !bookings.Any();
         }
+
+        public async Task<decimal> GetCancelBookingPercentageAsync()
+        {
+            var totalBookings = await _context.Bookings.CountAsync();
+            var cancelBookings = await _context.Bookings
+                .Where(b => b.Status == (int)BookingStatus.Cancelled)
+                .CountAsync();
+
+            return (decimal)cancelBookings / (totalBookings == 0 ? 1 : totalBookings) * 100;
+
+        }
     }
 }

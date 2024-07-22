@@ -219,6 +219,34 @@ namespace Badminton.Web.Controllers
             return Ok(summary);
         }
 
+        [HttpGet("GetMonthlyBookingTotals")]
+        public async Task<IActionResult> GetMonthlyBookingTotals()
+        {
+            var monthlyTotals = await _context.Bookings
+                .GroupBy(b => b.CreateDate.Month)
+                .Select(g => new
+                {
+                    Month = g.Key,
+                    Total = g.Count()
+                })
+                .ToListAsync();
+
+            // Initialize result array with 12 elements, all set to 0
+            var result = new int[12];
+
+            // Populate result array with totals from monthlyTotals
+            foreach (var item in monthlyTotals)
+            {
+                result[item.Month - 1] = item.Total; // -1 because Month is 1-based index
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = result
+            });
+        }
+
         [HttpGet("amount/{userId}")]
         public async Task<IActionResult> GetTotalAmountByUserId(int userId)
         {

@@ -232,7 +232,9 @@ namespace Badminton.Web.Controllers
                 RoleType = 3, // Set RoleType to 3 for User
                 Otp = hashedOtp, // Save hashed OTP
                 OtpExpiration = DateTime.UtcNow.AddMinutes(5), // Example: OTP expires in 5 minutes
-                Verify = 0 // Not verified yet
+                Verify = 0, // Not verified yet
+                AccountBalance = 1000000
+
             };
 
             _context.Users.Add(user);
@@ -317,6 +319,8 @@ namespace Badminton.Web.Controllers
 
 
 
+
+
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
@@ -384,6 +388,30 @@ namespace Badminton.Web.Controllers
                 Data = userDtoList
             });
         }
+
+        [HttpGet("GetTotalUserByRoleType3")]
+        public async Task<IActionResult> GetTotalUserByRoleType3()
+        {
+            if (!IsAdmin(User))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Unauthorized"
+                });
+            }
+
+            var roleType = 3; // Giá trị RoleType cần kiểm tra
+            var totalUsers = await _context.Users.CountAsync(u => u.RoleType == roleType);
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = totalUsers
+            });
+        }
+
+
 
 
         // GetById

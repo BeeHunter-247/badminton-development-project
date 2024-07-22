@@ -39,10 +39,10 @@ namespace Badminton.Web.Repository
         {
             var queryObject = _context.Evaluates.Include(u => u.User).AsQueryable();
 
-            #region Pagination
-            var skipNumber = (query.pageNumber - 1) * query.pageSize;
-            #endregion
-            return await queryObject.Skip(skipNumber).Take(query.pageSize).ToListAsync();
+            //#region Pagination
+            //var skipNumber = (query.pageNumber - 1) * query.pageSize;
+            //#endregion
+            return await queryObject./*Skip(skipNumber).Take(query.pageSize).*/ToListAsync();
         }
 
         public async Task<Evaluate> GetByIdAsync(int id)

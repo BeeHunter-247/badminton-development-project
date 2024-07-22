@@ -166,13 +166,23 @@ namespace Badminton.Web.Controllers
             var existBooking = await _sCourtRepo.CheckBookingExist(subCourtId);
             if(!existBooking)
             {
-                await _sCourtRepo.DeleteAsync(subCourtId);
+                var delete = await _sCourtRepo.DeleteAsync(subCourtId);
+
+                if(delete != null)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = true,
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Subcourt has been deleted successful."
+                    });
+                }
 
                 return Ok(new ApiResponse
                 {
-                    Success = true,
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = "Sân đã được xóa thành công."
+                    Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = "SubCourt does not exist!"
                 });
             }
 
@@ -180,7 +190,7 @@ namespace Badminton.Web.Controllers
             {
                 Success = false,
                 StatusCode = StatusCodes.Status409Conflict,
-                Message = "Sân đang được đặt không thể xóa!"
+                Message = "The subcourt is booked, it cannot be deleted!"
             });
         }
     }

@@ -460,13 +460,14 @@ namespace Badminton.Web.Controllers
                 }
 
                 // Create the booking
+                DateTime currentTime = DateTime.Now;
                 var booking = new Booking
                 {
                     UserId = bookingDTO.UserId,
                     OwnerId = court.OwnerId,
                     SubCourtId = bookingDTO.SubCourtId,
                     TimeSlotId = bookingDTO.TimeSlotId,
-                    CreateDate = DateTime.Parse(bookingDTO.CreateDate),
+                    CreateDate = currentTime,
                     BookingDate = parseBookingDate,
                     Amount = bookingDTO.Amount,
                     Status = (int)BookingStatus.Pending,

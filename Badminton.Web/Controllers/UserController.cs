@@ -313,7 +313,7 @@ namespace Badminton.Web.Controllers
 
 
         [HttpGet("GetTop5PeopleUseMostAmount")]
-        public async Task<IActionResult> GetTop5PeopleUseMostAmount()
+        public async Task<IActionResult> GetTop7PeopleUseMostAmount()
         {
             var topUsers = await _context.Bookings
                 .GroupBy(b => new { b.UserId, b.User.UserName, b.User.Email })
@@ -325,7 +325,7 @@ namespace Badminton.Web.Controllers
                     TotalAmount = g.Sum(b => b.Amount ?? 0)
                 })
                 .OrderByDescending(u => u.TotalAmount)
-                .Take(5)
+                .Take(7)
                 .ToListAsync();
 
             return Ok(new ApiResponse

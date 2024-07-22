@@ -317,6 +317,8 @@ namespace Badminton.Web.Controllers
 
 
 
+
+
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
@@ -384,6 +386,30 @@ namespace Badminton.Web.Controllers
                 Data = userDtoList
             });
         }
+
+        [HttpGet("GetTotalUserByRoleType3")]
+        public async Task<IActionResult> GetTotalUserByRoleType3()
+        {
+            if (!IsAdmin(User))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Unauthorized"
+                });
+            }
+
+            var roleType = 3; // Giá trị RoleType cần kiểm tra
+            var totalUsers = await _context.Users.CountAsync(u => u.RoleType == roleType);
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = totalUsers
+            });
+        }
+
+
 
 
         // GetById

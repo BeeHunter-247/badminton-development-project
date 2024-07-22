@@ -7,5 +7,6 @@ namespace Badminton.Web.Interfaces
         Task<User> RegisterUserAsync(User user);
         Task<User> GetUserByUsernameAsync(string username);
         Task<User> GetUserByIdAsync(int id);
+        Task<User> UpdateAsync(User user);
     }
 }

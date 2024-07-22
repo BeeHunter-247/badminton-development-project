@@ -16,6 +16,17 @@ namespace Badminton.Web.Repository
         {
             _context = context;
         }
+        public async Task UpdateBookingStatusAsync(int id, BookingStatus status)
+        {
+            var existingBooking = await _context.Bookings.FirstOrDefaultAsync(b => b.BookingId == id);
+            if (existingBooking == null)
+            {
+                throw new KeyNotFoundException("Booking not found.");
+            }
+
+            existingBooking.Status = (int)status;
+            await _context.SaveChangesAsync();
+        }
 
         // create
         public async Task<Booking> CreateAsync(Booking bookingModel)
@@ -74,29 +85,83 @@ namespace Badminton.Web.Repository
                 return null;
             }
 
-            
-            existingBooking.BookingDate = DateOnly.Parse(bookingDTO.BookingDate);
+            // Cập nhật các thuộc tính của existingBooking từ bookingDTO
+            existingBooking.BookingDate = DateOnly.Parse(bookingDTO.BookingDate); // Chuyển đổi string thành DateOnly
             existingBooking.SubCourtId = bookingDTO.SubCourtId;
             existingBooking.TimeSlotId = bookingDTO.TimeSlotId;
-            existingBooking.Amount= bookingDTO.Amount;
-            await _context.SaveChangesAsync();
+            existingBooking.Amount = bookingDTO.Amount;
+            // Giả sử PromotionCode là một số nguyên, bạn có thể thay đổi nếu cần thiết
+            existingBooking.PromotionCode = bookingDTO.PromotionCode?.ToString();
 
+            await _context.SaveChangesAsync();
             return existingBooking;
         }
 
+        public async Task<Booking?> UpdateAsync1(Booking existingBooking)
+        {
+            var bookingToUpdate = await _context.Bookings.FirstOrDefaultAsync(b => b.BookingId == existingBooking.BookingId);
+            if (bookingToUpdate == null)
+            {
+                return null;
+            }
 
+            // Cập nhật các thuộc tính của bookingToUpdate từ existingBooking
+            bookingToUpdate.BookingDate = existingBooking.BookingDate;
+            bookingToUpdate.SubCourtId = existingBooking.SubCourtId;
+            bookingToUpdate.TimeSlotId = existingBooking.TimeSlotId;
+            bookingToUpdate.Amount = existingBooking.Amount;
+            bookingToUpdate.PromotionCode = existingBooking.PromotionCode;
 
+            await _context.SaveChangesAsync();
+            return bookingToUpdate;
+        }
 
 
         // cancel
-        public async Task CancelBookingAsync (int bookingId)
+        public async Task CancelBookingAsync(int bookingId)
         {
-            var booking = await _context.Bookings.FindAsync(bookingId);
+            // Lấy thông tin của booking
+            var booking = await _context.Bookings
+                .Include(b => b.SubCourt) // Giả sử rằng SubCourt liên kết với Court và Court có OwnerId
+                .ThenInclude(sc => sc.Court) // Lấy thông tin Court liên kết với SubCourt
+                .FirstOrDefaultAsync(b => b.BookingId == bookingId);
+
             if (booking == null)
             {
                 throw new KeyNotFoundException("Booking not found.");
             }
 
+            // Kiểm tra trạng thái của booking
+            if (booking.Status != (int)BookingStatus.Pending)
+            {
+                throw new InvalidOperationException("Only pending bookings can be cancelled.");
+            }
+
+            // Cập nhật số dư tài khoản của người dùng
+            var user = await _context.Users.FindAsync(booking.UserId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found.");
+            }
+
+            // Cập nhật số dư tài khoản của chủ sở hữu
+            var owner = await _context.Users.FindAsync(booking.SubCourt.Court.OwnerId);
+            if (owner == null)
+            {
+                throw new KeyNotFoundException("Owner not found.");
+            }
+
+            // Hoàn tiền cho người dùng
+            user.AccountBalance += booking.Amount;
+
+            // Trừ tiền của chủ sở hữu
+            owner.AccountBalance -= booking.Amount;
+
+            // Cập nhật thông tin người dùng và chủ sở hữu trong cơ sở dữ liệu
+            _context.Users.Update(user);
+            _context.Users.Update(owner);
+
+            // Cập nhật trạng thái của booking
             booking.Status = (int)BookingStatus.Cancelled;
 
             try
@@ -108,6 +173,7 @@ namespace Badminton.Web.Repository
                 throw new Exception("An error occurred while cancelling the booking.", ex);
             }
         }
+
 
         //CheckIn
         public async Task CheckInBookingAsync(int bookingId)

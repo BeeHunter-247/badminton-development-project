@@ -15,6 +15,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using BCrypt.Net;
+using Badminton.Web.DTO.Admin;
 
 namespace Badminton.Web.Controllers
 {
@@ -410,18 +411,11 @@ namespace Badminton.Web.Controllers
             });
         }
 
+
         [HttpGet("GetTotalUserByRoleType3")]
         public async Task<IActionResult> GetTotalUserByRoleType3()
         {
-            if (!IsAdmin(User))
-            {
-                return Unauthorized(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Unauthorized"
-                });
-            }
-
+           
             var roleType = 3; // Giá trị RoleType cần kiểm tra
             var totalUsers = await _context.Users.CountAsync(u => u.RoleType == roleType);
 
@@ -431,7 +425,6 @@ namespace Badminton.Web.Controllers
                 Data = totalUsers
             });
         }
-
 
 
 
@@ -472,10 +465,13 @@ namespace Badminton.Web.Controllers
             });
         }
 
+
         [HttpGet("GetCurrentUser")]
         [Authorize]
         //User and Admin
         public async Task<IActionResult> GetCurrentUser()
+
+
         {
             // Log claims for debugging
             foreach (var claim in User.Claims)
@@ -608,9 +604,6 @@ namespace Badminton.Web.Controllers
         }
 
 
-
-
-
         [HttpPut("EditUserStatus")]
         [Authorize]
         public async Task<IActionResult> EditUserStatus(EditUserStatusModel model)
@@ -665,8 +658,6 @@ namespace Badminton.Web.Controllers
                 Message = "User status updated successfully"
             });
         }
-
-
         [HttpPut("EditRole")]
         [Authorize]
         public async Task<IActionResult> EditRole(EditRoleModel model)
@@ -732,6 +723,45 @@ namespace Badminton.Web.Controllers
                 Message = "User role updated successfully"
             });
         }
+        [HttpGet("GetTotalUserInSystem")]
+        public async Task<IActionResult> GetTotalUserInSystem()
+        {
+            var totalAdmin = await _context.Users.CountAsync(u => u.RoleType == 0); 
+            var totalOwner = await _context.Users.CountAsync(u => u.RoleType == 1); 
+            var totalUser = await _context.Users.CountAsync(u => u.RoleType == 3); 
+
+            var result = new TotalUserDTO
+            {
+                TotalAdmin = totalAdmin,
+                TotalOwner = totalOwner,
+                TotalUser = totalUser
+            };
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = result
+            });
+        }
+
+        [HttpGet("GetTotalCourtInSystem")]
+        public async Task<IActionResult> GetTotalCourtInSystem()
+        {
+            var totalCourts = await _context.Courts
+                .GroupBy(c => c.OwnerId)
+                .Select(g => new TotalCourtDTO
+                {
+                    OwnerName = g.FirstOrDefault().Owner.FullName,
+                    TotalCourt = g.Count()
+                })
+                .ToListAsync();
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = totalCourts
+            });
+        }
 
 
 
@@ -758,12 +788,7 @@ namespace Badminton.Web.Controllers
 
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
             return jwtTokenHandler.WriteToken(token);
-        
-        
-        
-        
         }
-
 
 
 

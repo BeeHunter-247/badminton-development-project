@@ -220,17 +220,6 @@ namespace Badminton.Web.Controllers
             return Ok(summary);
         }
 
-
-
-
-
-
-
-
-
-
-
-
         [HttpGet("amount/{userId}")]
         public async Task<IActionResult> GetTotalAmountByUserId(int userId)
         {
@@ -479,11 +468,6 @@ namespace Badminton.Web.Controllers
                 });
             }
         }
-
-
-
-
-
 
         //[HttpPost("create-multiple")]
         //public async Task<IActionResult> CreateMultipleBookingsAsync(CreateMultipleBookingDTO bookingDTO)
@@ -777,6 +761,7 @@ namespace Badminton.Web.Controllers
         //        return NotFound(new ApiResponse { Success = false, Message = ex.Message });
         //    }
         //}
+
         [HttpPut("{id}/cancel")]
         public async Task<IActionResult> CancelBooking(int id)
         {
@@ -854,9 +839,6 @@ namespace Badminton.Web.Controllers
                 });
             }
         }
-
-
-
 
         [HttpPut("{id}/checkIn")]
         public async Task<IActionResult> CheckInBooking(int id)

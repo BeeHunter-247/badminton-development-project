@@ -674,17 +674,6 @@ namespace Badminton.Web.Controllers
                     });
                 }
 
-                // check Pending
-                if (existingBooking.Status != (int)BookingStatus.Pending)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        StatusCode = StatusCodes.Status409Conflict,
-                        Message = "Only pending bookings can be cancel."
-                    });
-                }
-
                 await _bookingRepo.CancelBookingAsync(id);
                 return Ok(new ApiResponse
                 {
@@ -721,18 +710,7 @@ namespace Badminton.Web.Controllers
                         Message = "Booking not found!"
                     });
                 }
-
-                // Check if the booking status is pending
-                if (existingBooking.Status != (int)BookingStatus.Pending)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        StatusCode = StatusCodes.Status409Conflict,
-                        Message = "Only pending bookings can be canceled."
-                    });
-                }
-
+               
                 // Get the user and owner details
                 var user = await _userRepo.GetUserByIdAsync(existingBooking.UserId);
                 var subCourt = await _subCourtRepo.GetByIdAsync(existingBooking.SubCourtId);

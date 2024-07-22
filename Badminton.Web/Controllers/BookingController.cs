@@ -674,7 +674,7 @@ namespace Badminton.Web.Controllers
                     });
                 }
 
-                await _bookingRepo.CancelBookingAsync(id);
+                await _bookingRepo.Cancel(id);
                 return Ok(new ApiResponse
                 {
                     Success = true,

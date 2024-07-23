@@ -103,5 +103,18 @@ namespace Badminton.Web.Repository
             await _context.SaveChangesAsync();
             return existingSCourt;
         }
+
+        public async Task<SubCourt?> UpdatePriceAsync(int id, UpdatePriceDTO priceDTO)
+        {
+            var existingSubCourt = await _context.SubCourts.FirstOrDefaultAsync(s => s.SubCourtId == id);
+            if( existingSubCourt == null)
+            {
+                return null;
+            }
+
+            existingSubCourt.PricePerHour = priceDTO.Price;
+            await _context.SaveChangesAsync();
+            return existingSubCourt;
+        }
     }
 }

@@ -193,5 +193,36 @@ namespace Badminton.Web.Controllers
                 Message = "The subcourt is booked, it cannot be deleted!"
             });
         }
+
+        [HttpPut]
+        [Route("{id}/UpdatePrice")]
+        public async Task<IActionResult> UpdatePrice([FromRoute] int id, [FromBody] UpdatePriceDTO priceDTO)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            var update = await _sCourtRepo.UpdatePriceAsync(id, priceDTO);
+            if(update == null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success= false,
+                    Message = "SubCourt not found!"
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = update
+            });
+        }
     }
 }

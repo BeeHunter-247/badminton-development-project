@@ -37,4 +37,9 @@ namespace Badminton.Web.DTO
         public decimal PricePerHour { get; set; }
         public int TimeSlotId { get; set; }
     }
+
+    public class UpdatePriceDTO
+    {
+        public decimal Price { get; set; }
+    }
 }

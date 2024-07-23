@@ -317,13 +317,14 @@ namespace Badminton.Web.Controllers
         public async Task<IActionResult> GetTop7PeopleUseMostAmount()
         {
             var topUsers = await _context.Bookings
+                .Where(b => new[] { 1, 3, 4 }.Contains(b.Status)) // Lọc những Booking có Status là 1, 3, hoặc 4
                 .GroupBy(b => new { b.UserId, b.User.UserName, b.User.Email })
                 .Select(g => new TopUserDTO
                 {
                     UserId = g.Key.UserId,
                     UserName = g.Key.UserName,
                     Email = g.Key.Email,
-                    TotalAmount = g.Sum(b => b.Amount ?? 0)
+                    TotalAmount = g.Where(b => new[] { 1, 3, 4 }.Contains(b.Status)).Sum(b => b.Amount ?? 0) // Chỉ tính tổng Amount của những Booking có Status là 1, 3, hoặc 4
                 })
                 .OrderByDescending(u => u.TotalAmount)
                 .Take(7)
@@ -335,6 +336,7 @@ namespace Badminton.Web.Controllers
                 Data = topUsers
             });
         }
+
 
 
 

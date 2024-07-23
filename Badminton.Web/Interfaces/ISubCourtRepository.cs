@@ -15,5 +15,6 @@ namespace Badminton.Web.Interfaces
         Task<bool> CheckBookingExist(int subCourtId);
         public bool AnySubCourtBooked(int subCourtId);
         Task<IEnumerable<SubCourt>> GetByCourtIdAsync(int courtId);
+        Task<SubCourt?> UpdatePriceAsync(int id, UpdatePriceDTO priceDTO);
     }
 }

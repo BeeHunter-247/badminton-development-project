@@ -102,9 +102,9 @@ namespace Badminton.Web.Repository
             return await _context.Courts.FindAsync(id);
         }
 
-        public async Task<List<Court>> GetCourtByStatusAsync(int status)
+        public async Task<List<Court>> GetCourtByStatusZeroAsync()
         {
-            return await _context.Courts.Where(c => c.Status == status).ToListAsync();
+            return await _context.Courts.Where(c => c.Status == 0).ToListAsync();
         }
 
         public async Task<Court?> UpdateAsync(int id, UpdateCourtDTO courtDTO)

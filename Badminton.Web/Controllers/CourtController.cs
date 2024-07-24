@@ -289,8 +289,8 @@ namespace Badminton.Web.Controllers
         }
 
         [HttpGet]
-        [Route("GetStatus/{status:int}")]
-        public async Task<IActionResult> GetByStatus([FromRoute] int status)
+        [Route("GetStatusZero")]
+        public async Task<IActionResult> GetByStatus()
         {
             if (!ModelState.IsValid)
             {
@@ -302,7 +302,7 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            var courts = await _courtRepo.GetCourtByStatusAsync(status);
+            var courts = await _courtRepo.GetCourtByStatusZeroAsync();
             if(!courts.Any())
             {
                 return Ok(new ApiResponse

@@ -11,5 +11,6 @@ namespace Badminton.Web.Interfaces
         Task<Promotion> CreateAsync(Promotion promotionModel);
         Task<Promotion?> UpdateAsync(int id, UpdatePromotionDTO promotionDTO);
         Task<Promotion?> DeleteAsync(int id);
+        Task<Promotion> GetValidPromotion(string code);
     }
 }

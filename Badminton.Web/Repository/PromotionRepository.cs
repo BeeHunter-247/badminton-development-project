@@ -65,5 +65,15 @@ namespace Badminton.Web.Repository
             await _context.SaveChangesAsync();
             return existingPromotion;
         }
+
+        public async Task<Promotion> GetValidPromotion(string code)
+        {
+            var now = DateOnly.FromDateTime(DateTime.UtcNow);
+            return await _context.Promotions
+                .Where(p => p.PromotionCode == code && p.EndDate >= now)
+                .FirstOrDefaultAsync();
+        }
+
     }
+
 }

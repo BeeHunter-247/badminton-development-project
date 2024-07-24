@@ -222,7 +222,9 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            if(courtDTO.formFiles != null)
+            var existingCourt = await _courtRepo.GetCourtByIdAsync(id);
+
+            if(courtDTO.formFiles != null && courtDTO.formFiles.Any())
             {
                 foreach (var file in courtDTO.formFiles)
                 {
@@ -234,6 +236,10 @@ namespace Badminton.Web.Controllers
 
                     courtDTO.Image = string.Join(", ", images);
                 }
+            }
+            else
+            {
+                courtDTO.Image = existingCourt.Image;
             }
            
 

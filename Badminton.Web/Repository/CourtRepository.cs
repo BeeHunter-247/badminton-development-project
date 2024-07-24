@@ -97,6 +97,11 @@ namespace Badminton.Web.Repository
             return await _context.Courts.Include(e => e.Evaluates).Include(s => s.SubCourts).FirstOrDefaultAsync(c => c.CourtId == id);
         }
 
+        public async Task<Court?> GetCourtByIdAsync(int id)
+        {
+            return await _context.Courts.FindAsync(id);
+        }
+
         public async Task<Court?> UpdateAsync(int id, UpdateCourtDTO courtDTO)
         {
             var existingCourt = await _context.Courts.FirstOrDefaultAsync(c => c.CourtId == id);

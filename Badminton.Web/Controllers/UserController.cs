@@ -41,6 +41,220 @@ namespace Badminton.Web.Controllers
         }
 
         // Controller actions and logic...
+        [HttpGet("GetTop5PeopleUseMostAmount")]
+        public async Task<IActionResult> GetTop7PeopleUseMostAmount()
+        {
+            var topUsers = await _context.Bookings
+                .Where(b => new[] { 1, 3, 4 }.Contains(b.Status)) // Lọc những Booking có Status là 1, 3, hoặc 4
+                .GroupBy(b => new { b.UserId, b.User.UserName, b.User.Email })
+                .Select(g => new TopUserDTO
+                {
+                    UserId = g.Key.UserId,
+                    UserName = g.Key.UserName,
+                    Email = g.Key.Email,
+                    TotalAmount = g.Where(b => new[] { 1, 3, 4 }.Contains(b.Status)).Sum(b => b.Amount ?? 0) // Chỉ tính tổng Amount của những Booking có Status là 1, 3, hoặc 4
+                })
+                .OrderByDescending(u => u.TotalAmount)
+                .Take(7)
+                .ToListAsync();
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = topUsers
+            });
+        }
+
+        [HttpGet("GetAllUsers")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            if (!IsAdmin(User))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Unauthorized"
+                });
+            }
+
+            var users = await _context.Users.ToListAsync();
+
+            // Map each user to UserAdminDTO
+            var userDtoList = new List<UserAdminDTO>();
+            foreach (var user in users)
+            {
+                var userDto = _mapper.Map<UserAdminDTO>(user);
+
+                // Convert RoleType from int to string (assuming GetUserRole is a method you have elsewhere)
+                userDto.RoleType = GetUserRole(user.RoleType);
+
+                userDtoList.Add(userDto);
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = userDtoList
+            });
+        }
+
+
+        [HttpGet("GetTotalUserByRoleType3")]
+        public async Task<IActionResult> GetTotalUserByRoleType3()
+        {
+
+            var roleType = 3; // Giá trị RoleType cần kiểm tra
+            var totalUsers = await _context.Users.CountAsync(u => u.RoleType == roleType);
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = totalUsers
+            });
+        }
+
+
+
+        // GetById
+        //
+        [HttpGet("GetUserById/{id}")]
+        public async Task<IActionResult> GetUserById(int id)
+        {
+            if (!IsAdmin(User))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Unauthorized"
+                });
+            }
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "User not found"
+                });
+            }
+
+            // Map the user to UserAdminDTO
+            var userDto = _mapper.Map<UserAdminDTO>(user);
+
+            // Convert the RoleType from int to string
+            userDto.RoleType = GetUserRole(user.RoleType);
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = userDto
+            });
+        }
+
+
+        [HttpGet("GetCurrentUser")]
+        [Authorize]
+        //User and Admin
+        public async Task<IActionResult> GetCurrentUser()
+
+
+        {
+            // Log claims for debugging
+            foreach (var claim in User.Claims)
+            {
+                Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
+            }
+
+            // Get the user ID from the claims
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    Success = false,
+                    Message = "User ID claim not found"
+                });
+            }
+
+            // Parse the user ID
+            if (!int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid user ID"
+                });
+            }
+
+            // Retrieve the user from the database
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "User not found"
+                });
+            }
+
+            // Map the user to a DTO
+            var userDTO = _mapper.Map<UserDTO>(user);
+
+            // Return the user details
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "User found",
+                Data = userDTO
+            });
+        }
+        [HttpGet("GetTotalUserInSystem")]
+        public async Task<IActionResult> GetTotalUserInSystem()
+        {
+            var totalAdmin = await _context.Users.CountAsync(u => u.RoleType == 0);
+            var totalOwner = await _context.Users.CountAsync(u => u.RoleType == 1);
+            var totalUser = await _context.Users.CountAsync(u => u.RoleType == 3);
+
+            var result = new TotalUserDTO
+            {
+                TotalAdmin = totalAdmin,
+                TotalOwner = totalOwner,
+                TotalUser = totalUser
+            };
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = result
+            });
+        }
+
+        [HttpGet("GetTotalCourtInSystem")]
+        public async Task<IActionResult> GetTotalCourtInSystem()
+        {
+            var totalCourts = await _context.Courts
+                .GroupBy(c => c.OwnerId)
+                .Select(g => new TotalCourtDTO
+                {
+                    OwnerName = g.FirstOrDefault().Owner.FullName,
+                    TotalCourt = g.Count()
+                })
+                .ToListAsync();
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = totalCourts
+            });
+        }
+
+
+
+
+
+
+
 
 
 
@@ -313,29 +527,7 @@ namespace Badminton.Web.Controllers
 
 
 
-        [HttpGet("GetTop5PeopleUseMostAmount")]
-        public async Task<IActionResult> GetTop7PeopleUseMostAmount()
-        {
-            var topUsers = await _context.Bookings
-                .Where(b => new[] { 1, 3, 4 }.Contains(b.Status)) // Lọc những Booking có Status là 1, 3, hoặc 4
-                .GroupBy(b => new { b.UserId, b.User.UserName, b.User.Email })
-                .Select(g => new TopUserDTO
-                {
-                    UserId = g.Key.UserId,
-                    UserName = g.Key.UserName,
-                    Email = g.Key.Email,
-                    TotalAmount = g.Where(b => new[] { 1, 3, 4 }.Contains(b.Status)).Sum(b => b.Amount ?? 0) // Chỉ tính tổng Amount của những Booking có Status là 1, 3, hoặc 4
-                })
-                .OrderByDescending(u => u.TotalAmount)
-                .Take(7)
-                .ToListAsync();
-
-            return Ok(new ApiResponse
-            {
-                Success = true,
-                Data = topUsers
-            });
-        }
+      
 
 
 
@@ -379,154 +571,8 @@ namespace Badminton.Web.Controllers
             });
         }
 
-        
-        [HttpGet("GetAllUsers")]
-        public async Task<IActionResult> GetAllUsers()
-        {
-            if (!IsAdmin(User))
-            {
-                return Unauthorized(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Unauthorized"
-                });
-            }
-
-            var users = await _context.Users.ToListAsync();
-
-            // Map each user to UserAdminDTO
-            var userDtoList = new List<UserAdminDTO>();
-            foreach (var user in users)
-            {
-                var userDto = _mapper.Map<UserAdminDTO>(user);
-
-                // Convert RoleType from int to string (assuming GetUserRole is a method you have elsewhere)
-                userDto.RoleType = GetUserRole(user.RoleType);
-
-                userDtoList.Add(userDto);
-            }
-
-            return Ok(new ApiResponse
-            {
-                Success = true,
-                Data = userDtoList
-            });
-        }
-
-
-        [HttpGet("GetTotalUserByRoleType3")]
-        public async Task<IActionResult> GetTotalUserByRoleType3()
-        {
-           
-            var roleType = 3; // Giá trị RoleType cần kiểm tra
-            var totalUsers = await _context.Users.CountAsync(u => u.RoleType == roleType);
-
-            return Ok(new ApiResponse
-            {
-                Success = true,
-                Data = totalUsers
-            });
-        }
-
-
-
-        // GetById
-        //
-        [HttpGet("GetUserById/{id}")]
-        public async Task<IActionResult> GetUserById(int id)
-        {
-            if (!IsAdmin(User))
-            {
-                return Unauthorized(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Unauthorized"
-                });
-            }
-
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound(new ApiResponse
-                {
-                    Success = false,
-                    Message = "User not found"
-                });
-            }
-
-            // Map the user to UserAdminDTO
-            var userDto = _mapper.Map<UserAdminDTO>(user);
-
-            // Convert the RoleType from int to string
-            userDto.RoleType = GetUserRole(user.RoleType);
-
-            return Ok(new ApiResponse
-            {
-                Success = true,
-                Data = userDto
-            });
-        }
-
-
-        [HttpGet("GetCurrentUser")]
-        [Authorize]
-        //User and Admin
-        public async Task<IActionResult> GetCurrentUser()
-
-
-        {
-            // Log claims for debugging
-            foreach (var claim in User.Claims)
-            {
-                Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
-            }
-
-            // Get the user ID from the claims
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null)
-            {
-                return Unauthorized(new ApiResponse
-                {
-                    Success = false,
-                    Message = "User ID claim not found"
-                });
-            }
-
-            // Parse the user ID
-            if (!int.TryParse(userIdClaim.Value, out int userId))
-            {
-                return Unauthorized(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Invalid user ID"
-                });
-            }
-
-            // Retrieve the user from the database
-            var user = await _context.Users.FindAsync(userId);
-            if (user == null)
-            {
-                return NotFound(new ApiResponse
-                {
-                    Success = false,
-                    Message = "User not found"
-                });
-            }
-
-            // Map the user to a DTO
-            var userDTO = _mapper.Map<UserDTO>(user);
-
-            // Return the user details
-            return Ok(new ApiResponse
-            {
-                Success = true,
-                Message = "User found",
-                Data = userDTO
-            });
-        }
-
-
-
+       
+    
         //Edit Account (User)
         [HttpPut("EditSelf")]
         [Authorize]
@@ -725,45 +771,7 @@ namespace Badminton.Web.Controllers
                 Message = "User role updated successfully"
             });
         }
-        [HttpGet("GetTotalUserInSystem")]
-        public async Task<IActionResult> GetTotalUserInSystem()
-        {
-            var totalAdmin = await _context.Users.CountAsync(u => u.RoleType == 0); 
-            var totalOwner = await _context.Users.CountAsync(u => u.RoleType == 1); 
-            var totalUser = await _context.Users.CountAsync(u => u.RoleType == 3); 
-
-            var result = new TotalUserDTO
-            {
-                TotalAdmin = totalAdmin,
-                TotalOwner = totalOwner,
-                TotalUser = totalUser
-            };
-
-            return Ok(new ApiResponse
-            {
-                Success = true,
-                Data = result
-            });
-        }
-
-        [HttpGet("GetTotalCourtInSystem")]
-        public async Task<IActionResult> GetTotalCourtInSystem()
-        {
-            var totalCourts = await _context.Courts
-                .GroupBy(c => c.OwnerId)
-                .Select(g => new TotalCourtDTO
-                {
-                    OwnerName = g.FirstOrDefault().Owner.FullName,
-                    TotalCourt = g.Count()
-                })
-                .ToListAsync();
-
-            return Ok(new ApiResponse
-            {
-                Success = true,
-                Data = totalCourts
-            });
-        }
+       
 
 
 

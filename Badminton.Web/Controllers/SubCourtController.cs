@@ -80,7 +80,7 @@ namespace Badminton.Web.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSubCourtDTO updateDTO)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(new ApiResponse
                 {
@@ -91,7 +91,7 @@ namespace Badminton.Web.Controllers
             }
 
             var sCourt = await _sCourtRepo.UpdateAsync(id, updateDTO);
-            if( sCourt == null)
+            if (sCourt == null)
             {
                 return Ok(new ApiResponse
                 {
@@ -107,6 +107,7 @@ namespace Badminton.Web.Controllers
                 Data = _mapper.Map<SubCourtDTO>(sCourt)
             });
         }
+
 
         [HttpPost("{courtId:int}")]
         public async Task<IActionResult> Create([FromRoute] int courtId, CreateSubCourtDTO createDTO)

@@ -136,45 +136,23 @@ namespace Badminton.Web.Controllers
                 });
             }
 
-            /*if(courtDTO.formfile != null) 
+            if (courtDTO.FormFiles != null && courtDTO.FormFiles.Count > 0)
             {
-                var fileResult = _fileRepo.SaveImage(court);
-                if (fileResult.Item1 == 1)
-                {
-                    courtDTO.Image = fileResult.Item2;
-                }
-            }
-            */
-
-            if(courtDTO.formFiles != null)
-            {
-                foreach (var file in courtDTO.formFiles)
+                foreach (var file in courtDTO.FormFiles)
                 {
                     var fileResult = _fileRepo.SaveImage(file);
                     if (fileResult.Item1 == 1)
                     {
-                        images.Add(courtDTO.Image = fileResult.Item2);
+                        images.Add(fileResult.Item2);
                     }
-
-                    courtDTO.Image = string.Join(", ", images);
                 }
+
+                courtDTO.Image = string.Join(", ", images);
             }
-            
+
             var courtModel = _mapper.Map<Court>(courtDTO);
 
-            /* var courtModel = new Court
-             {
-                 CourtName = courtDTO.CourtName,
-                 CourtManagerId = courtDTO.CourtManagerId,
-                 Location = courtDTO.Location,
-                 Phone = courtDTO.Phone,
-                 OpeningHours = courtDTO.OpeningHours,
-                 Image = string.Join(", ", images),
-                 Announcement = courtDTO.Announcement,
-             };
-            */
-
-            if(await _courtRepo.CourtNameExist(courtDTO.CourtName))
+            if (await _courtRepo.CourtNameExist(courtDTO.CourtName))
             {
                 return Ok(new ApiResponse
                 {
@@ -205,6 +183,7 @@ namespace Badminton.Web.Controllers
                 });
             }
         }
+
 
         [HttpPut]
         [Route("{id:int}")]

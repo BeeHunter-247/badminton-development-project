@@ -150,7 +150,20 @@ namespace Badminton.Web.Controllers
                 courtDTO.Image = string.Join(", ", images);
             }
 
-            var courtModel = _mapper.Map<Court>(courtDTO);
+            var courtTransfer = new SetDefaultStatus
+            {
+                CourtName = courtDTO.CourtName,
+                OwnerId = courtDTO.OwnerId,
+                Location = courtDTO.Location,
+                Phone = courtDTO.Phone,
+                OpeningHours = courtDTO.OpeningHours,
+                Image = courtDTO.Image,
+                Announcement = courtDTO.Announcement,
+                FormFiles = courtDTO.FormFiles,
+                Status = 0
+            };
+
+            var courtModel = _mapper.Map<Court>(courtTransfer);
 
             if (await _courtRepo.CourtNameExist(courtDTO.CourtName))
             {
@@ -238,6 +251,39 @@ namespace Badminton.Web.Controllers
                 Success = true,
                 StatusCode = 1,
                 Data = _mapper.Map<CourtDTO>(courtModel)
+            });
+        }
+
+        [HttpPut]
+        [Route("{id:int}/UpdateStatusCourt")]
+        public async Task<IActionResult> UpdateStatusCourt([FromRoute] int id, [FromBody] UpdateStatusDTO statusDTO)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            var updateStatus = await _courtRepo.UpdateStatusAsync(id, statusDTO);
+            if(updateStatus == null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Court not found!",
+                    StatusCode = StatusCodes.Status404NotFound,
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                StatusCode = StatusCodes.Status200OK,
+                Data = updateStatus
             });
         }
     }

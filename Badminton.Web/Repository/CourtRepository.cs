@@ -121,5 +121,19 @@ namespace Badminton.Web.Repository
             await _context.SaveChangesAsync();
             return existingCourt;
         }
+
+        public async Task<Court?> UpdateStatusAsync(int id, UpdateStatusDTO statusDTO)
+        {
+            var existingCourt = await _context.Courts.FirstOrDefaultAsync(c => c.CourtId == id);
+            if(existingCourt == null)
+            {
+                return null;
+            }
+
+            existingCourt.Status = statusDTO.Status;
+
+            await _context.SaveChangesAsync();
+            return existingCourt;
+        }
     }
 }

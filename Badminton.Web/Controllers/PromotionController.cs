@@ -161,6 +161,32 @@ namespace Badminton.Web.Controllers
 
             try
             {
+                var endDate = DateOnly.Parse(promotionDTO.EndDate);
+                var startDate = DateOnly.Parse(promotionDTO.StartDate);
+                var now = DateOnly.FromDateTime(DateTime.UtcNow);
+
+                // Check EndDate
+                if (endDate <= now)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        StatusCode = StatusCodes.Status400BadRequest,
+                        Message = "EndDate must be greater than today's date."
+                    });
+                }
+
+                // Check if StartDate is greater than EndDate
+                if (startDate > endDate)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        StatusCode = StatusCodes.Status400BadRequest,
+                        Message = "StartDate cannot be greater than EndDate."
+                    });
+                }
+
                 var promotionModel = new Promotion
                 {
                     PromotionCode = promotionDTO.PromotionCode,

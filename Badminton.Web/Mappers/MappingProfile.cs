@@ -31,6 +31,7 @@ namespace Badminton.Web.Mappers
             CreateMap<CheckIn, CheckInDTO>().ReverseMap();
             CreateMap<CreateCheckInDTO, CheckIn>().ReverseMap();
             CreateMap<PaymentDTO, Payment>().ReverseMap();
+            CreateMap<SetDefaultStatus, Court>().ReverseMap();
         }
     }
 }

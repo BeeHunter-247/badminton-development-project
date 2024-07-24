@@ -4,6 +4,7 @@ using Badminton.Web.Helpers;
 using Badminton.Web.Interfaces;
 using Badminton.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Badminton.Web.Controllers
 {
@@ -286,5 +287,38 @@ namespace Badminton.Web.Controllers
                 Data = updateStatus
             });
         }
+
+        [HttpGet]
+        [Route("GetStatus/{status:int}")]
+        public async Task<IActionResult> GetByStatus([FromRoute] int status)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            var courts = await _courtRepo.GetCourtByStatusAsync(status);
+            if(!courts.Any())
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = "Status court not found!"
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Data = _mapper.Map<List<CourtDTO>>(courts)
+            });
+        }
+
     }
 }

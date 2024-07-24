@@ -176,7 +176,7 @@ namespace Badminton.Web.Controllers
                     });
                 }
 
-                // Check if StartDate is greater than EndDate
+                // Check StartDate 
                 if (startDate > endDate)
                 {
                     return Ok(new ApiResponse

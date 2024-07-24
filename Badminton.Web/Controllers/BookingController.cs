@@ -16,10 +16,11 @@ namespace Badminton.Web.Controllers
         private readonly ICourtRepository _courtRepo;
         private readonly IUserRepository _userRepo;
         private readonly ISubCourtRepository _subCourtRepo;
+        private readonly IPromotionRepository _promotionRepo;
         private readonly IMapper _mapper;
         private readonly CourtSyncContext _context;
 
-        public BookingController(IBookingRepository bookingRepo, IMapper mapper, ISubCourtRepository subCourtRepository, ICourtRepository courtRepository, IUserRepository userRepository, CourtSyncContext context)
+        public BookingController(IBookingRepository bookingRepo, IMapper mapper, ISubCourtRepository subCourtRepository, ICourtRepository courtRepository,IPromotionRepository promotionRepo, IUserRepository userRepository, CourtSyncContext context)
         {
             _bookingRepo = bookingRepo;
             _mapper = mapper;
@@ -27,6 +28,7 @@ namespace Badminton.Web.Controllers
             _userRepo = userRepository;
             _subCourtRepo = subCourtRepository;
             _context = context;
+            _promotionRepo = promotionRepo;
         }
 
         [HttpGet]
@@ -276,80 +278,6 @@ namespace Badminton.Web.Controllers
             return Ok(percentage);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> CreateAsync(CreateBookingDTO bookingDTO)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(new ApiResponse
-        //        {
-        //            Success = false,
-        //            Message = "Invalid data",
-        //            Data = ModelState
-        //        });
-        //    }
-
-        //    try
-        //    {
-        //        if (!DateOnly.TryParse(bookingDTO.BookingDate, out var parseBookingDate))
-        //        {
-        //            ModelState.AddModelError("BookingDate", "Invalid BookingDate format. Please use yyyy-MM-dd.");
-        //            return BadRequest(ModelState);
-        //        }
-
-        //        // check booking trùng lặp
-        //        var existingBooking = await _bookingRepo.GetBookingByUserAndTime(bookingDTO.UserId, bookingDTO.SubCourtId, parseBookingDate, bookingDTO.TimeSlotId);
-        //        if (existingBooking != null)
-        //        {
-        //            return Ok(new ApiResponse
-        //            {
-        //                Success = false,
-        //                StatusCode = StatusCodes.Status409Conflict,
-        //                Message = "The user already has a booking for this sub-court, date and time."
-        //            });
-        //        }
-
-        //        // check SubCourt khả dụng ko
-        //        var isTimeSlotAvailable = await _bookingRepo.IsTimeSlotAvailableAsync(bookingDTO.SubCourtId, bookingDTO.TimeSlotId, parseBookingDate);
-        //        if (!isTimeSlotAvailable)
-        //        {
-        //            return Ok(new ApiResponse
-        //            {
-        //                Success = false,
-        //                StatusCode = StatusCodes.Status409Conflict,
-        //                Message = "SubCourt is unavailable on the specified date and time."
-        //            });
-        //        }
-
-        //        var booking = new Booking
-
-        //        {
-        //            UserId = bookingDTO.UserId,
-        //            SubCourtId = bookingDTO.SubCourtId,
-        //            TimeSlotId = bookingDTO.TimeSlotId,
-        //            CreateDate = DateTime.Parse(bookingDTO.CreateDate),
-        //            BookingDate = parseBookingDate,
-        //            Amount = bookingDTO.Amount,
-        //            Status = (int)BookingStatus.Pending,
-        //            BookingType = (int)BookingType.Daily,
-        //            PromotionCode = (string.IsNullOrWhiteSpace(bookingDTO.PromotionCode) || bookingDTO.PromotionCode.Equals("string")) ? null : bookingDTO.PromotionCode,
-        //        };
-
-
-        //        await _bookingRepo.CreateAsync(booking);
-
-        //        return Ok(new ApiResponse
-        //        {
-        //            Success = true,
-        //            StatusCode = StatusCodes.Status201Created,
-        //            Data = _mapper.Map<BookingDTO>(booking)
-        //        });
-        //    }
-        //    catch
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
 
         [HttpPost]
         public async Task<IActionResult> CreateAsync(CreateBookingDTO bookingDTO)
@@ -400,9 +328,10 @@ namespace Badminton.Web.Controllers
                 var subCourt = await _subCourtRepo.GetByIdAsync(bookingDTO.SubCourtId);
                 if (subCourt == null)
                 {
-                    return NotFound(new ApiResponse
+                    return Ok(new ApiResponse
                     {
                         Success = false,
+                        StatusCode = StatusCodes.Status404NotFound,
                         Message = "SubCourt not found"
                     });
                 }
@@ -411,9 +340,10 @@ namespace Badminton.Web.Controllers
                 var court = await _courtRepo.GetByIdAsync(subCourt.CourtId);
                 if (court == null)
                 {
-                    return NotFound(new ApiResponse
+                    return Ok(new ApiResponse
                     {
                         Success = false,
+                        StatusCode = StatusCodes.Status404NotFound,
                         Message = "Court not found"
                     });
                 }
@@ -421,18 +351,20 @@ namespace Badminton.Web.Controllers
                 var owner = await _userRepo.GetUserByIdAsync(court.OwnerId);
                 if (owner == null)
                 {
-                    return NotFound(new ApiResponse
+                    return Ok(new ApiResponse
                     {
                         Success = false,
+                        StatusCode = StatusCodes.Status404NotFound,
                         Message = $"Owner with ID {court.OwnerId} not found"
                     });
                 }
 
                 if (owner.RoleType != 1)
                 {
-                    return BadRequest(new ApiResponse
+                    return Ok(new ApiResponse
                     {
                         Success = false,
+                        StatusCode = StatusCodes.Status404NotFound,
                         Message = $"Owner with ID {court.OwnerId} does not have the correct role type. Expected role type 2, but found {owner.RoleType}"
                     });
                 }
@@ -441,9 +373,10 @@ namespace Badminton.Web.Controllers
                 var user = await _userRepo.GetUserByIdAsync(bookingDTO.UserId);
                 if (user == null)
                 {
-                    return NotFound(new ApiResponse
+                    return Ok(new ApiResponse
                     {
                         Success = false,
+                        StatusCode = StatusCodes.Status404NotFound,
                         Message = $"User with ID {bookingDTO.UserId} not found"
                     });
                 }
@@ -451,12 +384,27 @@ namespace Badminton.Web.Controllers
                 // Check if the User has enough balance
                 if (user.AccountBalance < bookingDTO.Amount)
                 {
-                    return BadRequest(new ApiResponse
+                    return Ok(new ApiResponse
                     {
                         Success = false,
                         StatusCode = StatusCodes.Status400BadRequest,
                         Message = "Insufficient account balance."
                     });
+                }
+
+                //check date promotion
+                if (!string.IsNullOrWhiteSpace(bookingDTO.PromotionCode) && !bookingDTO.PromotionCode.Equals("string"))
+                {
+                    var promotion = await _promotionRepo.GetValidPromotion(bookingDTO.PromotionCode);
+                    if (promotion == null)
+                    {
+                        return Ok(new ApiResponse
+                        {
+                            Success = false,
+                            StatusCode = StatusCodes.Status400BadRequest,
+                            Message = "Invalid or expired promotion code."
+                        });
+                    }
                 }
 
                 // Create the booking
@@ -590,7 +538,7 @@ namespace Badminton.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
                     Message = "Invalid data",
@@ -601,9 +549,10 @@ namespace Badminton.Web.Controllers
             var existingBooking = await _bookingRepo.GetById(id);
             if (existingBooking == null)
             {
-                return NotFound(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
+                    StatusCode = StatusCodes.Status404NotFound,
                     Message = "Booking not found!"
                 });
             }
@@ -630,9 +579,10 @@ namespace Badminton.Web.Controllers
                 }
                 else
                 {
-                    return BadRequest(new ApiResponse
+                    return Ok(new ApiResponse
                     {
                         Success = false,
+                        StatusCode = StatusCodes.Status404NotFound,
                         Message = "Failed to update booking status."
                     });
                 }
@@ -759,9 +709,10 @@ namespace Badminton.Web.Controllers
 
                 if (user == null || owner == null)
                 {
-                    return NotFound(new ApiResponse
+                    return Ok(new ApiResponse
                     {
                         Success = false,
+                        StatusCode = StatusCodes.Status404NotFound,
                         Message = "User or owner not found"
                     });
                 }
@@ -895,7 +846,7 @@ namespace Badminton.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new ApiResponse
+                return Ok(new ApiResponse
                 {
                     Success = false,
                     Message = "Invalid data",

@@ -24,6 +24,7 @@ namespace Badminton.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
+
             // JWT Configuration
             builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("AppSettings"));
             var secretKey = builder.Configuration["AppSettings:SecretKey"];
@@ -50,6 +51,15 @@ namespace Badminton.Web
                 options.LoginPath = "/Account/Login";
                 options.ExpireTimeSpan = TimeSpan.FromHours(3); // Set cookie expiration time to 3 hours
                 options.SlidingExpiration = true;
+            });
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigins", builder =>
+                {
+                    builder.WithOrigins("http://localhost:5173") // URL của frontend
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
             });
 
             // CORS Configuration
@@ -89,6 +99,7 @@ namespace Badminton.Web
                     }
                 });
             });
+
 
             // Add services to the container
             builder.Services.AddHttpsRedirection(options =>
@@ -159,7 +170,7 @@ namespace Badminton.Web
             app.UseSwagger();
             app.UseSwaggerUI();
 
-            app.UseCors("corspolicy");
+            app.UseCors("AllowSpecificOrigins");
 
             app.UseHttpsRedirection();
 

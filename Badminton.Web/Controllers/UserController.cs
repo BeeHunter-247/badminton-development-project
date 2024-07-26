@@ -524,10 +524,112 @@ namespace Badminton.Web.Controllers
         }
 
 
+        [HttpPost("forgotpassword")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == model.Email);
+            if (user == null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid Email"
+                });
+            }
+
+            // Generate password reset token
+            var token = Guid.NewGuid().ToString();
+            user.PasswordResetToken = BCrypt.Net.BCrypt.HashPassword(token);
+            user.PasswordResetTokenExpiration = DateTime.UtcNow.AddHours(1);
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            var resetLink = $"http://localhost:5173/reset-password/{token}";
+
+            try
+            {
+                await _emailService.SendEmailAsync(user.Email, "Reset Password", $"Click the link to reset your password: {resetLink}");
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Password reset link has been sent to your email."
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse { Success = false, Message = $"An error occurred: {ex.Message}" });
+            }
+        }
 
 
 
-      
+
+        [HttpPost("resetpassword")]
+        public async Task<IActionResult> ResetPassword(SetNewPasswordModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid data",
+                    Data = ModelState
+                });
+            }
+
+            if (model.NewPassword != model.ConfirmPassword)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Password and confirm password do not match"
+                });
+            }
+
+            var user = await _context.Users
+                .Where(u => u.PasswordResetTokenExpiration > DateTime.UtcNow)
+                .ToListAsync();
+
+            var matchedUser = user.SingleOrDefault(u => BCrypt.Net.BCrypt.Verify(model.Token, u.PasswordResetToken));
+
+            if (matchedUser == null)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid or expired token"
+                });
+            }
+
+            matchedUser.Password = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
+            matchedUser.PasswordResetToken = null;
+            matchedUser.PasswordResetTokenExpiration = null;
+
+            _context.Users.Update(matchedUser);
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Password has been reset successfully"
+            });
+        }
+
+
+
+
+
 
 
 
